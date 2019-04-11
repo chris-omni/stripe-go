@@ -38,34 +38,34 @@ type SubscriptionTransferDataParams struct {
 // SubscriptionParams is the set of parameters that can be used when creating or updating a subscription.
 // For more details see https://stripe.com/docs/api#create_subscription and https://stripe.com/docs/api#update_subscription.
 type SubscriptionParams struct {
-	Params                      `form:"*"`
-	ApplicationFeePercent       *float64                             `form:"application_fee_percent"`
-	BackdateStartDate           *int64                               `form:"backdate_start_date"`
-	Billing                     *string                              `form:"billing"`
-	BillingCycleAnchor          *int64                               `form:"billing_cycle_anchor"`
-	BillingCycleAnchorNow       *bool                                `form:"-"` // See custom AppendTo
-	BillingCycleAnchorUnchanged *bool                                `form:"-"` // See custom AppendTo
-	BillingThresholds           *SubscriptionBillingThresholdsParams `form:"billing_thresholds"`
-	CancelAt                    *int64                               `form:"cancel_at"`
-	CancelAtPeriodEnd           *bool                                `form:"cancel_at_period_end"`
-	Card                        *CardParams                          `form:"card"`
-	Coupon                      *string                              `form:"coupon"`
-	Customer                    *string                              `form:"customer"`
-	DaysUntilDue                *int64                               `form:"days_until_due"`
-	DefaultPaymentMethod        *string                              `form:"default_payment_method"`
-	DefaultSource               *string                              `form:"default_source"`
-	Items                       []*SubscriptionItemsParams           `form:"items"`
-	OnBehalfOf                  *string                              `form:"on_behalf_of"`
-	Plan                        *string                              `form:"plan"`
-	Prorate                     *bool                                `form:"prorate"`
-	ProrationDate               *int64                               `form:"proration_date"`
-	Quantity                    *int64                               `form:"quantity"`
-	TaxPercent                  *float64                             `form:"tax_percent"`
-	TrialEnd                    *int64                               `form:"trial_end"`
-	TransferData                *SubscriptionTransferDataParams      `form:"transfer_data"`
-	TrialEndNow                 *bool                                `form:"-"` // See custom AppendTo
-	TrialFromPlan               *bool                                `form:"trial_from_plan"`
-	TrialPeriodDays             *int64                               `form:"trial_period_days"`
+	Params                      `form:"*" json:"*"`
+	ApplicationFeePercent       *float64                             `form:"application_fee_percent" json:"application_fee_percent"`
+	BackdateStartDate           *int64                               `form:"backdate_start_date" json:"backdate_start_date"`
+	Billing                     *string                              `form:"billing" json:"billing"`
+	BillingCycleAnchor          *int64                               `form:"billing_cycle_anchor" json:"billing_cycle_anchor"`
+	BillingCycleAnchorNow       *bool                                `form:"-" json:"-"` // See custom AppendTo
+	BillingCycleAnchorUnchanged *bool                                `form:"-" json:"-"` // See custom AppendTo
+	BillingThresholds           *SubscriptionBillingThresholdsParams `form:"billing_thresholds" json:"billing_thresholds"`
+	CancelAt                    *int64                               `form:"cancel_at" json:"cancel_at"`
+	CancelAtPeriodEnd           *bool                                `form:"cancel_at_period_end" json:"cancel_at_period_end"`
+	Card                        *CardParams                          `form:"card" json:"card"`
+	Coupon                      *string                              `form:"coupon" json:"coupon"`
+	Customer                    *string                              `form:"customer" json:"customer"`
+	DaysUntilDue                *int64                               `form:"days_until_due" json:"days_until_due"`
+	DefaultPaymentMethod        *string                              `form:"default_payment_method" json:"default_payment_method"`
+	DefaultSource               *string                              `form:"default_source" json:"default_source"`
+	Items                       []*SubscriptionItemsParams           `form:"items" json:"items"`
+	OnBehalfOf                  *string                              `form:"on_behalf_of" json:"on_behalf_of"`
+	Plan                        *string                              `form:"plan" json:"plan"`
+	Prorate                     *bool                                `form:"prorate" json:"prorate"`
+	ProrationDate               *int64                               `form:"proration_date" json:"proration_date"`
+	Quantity                    *int64                               `form:"quantity" json:"quantity"`
+	TaxPercent                  *float64                             `form:"tax_percent" json:"tax_percent"`
+	TrialEnd                    *int64                               `form:"trial_end" json:"trial_end"`
+	TransferData                *SubscriptionTransferDataParams      `form:"transfer_data" json:"transfer_data"`
+	TrialEndNow                 *bool                                `form:"-" json:"-"` // See custom AppendTo
+	TrialFromPlan               *bool                                `form:"trial_from_plan" json:"trial_from_plan"`
+	TrialPeriodDays             *int64                               `form:"trial_period_days" json:"trial_period_days"`
 }
 
 // SubscriptionBillingThresholdsParams is a structure representing the parameters allowed to control

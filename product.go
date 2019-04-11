@@ -22,21 +22,21 @@ type PackageDimensionsParams struct {
 
 // ProductParams is the set of parameters that can be used when creating or updating a product.
 type ProductParams struct {
-	Params              `form:"*"`
-	Active              *bool                    `form:"active"`
-	Attributes          []*string                `form:"attributes"`
-	Caption             *string                  `form:"caption"`
-	DeactivateOn        []*string                `form:"deactivate_on"`
-	Description         *string                  `form:"description"`
-	ID                  *string                  `form:"id"`
-	Images              []*string                `form:"images"`
-	Name                *string                  `form:"name"`
-	PackageDimensions   *PackageDimensionsParams `form:"package_dimensions"`
-	Shippable           *bool                    `form:"shippable"`
-	StatementDescriptor *string                  `form:"statement_descriptor"`
-	Type                *string                  `form:"type"`
-	UnitLabel           *string                  `form:"unit_label"`
-	URL                 *string                  `form:"url"`
+	Params              `form:"*" json:"*"`
+	Active              *bool                    `form:"active" json:"active"`
+	Attributes          []*string                `form:"attributes" json:"attributes"`
+	Caption             *string                  `form:"caption" json:"caption"`
+	DeactivateOn        []*string                `form:"deactivate_on" json:"deactivate_on"`
+	Description         *string                  `form:"description" json:"description"`
+	ID                  *string                  `form:"id" json:"id"`
+	Images              []*string                `form:"images" json:"images"`
+	Name                *string                  `form:"name" json:"name"`
+	PackageDimensions   *PackageDimensionsParams `form:"package_dimensions" json:"package_dimensions"`
+	Shippable           *bool                    `form:"shippable" json:"shippable"`
+	StatementDescriptor *string                  `form:"statement_descriptor" json:"statement_descriptor"`
+	Type                *string                  `form:"type" json:"type"`
+	UnitLabel           *string                  `form:"unit_label" json:"unit_label"`
+	URL                 *string                  `form:"url" json:"url"`
 }
 
 // PackageDimensions represents the dimension of a product or a SKU from the

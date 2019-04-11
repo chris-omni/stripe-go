@@ -25,22 +25,22 @@ const (
 // CustomerParams is the set of parameters that can be used when creating or updating a customer.
 // For more details see https://stripe.com/docs/api#create_customer and https://stripe.com/docs/api#update_customer.
 type CustomerParams struct {
-	Params          `form:"*"`
-	AccountBalance  *int64                         `form:"account_balance"`
-	Coupon          *string                        `form:"coupon"`
-	DefaultSource   *string                        `form:"default_source"`
-	Description     *string                        `form:"description"`
-	Email           *string                        `form:"email"`
-	InvoicePrefix   *string                        `form:"invoice_prefix"`
-	InvoiceSettings *CustomerInvoiceSettingsParams `form:"invoice_settings"`
-	Plan            *string                        `form:"plan"`
-	Quantity        *int64                         `form:"quantity"`
-	Shipping        *CustomerShippingDetailsParams `form:"shipping"`
-	Source          *SourceParams                  `form:"*"` // SourceParams has custom encoding so brought to top level with "*"
-	TaxInfo         *CustomerTaxInfoParams         `form:"tax_info"`
-	TaxPercent      *float64                       `form:"tax_percent"`
-	Token           *string                        `form:"-"` // This doesn't seem to be used?
-	TrialEnd        *int64                         `form:"trial_end"`
+	Params          `form:"*" json:"*"`
+	AccountBalance  *int64                         `form:"account_balance" json:"account_balance"`
+	Coupon          *string                        `form:"coupon" json:"coupon"`
+	DefaultSource   *string                        `form:"default_source" json:"default_source"`
+	Description     *string                        `form:"description" json:"description"`
+	Email           *string                        `form:"email" json:"email"`
+	InvoicePrefix   *string                        `form:"invoice_prefix" json:"invoice_prefix"`
+	InvoiceSettings *CustomerInvoiceSettingsParams `form:"invoice_settings" json:"invoice_settings"`
+	Plan            *string                        `form:"plan" json:"plan"`
+	Quantity        *int64                         `form:"quantity" json:"quantity"`
+	Shipping        *CustomerShippingDetailsParams `form:"shipping" json:"shipping"`
+	Source          *SourceParams                  `form:"*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	TaxInfo         *CustomerTaxInfoParams         `form:"tax_info" json:"tax_info"`
+	TaxPercent      *float64                       `form:"tax_percent" json:"tax_percent"`
+	Token           *string                        `form:"-" json:"-"` // This doesn't seem to be used?
+	TrialEnd        *int64                         `form:"trial_end" json:"trial_end"`
 }
 
 // CustomerInvoiceCustomFieldParams represents the parameters associated with one custom field on
