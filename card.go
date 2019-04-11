@@ -72,27 +72,27 @@ const cardSource = "source"
 // cards have some unusual logic on creates that necessitates manual handling
 // of all parameters. See AppendToAsCardSourceOrExternalAccount.
 type CardParams struct {
-	Params             `form:"*"`
-	Account            *string `form:"-"`
-	AddressCity        *string `form:"address_city"`
-	AddressCountry     *string `form:"address_country"`
-	AddressLine1       *string `form:"address_line1"`
-	AddressLine2       *string `form:"address_line2"`
-	AddressState       *string `form:"address_state"`
-	AddressZip         *string `form:"address_zip"`
-	CVC                *string `form:"cvc"`
-	Currency           *string `form:"currency"`
-	Customer           *string `form:"-"`
-	DefaultForCurrency *bool   `form:"default_for_currency"`
-	ExpMonth           *string `form:"exp_month"`
-	ExpYear            *string `form:"exp_year"`
-	Name               *string `form:"name"`
-	Number             *string `form:"number"`
-	Recipient          *string `form:"-"`
-	Token              *string `form:"-"`
+	Params             `form:"*" json:"*"`
+	Account            *string `form:"-" json:"-"`
+	AddressCity        *string `form:"address_city" json:"address_city"`
+	AddressCountry     *string `form:"address_country" json:"address_country"`
+	AddressLine1       *string `form:"address_line1" json:"address_line1"`
+	AddressLine2       *string `form:"address_line2" json:"address_line2"`
+	AddressState       *string `form:"address_state" json:"address_state"`
+	AddressZip         *string `form:"address_zip" json:"address_zip"`
+	CVC                *string `form:"cvc" json:"cvc"`
+	Currency           *string `form:"currency" json:"currency"`
+	Customer           *string `form:"-" json:"-"`
+	DefaultForCurrency *bool   `form:"default_for_currency" json:"default_for_currency"`
+	ExpMonth           *string `form:"exp_month" json:"exp_month"`
+	ExpYear            *string `form:"exp_year" json:"exp_year"`
+	Name               *string `form:"name" json:"name"`
+	Number             *string `form:"number" json:"number"`
+	Recipient          *string `form:"-" json:"-"`
+	Token              *string `form:"-" json:"-"`
 
 	// ID is used when tokenizing a card for shared customers
-	ID string `form:"*"`
+	ID string `form:"*" json:"*"`
 }
 
 // AppendToAsCardSourceOrExternalAccount appends the given CardParams as either a
