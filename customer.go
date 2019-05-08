@@ -35,33 +35,33 @@ const (
 // CustomerParams is the set of parameters that can be used when creating or updating a customer.
 // For more details see https://stripe.com/docs/api#create_customer and https://stripe.com/docs/api#update_customer.
 type CustomerParams struct {
-	Params           `form:"*"`
-	AccountBalance   *int64                         `form:"account_balance"`
-	Address          *AddressParams                 `form:"address"`
-	Coupon           *string                        `form:"coupon"`
-	DefaultSource    *string                        `form:"default_source"`
-	Description      *string                        `form:"description"`
-	Email            *string                        `form:"email"`
-	InvoicePrefix    *string                        `form:"invoice_prefix"`
-	InvoiceSettings  *CustomerInvoiceSettingsParams `form:"invoice_settings"`
-	Name             *string                        `form:"name"`
-	PaymentMethod    *string                        `form:"payment_method"`
-	Phone            *string                        `form:"phone"`
-	PreferredLocales []*string                      `form:"preferred_locales"`
-	Shipping         *CustomerShippingDetailsParams `form:"shipping"`
-	Source           *SourceParams                  `form:"*"` // SourceParams has custom encoding so brought to top level with "*"
-	TaxExempt        *string                        `form:"tax_exempt"`
-	TaxIDData        []*CustomerTaxIDDataParams     `form:"tax_id_data"`
-	Token            *string                        `form:"-"` // This doesn't seem to be used?
+	Params           `form:"*" json:"*"`
+	AccountBalance   *int64                         `form:"account_balance" json:"account_balance"`
+	Address          *AddressParams                 `form:"address" json:"address"`
+	Coupon           *string                        `form:"coupon" json:"coupon"`
+	DefaultSource    *string                        `form:"default_source" json:"default_source"`
+	Description      *string                        `form:"description" json:"description"`
+	Email            *string                        `form:"email" json:"email"`
+	InvoicePrefix    *string                        `form:"invoice_prefix" json:"invoice_prefix"`
+	InvoiceSettings  *CustomerInvoiceSettingsParams `form:"invoice_settings" json:"invoice_settings"`
+	Name             *string                        `form:"name" json:"name"`
+	PaymentMethod    *string                        `form:"payment_method" json:"payment_method"`
+	Phone            *string                        `form:"phone" json:"phone"`
+	PreferredLocales []*string                      `form:"preferred_locales" json:"preferred_locales"`
+	Shipping         *CustomerShippingDetailsParams `form:"shipping" json:"shipping"`
+	Source           *SourceParams                  `form:"*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	TaxExempt        *string                        `form:"tax_exempt" json:"tax_exempt"`
+	TaxIDData        []*CustomerTaxIDDataParams     `form:"tax_id_data" json:"tax_id_data"`
+	Token            *string                        `form:"-" json:"-"` // This doesn't seem to be used?
 
 	// The following parameter is deprecated. Use TaxIDData instead.
-	TaxInfo *CustomerTaxInfoParams `form:"tax_info"`
+	TaxInfo *CustomerTaxInfoParams `form:"tax_info" json:"tax_info"`
 
 	// The parameters below are considered deprecated. Consider creating a Subscription separately instead.
-	Plan       *string  `form:"plan"`
-	Quantity   *int64   `form:"quantity"`
-	TaxPercent *float64 `form:"tax_percent"`
-	TrialEnd   *int64   `form:"trial_end"`
+	Plan       *string  `form:"plan" json:"plan"`
+	Quantity   *int64   `form:"quantity" json:"quantity"`
+	TaxPercent *float64 `form:"tax_percent" json:"tax_percent"`
+	TrialEnd   *int64   `form:"trial_end" json:"trial_end"`
 }
 
 // CustomerInvoiceCustomFieldParams represents the parameters associated with one custom field on
