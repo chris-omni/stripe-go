@@ -44,52 +44,57 @@ const (
 // BillingDetailsParams is the set of parameters that can be used as billing details
 // when creating or updating a PaymentMethod
 type BillingDetailsParams struct {
-	Address *AddressParams `form:"address"`
-	Email   *string        `form:"email"`
-	Name    *string        `form:"name"`
-	Phone   *string        `form:"phone"`
+	Address *AddressParams `form:"address" json:"address"`
+	Email   *string        `form:"email" json:"email"`
+	Name    *string        `form:"name" json:"name"`
+	Phone   *string        `form:"phone" json:"phone"`
 }
 
 // PaymentMethodCardParams is the set of parameters allowed for the `card` hash when creating a
 // PaymentMethod of type card.
 type PaymentMethodCardParams struct {
-	CVC      *string `form:"cvc"`
-	ExpMonth *string `form:"exp_month"`
-	ExpYear  *string `form:"exp_year"`
-	Number   *string `form:"number"`
-	Token    *string `form:"token"`
+	CVC      *string `form:"cvc" json:"cvc"`
+	ExpMonth *string `form:"exp_month" json:"exp_month"`
+	ExpYear  *string `form:"exp_year" json:"exp_year"`
+	Number   *string `form:"number" json:"number"`
+	Token    *string `form:"token" json:"token"`
 }
 
 // PaymentMethodParams is the set of parameters that can be used when creating or updating a
 // PaymentMethod.
 type PaymentMethodParams struct {
-	Params         `form:"*"`
-	BillingDetails *BillingDetailsParams    `form:"billing_details"`
-	Card           *PaymentMethodCardParams `form:"card"`
-	Customer       *string                  `form:"customer"`
-	PaymentMethod  *string                  `form:"payment_method"`
-	Type           *string                  `form:"type"`
+	Params         `form:"*" json:"*"`
+	BillingDetails *BillingDetailsParams    `form:"billing_details" json:"billing_details"`
+	Card           *PaymentMethodCardParams `form:"card" json:"card"`
+	PaymentMethod  *string                  `form:"payment_method" json:"payment_method"`
+	Type           *string                  `form:"type" json:"type"`
+
+	// The following parameter is not supported by the API and should not have been added
+	// TODO: remove in the next major version
+	Customer *string `form:"customer" json:"customer"`
 }
 
 // PaymentMethodAttachParams is the set of parameters that can be used when attaching a
 // PaymentMethod to a Customer.
 type PaymentMethodAttachParams struct {
-	Params   `form:"*"`
-	Customer *string `form:"customer"`
+	Params   `form:"*" json:"*"`
+	Customer *string `form:"customer" json:"customer"`
 }
 
 // PaymentMethodDetachParams is the set of parameters that can be used when detaching a
 // PaymentMethod.
 type PaymentMethodDetachParams struct {
-	Params   `form:"*"`
-	Customer *string `form:"customer"`
+	Params `form:"*" json:"*"`
+	// The following parameter is not supported by the API and should not have been added
+	// TODO: remove in the next major version
+	Customer *string `form:"customer" json:"customer"`
 }
 
 // PaymentMethodListParams is the set of parameters that can be used when listing PaymentMethods.
 type PaymentMethodListParams struct {
-	ListParams `form:"*"`
-	Customer   *string `form:"customer"`
-	Type       *string `form:"type"`
+	ListParams `form:"*" json:"*"`
+	Customer   *string `form:"customer" json:"customer"`
+	Type       *string `form:"type" json:"type"`
 }
 
 // BillingDetails represents the billing details associated with a PaymentMethod.
