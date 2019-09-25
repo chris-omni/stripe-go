@@ -1,4 +1,4 @@
-package stripe_test
+package stripe
 
 import (
 	"bytes"
@@ -17,12 +17,10 @@ import (
 	"time"
 
 	assert "github.com/stretchr/testify/require"
-	"github.com/stripe/stripe-go"
-	. "github.com/stripe/stripe-go/testing"
 )
 
 func TestBearerAuth(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	c := GetBackend(APIBackend).(*BackendImplementation)
 	key := "apiKey"
 
 	req, err := c.NewRequest("", "", key, "", nil)
@@ -32,8 +30,8 @@ func TestBearerAuth(t *testing.T) {
 }
 
 func TestContext(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
-	p := &stripe.Params{Context: context.Background()}
+	c := GetBackend(APIBackend).(*BackendImplementation)
+	p := &Params{Context: context.Background()}
 
 	req, err := c.NewRequest("", "", "", "", p)
 	assert.NoError(t, err)
@@ -91,14 +89,14 @@ func TestDo_Retry(t *testing.T) {
 	}))
 	defer testServer.Close()
 
-	backend := stripe.GetBackendWithConfig(
-		stripe.APIBackend,
-		&stripe.BackendConfig{
+	backend := GetBackendWithConfig(
+		APIBackend,
+		&BackendConfig{
 			LogLevel:          3,
 			MaxNetworkRetries: 5,
 			URL:               testServer.URL,
 		},
-	).(*stripe.BackendImplementation)
+	).(*BackendImplementation)
 
 	// Disable sleeping duration our tests.
 	backend.SetNetworkRetriesSleep(false)
@@ -123,6 +121,119 @@ func TestDo_Retry(t *testing.T) {
 	assert.Equal(t, 2, requestNum)
 }
 
+func TestShouldRetry(t *testing.T) {
+	MaxNetworkRetries := 3
+
+	c := GetBackendWithConfig(
+		APIBackend,
+		&BackendConfig{
+			MaxNetworkRetries: MaxNetworkRetries,
+		},
+	).(*BackendImplementation)
+
+	// Exceeded maximum number of retries
+	assert.False(t, c.shouldRetry(
+		nil,
+		&http.Request{},
+		&http.Response{},
+		MaxNetworkRetries,
+	))
+
+	// Doesn't retry most Stripe errors (they must also match a status code
+	// below to be retried)
+	assert.False(t, c.shouldRetry(
+		&Error{Msg: "An error from Stripe"},
+		&http.Request{},
+		&http.Response{StatusCode: http.StatusBadRequest},
+		0,
+	))
+
+	// Currently retries on any non-Stripe error (which we should fix)
+	assert.True(t, c.shouldRetry(
+		fmt.Errorf("an error"),
+		&http.Request{},
+		nil,
+		0,
+	))
+
+	// `Stripe-Should-Retry: false`
+	assert.False(t, c.shouldRetry(
+		nil,
+		&http.Request{},
+		&http.Response{
+			Header: http.Header(map[string][]string{
+				"Stripe-Should-Retry": {"false"},
+			}),
+			// Note we send status 409 here, which would normally be retried
+			StatusCode: http.StatusConflict,
+		},
+		0,
+	))
+
+	// `Stripe-Should-Retry: true`
+	assert.True(t, c.shouldRetry(
+		nil,
+		&http.Request{},
+		&http.Response{
+			Header: http.Header(map[string][]string{
+				"Stripe-Should-Retry": {"true"},
+			}),
+			// Note we send status 400 here, which would normally not be
+			// retried
+			StatusCode: http.StatusBadRequest,
+		},
+		0,
+	))
+
+	// 409 Conflict
+	assert.True(t, c.shouldRetry(
+		nil,
+		&http.Request{},
+		&http.Response{StatusCode: http.StatusConflict},
+		0,
+	))
+
+	// 429 Too Many Requests -- retry on lock timeout
+	assert.True(t, c.shouldRetry(
+		&Error{Code: ErrorCodeLockTimeout},
+		&http.Request{},
+		&http.Response{StatusCode: http.StatusTooManyRequests},
+		0,
+	))
+
+	// 429 Too Many Requests -- don't retry normally
+	assert.False(t, c.shouldRetry(
+		nil,
+		&http.Request{},
+		&http.Response{StatusCode: http.StatusTooManyRequests},
+		0,
+	))
+
+	// 500 Internal Server Error -- retry if non-POST
+	assert.True(t, c.shouldRetry(
+		nil,
+		&http.Request{Method: http.MethodGet},
+		&http.Response{StatusCode: http.StatusInternalServerError},
+		0,
+	))
+
+	// 500 Internal Server Error -- don't retry POST
+	assert.False(t, c.shouldRetry(
+		nil,
+		&http.Request{Method: http.MethodPost},
+		&http.Response{StatusCode: http.StatusInternalServerError},
+		0,
+	))
+
+	// 503 Service Unavailable
+	assert.True(t, c.shouldRetry(
+		nil,
+		&http.Request{},
+		&http.Response{StatusCode: http.StatusServiceUnavailable},
+		0,
+	))
+}
+
 func TestDo_RetryOnTimeout(t *testing.T) {
 	type testServerResponse struct {
 		Message string `json:"message"`
@@ -137,15 +248,15 @@ func TestDo_RetryOnTimeout(t *testing.T) {
 	}))
 	defer testServer.Close()
 
-	backend := stripe.GetBackendWithConfig(
-		stripe.APIBackend,
-		&stripe.BackendConfig{
+	backend := GetBackendWithConfig(
+		APIBackend,
+		&BackendConfig{
 			LogLevel:          3,
 			MaxNetworkRetries: 1,
 			URL:               testServer.URL,
 			HTTPClient:        &http.Client{Timeout: timeout},
 		},
-	).(*stripe.BackendImplementation)
+	).(*BackendImplementation)
 
 	backend.SetNetworkRetriesSleep(false)
 
@@ -193,14 +304,14 @@ func TestDo_TelemetryDisabled(t *testing.T) {
 	}))
 	defer testServer.Close()
 
-	backend := stripe.GetBackendWithConfig(
-		stripe.APIBackend,
-		&stripe.BackendConfig{
+	backend := GetBackendWithConfig(
+		APIBackend,
+		&BackendConfig{
 			LogLevel:          3,
 			MaxNetworkRetries: 0,
 			URL:               testServer.URL,
 		},
-	).(*stripe.BackendImplementation)
+	).(*BackendImplementation)
 
 	// When telemetry is enabled, the metrics for a request are sent with the
 	// _next_ request via the `X-Stripe-Client-Telemetry header`. To test that
@@ -227,7 +338,7 @@ func TestDo_TelemetryDisabled(t *testing.T) {
 }
 
 // Test that telemetry metrics are sent on subsequent requests when
-// stripe.EnableTelemetry = true.
+// EnableTelemetry = true.
 func TestDo_TelemetryEnabled(t *testing.T) {
 	type testServerResponse struct {
 		Message string `json:"message"`
@@ -257,7 +368,7 @@ func TestDo_TelemetryEnabled(t *testing.T) {
 		case 2:
 			assert.True(t, len(telemetryStr) > 0, "telemetryStr should not be empty")
 
-			// the telemetry should properly unmarshal into stripe.RequestTelemetry
+			// the telemetry should properly unmarshal into RequestTelemetry
 			var telemetry requestTelemetry
 			err := json.Unmarshal([]byte(telemetryStr), &telemetry)
 			assert.NoError(t, err)
@@ -281,15 +392,15 @@ func TestDo_TelemetryEnabled(t *testing.T) {
 	}))
 	defer testServer.Close()
 
-	backend := stripe.GetBackendWithConfig(
-		stripe.APIBackend,
-		&stripe.BackendConfig{
+	backend := GetBackendWithConfig(
+		APIBackend,
+		&BackendConfig{
 			LogLevel:          3,
 			MaxNetworkRetries: 0,
 			URL:               testServer.URL,
 			EnableTelemetry:   true,
 		},
-	).(*stripe.BackendImplementation)
+	).(*BackendImplementation)
 
 	for i := 0; i < 2; i++ {
 		request, err := backend.NewRequest(
@@ -338,15 +449,15 @@ func TestDo_TelemetryEnabledNoDataRace(t *testing.T) {
 	}))
 	defer testServer.Close()
 
-	backend := stripe.GetBackendWithConfig(
-		stripe.APIBackend,
-		&stripe.BackendConfig{
+	backend := GetBackendWithConfig(
+		APIBackend,
+		&BackendConfig{
 			LogLevel:          3,
 			MaxNetworkRetries: 0,
 			URL:               testServer.URL,
 			EnableTelemetry:   true,
 		},
-	).(*stripe.BackendImplementation)
+	).(*BackendImplementation)
 
 	times := 20 // 20 > telemetryBufferSize, so some metrics could be discarded
 	done := make(chan struct{})
@@ -381,38 +492,38 @@ func TestDo_TelemetryEnabledNoDataRace(t *testing.T) {
 
 func TestFormatURLPath(t *testing.T) {
 	assert.Equal(t, "/v1/resources/1/subresources/2",
-		stripe.FormatURLPath("/v1/resources/%s/subresources/%s", "1", "2"))
+		FormatURLPath("/v1/resources/%s/subresources/%s", "1", "2"))
 
 	// Tests that each parameter is escaped for use in URLs
 	assert.Equal(t, "/v1/resources/%25",
-		stripe.FormatURLPath("/v1/resources/%s", "%"))
+		FormatURLPath("/v1/resources/%s", "%"))
 }
 
 func TestGetBackendWithConfig_Loggers(t *testing.T) {
-	leveledLogger := &stripe.LeveledLogger{}
+	leveledLogger := &LeveledLogger{}
 	logger := log.New(os.Stdout, "", 0)
 
 	// Prefers a LeveledLogger
 	{
-		backend := stripe.GetBackendWithConfig(
-			stripe.APIBackend,
-			&stripe.BackendConfig{
+		backend := GetBackendWithConfig(
+			APIBackend,
+			&BackendConfig{
 				LeveledLogger: leveledLogger,
 				Logger:        logger,
 			},
-		).(*stripe.BackendImplementation)
+		).(*BackendImplementation)
 
 		assert.Equal(t, leveledLogger, backend.LeveledLogger)
 	}
 
 	// Falls back to Logger
 	{
-		backend := stripe.GetBackendWithConfig(
-			stripe.APIBackend,
-			&stripe.BackendConfig{
+		backend := GetBackendWithConfig(
+			APIBackend,
+			&BackendConfig{
 				Logger: logger,
 			},
-		).(*stripe.BackendImplementation)
+		).(*BackendImplementation)
 
 		assert.NotNil(t, backend.LeveledLogger)
 	}
@@ -420,61 +531,61 @@ func TestGetBackendWithConfig_Loggers(t *testing.T) {
 
 func TestGetBackendWithConfig_TrimV1Suffix(t *testing.T) {
 	{
-		backend := stripe.GetBackendWithConfig(
-			stripe.APIBackend,
-			&stripe.BackendConfig{
-				URL: "https://api.stripe.com/v1",
+		backend := GetBackendWithConfig(
+			APIBackend,
+			&BackendConfig{
+				URL: "https://api.com/v1",
 			},
-		).(*stripe.BackendImplementation)
+		).(*BackendImplementation)
 
 		// The `/v1` suffix has been stripped.
-		assert.Equal(t, "https://api.stripe.com", backend.URL)
+		assert.Equal(t, "https://api.com", backend.URL)
 	}
 
 	// Also support trimming a `/v1/` with an extra trailing slash which is
 	// probably an often seen mistake.
 	{
-		backend := stripe.GetBackendWithConfig(
-			stripe.APIBackend,
-			&stripe.BackendConfig{
-				URL: "https://api.stripe.com/v1/",
+		backend := GetBackendWithConfig(
+			APIBackend,
+			&BackendConfig{
+				URL: "https://api.com/v1/",
 			},
-		).(*stripe.BackendImplementation)
+		).(*BackendImplementation)
 
-		assert.Equal(t, "https://api.stripe.com", backend.URL)
+		assert.Equal(t, "https://api.com", backend.URL)
 	}
 
 	// No-op otherwise.
 	{
-		backend := stripe.GetBackendWithConfig(
-			stripe.APIBackend,
-			&stripe.BackendConfig{
-				URL: "https://api.stripe.com",
+		backend := GetBackendWithConfig(
+			APIBackend,
+			&BackendConfig{
+				URL: "https://api.com",
 			},
-		).(*stripe.BackendImplementation)
+		).(*BackendImplementation)
 
-		assert.Equal(t, "https://api.stripe.com", backend.URL)
+		assert.Equal(t, "https://api.com", backend.URL)
 	}
 }
 
 func TestParseID(t *testing.T) {
 	// JSON string
 	{
-		id, ok := stripe.ParseID([]byte(`"ch_123"`))
+		id, ok := ParseID([]byte(`"ch_123"`))
 		assert.Equal(t, "ch_123", id)
 		assert.True(t, ok)
 	}
 
 	// JSON object
 	{
-		id, ok := stripe.ParseID([]byte(`{"id":"ch_123"}`))
+		id, ok := ParseID([]byte(`{"id":"ch_123"}`))
 		assert.Equal(t, "", id)
 		assert.False(t, ok)
 	}
 
 	// Other JSON scalar (this should never be used, but check the results anyway)
 	{
-		id, ok := stripe.ParseID([]byte(`123`))
+		id, ok := ParseID([]byte(`123`))
 		assert.Equal(t, "", id)
 		assert.False(t, ok)
 	}
@@ -487,7 +598,7 @@ func TestMultipleAPICalls(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+			c := GetBackend(APIBackend).(*BackendImplementation)
 			key := "apiKey"
 
 			req, err := c.NewRequest("", "", key, "", nil)
@@ -500,8 +611,8 @@ func TestMultipleAPICalls(t *testing.T) {
 }
 
 func TestIdempotencyKey(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
-	p := &stripe.Params{IdempotencyKey: stripe.String("idempotency-key")}
+	c := GetBackend(APIBackend).(*BackendImplementation)
+	p := &Params{IdempotencyKey: String("idempotency-key")}
 
 	req, err := c.NewRequest("", "", "", "", p)
 	assert.NoError(t, err)
@@ -511,20 +622,20 @@ func TestIdempotencyKey(t *testing.T) {
 
 func TestNewBackends(t *testing.T) {
 	httpClient := &http.Client{}
-	backends := stripe.NewBackends(httpClient)
-	assert.Equal(t, httpClient, backends.API.(*stripe.BackendImplementation).HTTPClient)
-	assert.Equal(t, httpClient, backends.Uploads.(*stripe.BackendImplementation).HTTPClient)
+	backends := NewBackends(httpClient)
+	assert.Equal(t, httpClient, backends.API.(*BackendImplementation).HTTPClient)
+	assert.Equal(t, httpClient, backends.Uploads.(*BackendImplementation).HTTPClient)
 }
 
 func TestStripeAccount(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
-	p := &stripe.Params{}
-	p.SetStripeAccount(TestMerchantID)
+	c := GetBackend(APIBackend).(*BackendImplementation)
+	p := &Params{}
+	p.SetStripeAccount("acct_123")
 
 	req, err := c.NewRequest("", "", "", "", p)
 	assert.NoError(t, err)
 
-	assert.Equal(t, TestMerchantID, req.Header.Get("Stripe-Account"))
+	assert.Equal(t, "acct_123", req.Header.Get("Stripe-Account"))
 }
 
 func TestUnmarshalJSONVerbose(t *testing.T) {
@@ -532,7 +643,7 @@ func TestUnmarshalJSONVerbose(t *testing.T) {
 		Message string `json:"message"`
 	}
 
-	backend := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	backend := GetBackend(APIBackend).(*BackendImplementation)
 
 	// Valid JSON
 	{
@@ -573,7 +684,7 @@ func TestUnmarshalJSONVerbose(t *testing.T) {
 }
 
 func TestUserAgent(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	c := GetBackend(APIBackend).(*BackendImplementation)
 
 	req, err := c.NewRequest("", "", "", "", nil)
 	assert.NoError(t, err)
@@ -587,16 +698,16 @@ func TestUserAgent(t *testing.T) {
 }
 
 func TestUserAgentWithAppInfo(t *testing.T) {
-	appInfo := &stripe.AppInfo{
+	appInfo := &AppInfo{
 		Name:      "MyAwesomePlugin",
 		PartnerID: "partner_1234",
 		URL:       "https://myawesomeplugin.info",
 		Version:   "1.2.34",
 	}
-	stripe.SetAppInfo(appInfo)
-	defer stripe.SetAppInfo(nil)
+	SetAppInfo(appInfo)
+	defer SetAppInfo(nil)
 
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	c := GetBackend(APIBackend).(*BackendImplementation)
 
 	req, err := c.NewRequest("", "", "", "", nil)
 	assert.NoError(t, err)
@@ -632,7 +743,7 @@ func TestUserAgentWithAppInfo(t *testing.T) {
 }
 
 func TestStripeClientUserAgent(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	c := GetBackend(APIBackend).(*BackendImplementation)
 
 	req, err := c.NewRequest("", "", "", "", nil)
 	assert.NoError(t, err)
@@ -654,19 +765,19 @@ func TestStripeClientUserAgent(t *testing.T) {
 
 	// Anywhere these tests are running can reasonable be expected to have a
 	// `uname` to run, so do this basic check.
-	assert.NotEqual(t, stripe.UnknownPlatform, userAgent["lang_version"])
+	assert.NotEqual(t, UnknownPlatform, userAgent["lang_version"])
 }
 
 func TestStripeClientUserAgentWithAppInfo(t *testing.T) {
-	appInfo := &stripe.AppInfo{
+	appInfo := &AppInfo{
 		Name:    "MyAwesomePlugin",
 		URL:     "https://myawesomeplugin.info",
 		Version: "1.2.34",
 	}
-	stripe.SetAppInfo(appInfo)
-	defer stripe.SetAppInfo(nil)
+	SetAppInfo(appInfo)
+	defer SetAppInfo(nil)
 
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	c := GetBackend(APIBackend).(*BackendImplementation)
 
 	req, err := c.NewRequest("", "", "", "", nil)
 	assert.NoError(t, err)
@@ -685,7 +796,7 @@ func TestStripeClientUserAgentWithAppInfo(t *testing.T) {
 }
 
 func TestResponseToError(t *testing.T) {
-	c := stripe.GetBackend(stripe.APIBackend).(*stripe.BackendImplementation)
+	c := GetBackend(APIBackend).(*BackendImplementation)
 
 	// A test response that includes a status code and request ID.
 	res := &http.Response{
@@ -697,25 +808,25 @@ func TestResponseToError(t *testing.T) {
 
 	// An error that contains expected fields which we're going to serialize to
 	// JSON and inject into our conversion function.
-	expectedErr := &stripe.Error{
-		Code:  stripe.ErrorCodeMissing,
+	expectedErr := &Error{
+		Code:  ErrorCodeMissing,
 		Msg:   "That card was declined",
 		Param: "expiry_date",
-		Type:  stripe.ErrorTypeCard,
+		Type:  ErrorTypeCard,
 	}
 	bytes, err := json.Marshal(expectedErr)
 	assert.NoError(t, err)
 
 	// Unpack the error that we just serialized so that we can inject a
 	// type-specific field into it ("decline_code"). This will show up in a
-	// field on a special stripe.CardError type which is attached to the common
-	// stripe.Error.
+	// field on a special CardError type which is attached to the common
+	// Error.
 	var raw map[string]string
 	err = json.Unmarshal(bytes, &raw)
 	assert.NoError(t, err)
 
-	expectedDeclineCode := "decline-code"
-	raw["decline_code"] = expectedDeclineCode
+	expectedDeclineCode := DeclineCodeInvalidCVC
+	raw["decline_code"] = string(expectedDeclineCode)
 	bytes, err = json.Marshal(raw)
 	assert.NoError(t, err)
 
@@ -724,7 +835,7 @@ func TestResponseToError(t *testing.T) {
 
 	// An error containing Stripe-specific fields that we cast back from the
 	// generic Golang error.
-	stripeErr := err.(*stripe.Error)
+	stripeErr := err.(*Error)
 
 	assert.Equal(t, expectedErr.Code, stripeErr.Code)
 	assert.Equal(t, expectedErr.Msg, stripeErr.Msg)
@@ -736,57 +847,57 @@ func TestResponseToError(t *testing.T) {
 	// Just a bogus type coercion to demonstrate how this code might be
 	// written. Because we've assigned ErrorTypeCard as the error's type, Err
 	// should always come out as a CardError.
-	_, ok := stripeErr.Err.(*stripe.InvalidRequestError)
+	_, ok := stripeErr.Err.(*InvalidRequestError)
 	assert.False(t, ok)
 
-	cardErr, ok := stripeErr.Err.(*stripe.CardError)
+	cardErr, ok := stripeErr.Err.(*CardError)
 	assert.True(t, ok)
 	assert.Equal(t, expectedDeclineCode, cardErr.DeclineCode)
 }
 
 func TestStringSlice(t *testing.T) {
 	input := []string{"a", "b", "c"}
-	result := stripe.StringSlice(input)
+	result := StringSlice(input)
 
 	assert.Equal(t, "a", *result[0])
 	assert.Equal(t, "b", *result[1])
 	assert.Equal(t, "c", *result[2])
 
-	assert.Equal(t, 0, len(stripe.StringSlice(nil)))
+	assert.Equal(t, 0, len(StringSlice(nil)))
 }
 
 func TestInt64Slice(t *testing.T) {
 	input := []int64{8, 7, 6}
-	result := stripe.Int64Slice(input)
+	result := Int64Slice(input)
 
 	assert.Equal(t, int64(8), *result[0])
 	assert.Equal(t, int64(7), *result[1])
 	assert.Equal(t, int64(6), *result[2])
 
-	assert.Equal(t, 0, len(stripe.Int64Slice(nil)))
+	assert.Equal(t, 0, len(Int64Slice(nil)))
 }
 
 func TestFloat64Slice(t *testing.T) {
 	input := []float64{8, 7, 6}
-	result := stripe.Float64Slice(input)
+	result := Float64Slice(input)
 
 	assert.Equal(t, float64(8), *result[0])
 	assert.Equal(t, float64(7), *result[1])
 	assert.Equal(t, float64(6), *result[2])
 
-	assert.Equal(t, 0, len(stripe.Float64Slice(nil)))
+	assert.Equal(t, 0, len(Float64Slice(nil)))
 }
 
 func TestBoolSlice(t *testing.T) {
 	input := []bool{true, false, true, false}
-	result := stripe.BoolSlice(input)
+	result := BoolSlice(input)
 
 	assert.Equal(t, true, *result[0])
 	assert.Equal(t, false, *result[1])
 	assert.Equal(t, true, *result[2])
 	assert.Equal(t, false, *result[3])
 
-	assert.Equal(t, 0, len(stripe.BoolSlice(nil)))
+	assert.Equal(t, 0, len(BoolSlice(nil)))
 }
 
 //

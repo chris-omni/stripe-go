@@ -56,6 +56,7 @@ type DOBParams struct {
 type RelationshipParams struct {
 	AccountOpener    *bool    `form:"account_opener"`
 	Director         *bool    `form:"director"`
+	Executive        *bool    `form:"executive"`
 	Owner            *bool    `form:"owner"`
 	PercentOwnership *float64 `form:"percent_ownership"`
 	Title            *string  `form:"title"`
@@ -71,7 +72,8 @@ type PersonVerificationDocumentParams struct {
 // PersonVerificationParams is used to represent parameters associated with a person's verification
 // details.
 type PersonVerificationParams struct {
-	Document *PersonVerificationDocumentParams `form:"document"`
+	AdditionalDocument *PersonVerificationDocumentParams `form:"additional_document"`
+	Document           *PersonVerificationDocumentParams `form:"document"`
 }
 
 // PersonParams is the set of parameters that can be used when creating or updating a person.
@@ -104,6 +106,7 @@ type PersonParams struct {
 type RelationshipListParams struct {
 	AccountOpener *bool `form:"account_opener"`
 	Director      *bool `form:"director"`
+	Executive     *bool `form:"executive"`
 	Owner         *bool `form:"owner"`
 }
 
@@ -126,6 +129,7 @@ type DOB struct {
 type Relationship struct {
 	AccountOpener    bool    `json:"account_opener"`
 	Director         bool    `json:"director"`
+	Executive        bool    `json:"executive"`
 	Owner            bool    `json:"owner"`
 	PercentOwnership float64 `json:"percent_ownership"`
 	Title            string  `json:"title"`
@@ -133,9 +137,10 @@ type Relationship struct {
 
 // Requirements represents what's missing to verify a Person.
 type Requirements struct {
-	CurrentlyDue  []string `json:"currently_due"`
-	EventuallyDue []string `json:"eventually_due"`
-	PastDue       []string `json:"past_due"`
+	CurrentlyDue        []string `json:"currently_due"`
+	EventuallyDue       []string `json:"eventually_due"`
+	PastDue             []string `json:"past_due"`
+	PendingVerification []string `json:"pending_verification"`
 }
 
 // PersonVerificationDocument represents the documents associated with a Person.
@@ -148,10 +153,11 @@ type PersonVerificationDocument struct {
 
 // PersonVerification is the structure for a person's verification details.
 type PersonVerification struct {
-	Details     string                        `json:"details"`
-	DetailsCode PersonVerificationDetailsCode `json:"details_code"`
-	Document    *PersonVerificationDocument   `json:"document"`
-	Status      IdentityVerificationStatus    `json:"status"`
+	AdditionalDocument *PersonVerificationDocument   `json:"additional_document"`
+	Details            string                        `json:"details"`
+	DetailsCode        PersonVerificationDetailsCode `json:"details_code"`
+	Document           *PersonVerificationDocument   `json:"document"`
+	Status             IdentityVerificationStatus    `json:"status"`
 }
 
 // Person is the resource representing a Stripe person.

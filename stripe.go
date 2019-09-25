@@ -3,6 +3,7 @@ package stripe
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -27,13 +28,20 @@ import (
 
 const (
 	// APIVersion is the currently supported API version
-	APIVersion string = "2019-03-14"
+	APIVersion string = "2019-09-09"
 
 	// APIBackend is a constant representing the API service backend.
 	APIBackend SupportedBackend = "api"
 
 	// APIURL is the URL of the API service backend.
 	APIURL string = "https://api.stripe.com"
+
+	// ConnectURL is the URL for OAuth.
+	ConnectURL string = "https://connect.stripe.com"
+
+	// ConnectBackend is a constant representing the connect service backend for
+	// OAuth.
+	ConnectBackend SupportedBackend = "connect"
 
 	// UnknownPlatform is the string returned as the system name if we couldn't get
 	// one from `uname`.
@@ -53,11 +61,11 @@ const (
 // EnableTelemetry is a global override for enabling client telemetry, which
 // sends request performance metrics to Stripe via the `X-Stripe-Client-Telemetry`
 // header. If set to true, all clients will send telemetry metrics. Defaults to
-// false.
+// true.
 //
-// Telemetry can also be enabled on a per-client basis by instead creating a
-// `BackendConfig` with `EnableTelemetry: true`.
-var EnableTelemetry = false
+// Telemetry can also be disabled on a per-client basis by instead creating a
+// `BackendConfig` with `EnableTelemetry: false`.
+var EnableTelemetry = true
 
 // Key is the Stripe API key used globally in the binding.
 var Key string
@@ -326,6 +334,7 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 	var res *http.Response
 	var err error
 	var requestDuration time.Duration
+	var resBody []byte
 	for retry := 0; ; {
 		start := time.Now()
 
@@ -373,26 +382,48 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 		res, err = s.HTTPClient.Do(req)
 
 		requestDuration = time.Since(start)
-
 		s.LeveledLogger.Infof("Request completed in %v (retry: %v)", requestDuration, retry)
 
-		// If the response was okay, we're done, and it's safe to break out of
-		// the retry loop.
-		if !s.shouldRetry(err, res, retry) {
-			break
+		if err == nil {
+			resBody, err = ioutil.ReadAll(res.Body)
+			res.Body.Close()
 		}
 
 		if err != nil {
 			s.LeveledLogger.Errorf("Request failed with error: %v", err)
-		} else {
-			resBody, err := ioutil.ReadAll(res.Body)
-			res.Body.Close()
-			if err != nil {
-				s.LeveledLogger.Errorf("Cannot read response: %v", err)
+		} else if res.StatusCode >= 400 {
+			err = s.ResponseToError(res, resBody)
+
+			if stripeErr, ok := err.(*Error); ok {
+				// The Stripe API makes a distinction between errors that were
+				// caused by invalid parameters or something else versus those
+				// that occurred *despite* valid parameters, the latter coming
+				// back with status 402.
+				//
+				// On a 402, log to info so as to not make an integration's log
+				// noisy with error messages that they don't have much control
+				// over.
+				//
+				// Note I use the constant 402 instead of an `http.Status*`
+				// constant because technically 402 is "Payment required". The
+				// Stripe API doesn't comply to the letter of the specification
+				// and uses it in a broader sense.
+				if res.StatusCode == 402 {
+					s.LeveledLogger.Infof("User-compelled request error from Stripe (status %v): %v",
+						res.StatusCode, stripeErr)
+				} else {
+					s.LeveledLogger.Errorf("Request error from Stripe (status %v): %v",
+						res.StatusCode, stripeErr)
+				}
 			} else {
-				s.LeveledLogger.Errorf("Request failed with body: %s (status: %v)",
-					string(resBody), res.StatusCode)
+				s.LeveledLogger.Errorf("Error decoding error from Stripe: %v", err)
 			}
+		}
+
+		// If the response was okay, or an error that shouldn't be retried,
+		// we're done, and it's safe to leave the retry loop.
+		if !s.shouldRetry(err, req, res, retry) {
+			break
 		}
 
 		sleepDuration := s.sleepTime(retry)
@@ -404,12 +435,7 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 		time.Sleep(sleepDuration)
 	}
 
-	if err != nil {
-		s.LeveledLogger.Errorf("Request failed: %v", err)
-		return err
-	}
-
-	if s.enableTelemetry {
+	if s.enableTelemetry && res != nil {
 		reqID := res.Header.Get("Request-Id")
 		if len(reqID) > 0 {
 			metrics := requestMetrics{
@@ -426,16 +452,8 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 		}
 	}
 
-	defer res.Body.Close()
-
-	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		s.LeveledLogger.Errorf("Cannot read response: %v", err)
 		return err
-	}
-
-	if res.StatusCode >= 400 {
-		return s.ResponseToError(res, resBody)
 	}
 
 	s.LeveledLogger.Debugf("Response: %s\n", string(resBody))
@@ -450,14 +468,23 @@ func (s *BackendImplementation) Do(req *http.Request, body *bytes.Buffer, v inte
 // ResponseToError converts a stripe response to an Error.
 func (s *BackendImplementation) ResponseToError(res *http.Response, resBody []byte) error {
 	var raw rawError
-	if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &raw); err != nil {
-		return err
+	if s.Type == ConnectBackend {
+		// If this is an OAuth request, deserialize as Error because OAuth errors
+		// are a different shape from the standard API errors.
+		var topLevelError rawErrorInternal
+		if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &topLevelError); err != nil {
+			return err
+		}
+		raw.E = &topLevelError
+	} else {
+		if err := s.UnmarshalJSONVerbose(res.StatusCode, resBody, &raw); err != nil {
+			return err
+		}
 	}
 
 	// no error in resBody
 	if raw.E == nil {
 		err := errors.New(string(resBody))
-		s.LeveledLogger.Errorf("Unparsable error returned from Stripe: %v", err)
 		return err
 	}
 	raw.E.HTTPStatusCode = res.StatusCode
@@ -486,7 +513,6 @@ func (s *BackendImplementation) ResponseToError(res *http.Response, resBody []by
 	}
 	raw.E.Err = typedError
 
-	s.LeveledLogger.Errorf("Error encountered from Stripe: %v", raw.E.Error)
 	return raw.E.Error
 }
 
@@ -535,18 +561,63 @@ func (s *BackendImplementation) UnmarshalJSONVerbose(statusCode int, body []byte
 // Checks if an error is a problem that we should retry on. This includes both
 // socket errors that may represent an intermittent problem and some special
 // HTTP statuses.
-func (s *BackendImplementation) shouldRetry(err error, resp *http.Response, numRetries int) bool {
+func (s *BackendImplementation) shouldRetry(err error, req *http.Request, resp *http.Response, numRetries int) bool {
 	if numRetries >= s.MaxNetworkRetries {
 		return false
 	}
 
-	if err != nil {
+	stripeErr, _ := err.(*Error)
+
+	// TODO: This retries any non-Stripe errors produced as part of the
+	// communication process. It generally works, but there are many errors
+	// that should *not* be retried. Try to make this more granular by
+	// including only connection errors, timeout errors, etc.
+	if stripeErr == nil && err != nil {
 		return true
 	}
 
+	// The API may ask us not to retry (e.g. if doing so would be a no-op), or
+	// advise us to retry (e.g. in cases of lock timeouts). Defer to those
+	// instructions if given.
+	if resp.Header.Get("Stripe-Should-Retry") == "false" {
+		return false
+	}
+	if resp.Header.Get("Stripe-Should-Retry") == "true" {
+		return true
+	}
+
+	// 409 Conflict
 	if resp.StatusCode == http.StatusConflict {
 		return true
 	}
+
+	// 429 Too Many Requests
+	//
+	// There are a few different problems that can lead to a 429. The most
+	// common is rate limiting, on which we *don't* want to retry because
+	// that'd likely contribute to more contention problems. However, some 429s
+	// are lock timeouts, which is when a request conflicted with another
+	// request or an internal process on some particular object. These 429s are
+	// safe to retry.
+	if resp.StatusCode == http.StatusTooManyRequests {
+		if stripeErr != nil && stripeErr.Code == ErrorCodeLockTimeout {
+			return true
+		}
+	}
+
+	// 500 Internal Server Error
+	//
+	// We only bother retrying these for non-POST requests. POSTs end up being
+	// cached by the idempotency layer so there's no purpose in retrying them.
+	if resp.StatusCode >= http.StatusInternalServerError && req.Method != http.MethodPost {
+		return true
+	}
+
+	// 503 Service Unavailable
+	if resp.StatusCode == http.StatusServiceUnavailable {
+		return true
+	}
+
 	return false
 }
 
@@ -580,8 +651,8 @@ func (s *BackendImplementation) sleepTime(numRetries int) time.Duration {
 
 // Backends are the currently supported endpoints.
 type Backends struct {
-	API, Uploads Backend
-	mu           sync.RWMutex
+	API, Connect, Uploads Backend
+	mu                    sync.RWMutex
 }
 
 // SupportedBackend is an enumeration of supported Stripe endpoints.
@@ -670,6 +741,8 @@ func GetBackend(backendType SupportedBackend) Backend {
 	switch backendType {
 	case APIBackend:
 		backend = backends.API
+	case ConnectBackend:
+		backend = backends.Connect
 	case UploadsBackend:
 		backend = backends.Uploads
 	}
@@ -696,6 +769,8 @@ func GetBackend(backendType SupportedBackend) Backend {
 	switch backendType {
 	case APIBackend:
 		backends.API = backend
+	case ConnectBackend:
+		backends.Connect = backend
 	case UploadsBackend:
 		backends.Uploads = backend
 	}
@@ -740,6 +815,15 @@ func GetBackendWithConfig(backendType SupportedBackend, config *BackendConfig) B
 		config.URL = normalizeURL(config.URL)
 
 		return newBackendImplementation(backendType, config)
+
+	case ConnectBackend:
+		if config.URL == "" {
+			config.URL = ConnectURL
+		}
+
+		config.URL = normalizeURL(config.URL)
+
+		return newBackendImplementation(backendType, config)
 	}
 
 	return nil
@@ -772,9 +856,11 @@ func Int64Slice(v []int64) []*int64 {
 // should only need to use this for testing purposes or on App Engine.
 func NewBackends(httpClient *http.Client) *Backends {
 	apiConfig := &BackendConfig{HTTPClient: httpClient}
+	connectConfig := &BackendConfig{HTTPClient: httpClient}
 	uploadConfig := &BackendConfig{HTTPClient: httpClient}
 	return &Backends{
 		API:     GetBackendWithConfig(APIBackend, apiConfig),
+		Connect: GetBackendWithConfig(ConnectBackend, connectConfig),
 		Uploads: GetBackendWithConfig(UploadsBackend, uploadConfig),
 	}
 }
@@ -820,6 +906,8 @@ func SetBackend(backend SupportedBackend, b Backend) {
 	switch backend {
 	case APIBackend:
 		backends.API = b
+	case ConnectBackend:
+		backends.Connect = b
 	case UploadsBackend:
 		backends.Uploads = b
 	}
@@ -862,7 +950,7 @@ func StringSlice(v []string) []*string {
 const apiURL = "https://api.stripe.com"
 
 // clientversion is the binding version
-const clientversion = "60.13.0-omni.1"
+const clientversion = "63.2.1-omni"
 
 // defaultHTTPTimeout is the default timeout on the http.Client used by the library.
 // This is chosen to be consistent with the other Stripe language libraries and
@@ -926,7 +1014,43 @@ var appInfo *AppInfo
 var backends Backends
 var encodedStripeUserAgent string
 var encodedUserAgent string
-var httpClient = &http.Client{Timeout: defaultHTTPTimeout}
+
+// The default HTTP client used for communication with any of Stripe's
+// backends.
+//
+// Can be overridden with the function `SetHTTPClient` or by setting the
+// `HTTPClient` value when using `BackendConfig`.
+var httpClient = &http.Client{
+	Timeout: defaultHTTPTimeout,
+
+	// There is a bug in Go's HTTP/2 implementation that occasionally causes it
+	// to send an empty body when it receives a `GOAWAY` message from a server:
+	//
+	//     https://github.com/golang/go/issues/32441
+	//
+	// This is particularly problematic for this library because the empty body
+	// results in no parameters being sent, which usually results in a 400,
+	// which is a status code expressly not covered by retry logic.
+	//
+	// The bug seems to be somewhat tricky to fix and hasn't seen any traction
+	// lately, so for now we're mitigating by disabling HTTP/2 in stripe-go by
+	// default. Users who like to live dangerously can still re-enable it by
+	// specifying a custom HTTP client. When the bug above is fixed, we can
+	// turn it back on.
+	//
+	// The particular methodology here for disabling HTTP/2 is a little
+	// confusing at first glance, but is recommended by the `net/http`
+	// documentation ("Programs that must disable HTTP/2 can do so by setting
+	// Transport.TLSNextProto (for clients) ... to a non-nil, empty map.")
+	//
+	// Note that the test suite still uses HTTP/2 to run as it specifies its
+	// own HTTP client with it enabled. See `testing/testing.go`.
+	//
+	// (Written 2019/07/24.)
+	Transport: &http.Transport{
+		TLSNextProto: make(map[string]func(string, *tls.Conn) http.RoundTripper),
+	},
+}
 
 //
 // Private functions
