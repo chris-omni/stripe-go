@@ -22,8 +22,8 @@ const (
 // SourceParams is a union struct used to describe an
 // arbitrary payment source.
 type SourceParams struct {
-	Card  *CardParams `form:"-"`
-	Token *string     `form:"source"`
+	Card  *CardParams `form:"-" json:"-"`
+	Token *string     `form:"source" json:"source"`
 }
 
 // AppendTo implements custom encoding logic for SourceParams.
@@ -37,18 +37,18 @@ func (p *SourceParams) AppendTo(body *form.Values, keyParts []string) {
 // Customer object's payment sources.
 // For more details see https://stripe.com/docs/api#sources
 type CustomerSourceParams struct {
-	Params   `form:"*"`
-	Customer *string       `form:"-"` // Goes in the URL
-	Source   *SourceParams `form:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	Params   `form:"*" json:"*"`
+	Customer *string       `form:"-" json:"-"` // Goes in the URL
+	Source   *SourceParams `form:"*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
 }
 
 // SourceVerifyParams are used to verify a customer source
 // For more details see https://stripe.com/docs/guides/ach-beta
 type SourceVerifyParams struct {
-	Params   `form:"*"`
-	Amounts  [2]int64  `form:"amounts"` // Amounts is used when verifying bank accounts
-	Customer *string   `form:"-"`       // Goes in the URL
-	Values   []*string `form:"values"`  // Values is used when verifying sources
+	Params   `form:"*" json:"*"`
+	Amounts  [2]int64  `form:"amounts" json:"amounts"` // Amounts is used when verifying bank accounts
+	Customer *string   `form:"-" json:"-"`       // Goes in the URL
+	Values   []*string `form:"values" json:"values"`  // Values is used when verifying sources
 }
 
 // SetSource adds valid sources to a CustomerSourceParams object,
@@ -105,8 +105,8 @@ type SourceList struct {
 // SourceListParams are used to enumerate the payment sources that are attached
 // to a Customer.
 type SourceListParams struct {
-	ListParams `form:"*"`
-	Customer   *string `form:"-"` // Handled in URL
+	ListParams `form:"*" json:"*"`
+	Customer   *string `form:"-" json:"-"` // Handled in URL
 }
 
 // UnmarshalJSON handles deserialization of a PaymentSource.

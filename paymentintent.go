@@ -100,85 +100,85 @@ type PaymentIntentCancelParams struct {
 
 // PaymentIntentCaptureParams is the set of parameters that can be used when capturing a payment intent.
 type PaymentIntentCaptureParams struct {
-	Params                    `form:"*"`
-	AmountToCapture           *int64                           `form:"amount_to_capture"`
-	ApplicationFeeAmount      *int64                           `form:"application_fee_amount"`
-	StatementDescriptor       *string                          `form:"statement_descriptor"`
-	StatementDescriptorSuffix *string                          `form:"statement_descriptor_suffix"`
-	TransferData              *PaymentIntentTransferDataParams `form:"transfer_data"`
+	Params                    `form:"*" json:"*"`
+	AmountToCapture           *int64                           `form:"amount_to_capture" json:"amount_to_capture"`
+	ApplicationFeeAmount      *int64                           `form:"application_fee_amount" json:"application_fee_amount"`
+	StatementDescriptor       *string                          `form:"statement_descriptor" json:"statement_descriptor"`
+	StatementDescriptorSuffix *string                          `form:"statement_descriptor_suffix" json:"descriptor_suffix"`
+	TransferData              *PaymentIntentTransferDataParams `form:"transfer_data" json:"transfer_data"`
 }
 
 // PaymentIntentConfirmParams is the set of parameters that can be used when confirming a payment intent.
 type PaymentIntentConfirmParams struct {
 	Params               `form:"*"`
-	OffSession           *bool                                    `form:"off_session"`
-	PaymentMethod        *string                                  `form:"payment_method"`
-	PaymentMethodOptions *PaymentIntentPaymentMethodOptionsParams `form:"payment_method_options"`
-	PaymentMethodTypes   []*string                                `form:"payment_method_types"`
-	ReceiptEmail         *string                                  `form:"receipt_email"`
-	ReturnURL            *string                                  `form:"return_url"`
-	SavePaymentMethod    *bool                                    `form:"save_payment_method"`
-	SetupFutureUsage     *string                                  `form:"setup_future_usage"`
-	Shipping             *ShippingDetailsParams                   `form:"shipping"`
-	Source               *string                                  `form:"source"`
+	OffSession           *bool                                    `form:"off_session" json:"off_session"`
+	PaymentMethod        *string                                  `form:"payment_method" json:"payment_method"`
+	PaymentMethodOptions *PaymentIntentPaymentMethodOptionsParams `form:"payment_method_options" json:"payment_method_options"`
+	PaymentMethodTypes   []*string                                `form:"payment_method_types" json:"payment_method_types"`
+	ReceiptEmail         *string                                  `form:"receipt_email" json:"receipt_email"`
+	ReturnURL            *string                                  `form:"return_url" json:"return_url"`
+	SavePaymentMethod    *bool                                    `form:"save_payment_method" json:"save_payment_method"`
+	SetupFutureUsage     *string                                  `form:"setup_future_usage" json:"setup_future_usage"`
+	Shipping             *ShippingDetailsParams                   `form:"shipping" json:"shipping"`
+	Source               *string                                  `form:"source" json:"source"`
 }
 
 // PaymentIntentPaymentMethodOptionsCardParams represents the card-specific options applied to a
 // PaymentIntent.
 type PaymentIntentPaymentMethodOptionsCardParams struct {
-	MOTO                *bool   `form:"moto"`
-	RequestThreeDSecure *string `form:"request_three_d_secure"`
+	MOTO                *bool   `form:"moto" json:"moto"`
+	RequestThreeDSecure *string `form:"request_three_d_secure" json:"request_three_d_secure"`
 }
 
 // PaymentIntentPaymentMethodOptionsParams represents the type-specific payment method options
 // applied to a PaymentIntent.
 type PaymentIntentPaymentMethodOptionsParams struct {
-	Card *PaymentIntentPaymentMethodOptionsCardParams `form:"card"`
+	Card *PaymentIntentPaymentMethodOptionsCardParams `form:"card" json:"card"`
 }
 
 // PaymentIntentTransferDataParams is the set of parameters allowed for the transfer hash.
 type PaymentIntentTransferDataParams struct {
-	Amount      *int64  `form:"amount"`
-	Destination *string `form:"destination"`
+	Amount      *int64  `form:"amount" json:"amount"`
+	Destination *string `form:"destination" json:"destination"`
 }
 
 // PaymentIntentParams is the set of parameters that can be used when handling a payment intent.
 type PaymentIntentParams struct {
-	Params                    `form:"*"`
-	Amount                    *int64                                   `form:"amount"`
-	ApplicationFeeAmount      *int64                                   `form:"application_fee_amount"`
-	CaptureMethod             *string                                  `form:"capture_method"`
-	Confirm                   *bool                                    `form:"confirm"`
-	ConfirmationMethod        *string                                  `form:"confirmation_method"`
-	Currency                  *string                                  `form:"currency"`
-	Customer                  *string                                  `form:"customer"`
-	Description               *string                                  `form:"description"`
-	OnBehalfOf                *string                                  `form:"on_behalf_of"`
-	PaymentMethod             *string                                  `form:"payment_method"`
-	PaymentMethodOptions      *PaymentIntentPaymentMethodOptionsParams `form:"payment_method_options"`
-	PaymentMethodTypes        []*string                                `form:"payment_method_types"`
-	ReceiptEmail              *string                                  `form:"receipt_email"`
-	ReturnURL                 *string                                  `form:"return_url"`
-	SavePaymentMethod         *bool                                    `form:"save_payment_method"`
-	SetupFutureUsage          *string                                  `form:"setup_future_usage"`
-	Shipping                  *ShippingDetailsParams                   `form:"shipping"`
-	Source                    *string                                  `form:"source"`
-	StatementDescriptor       *string                                  `form:"statement_descriptor"`
-	StatementDescriptorSuffix *string                                  `form:"statement_descriptor_suffix"`
-	TransferData              *PaymentIntentTransferDataParams         `form:"transfer_data"`
-	TransferGroup             *string                                  `form:"transfer_group"`
+	Params                    `form:"*" json:"*"`
+	Amount                    *int64                                   `form:"amount" json:"amount"`
+	ApplicationFeeAmount      *int64                                   `form:"application_fee_amount" json:"application_fee_amount"`
+	CaptureMethod             *string                                  `form:"capture_method" json:"capture_method"`
+	Confirm                   *bool                                    `form:"confirm" json:"confirm"`
+	ConfirmationMethod        *string                                  `form:"confirmation_method" json:"confirmation_method"`
+	Currency                  *string                                  `form:"currency" json:"currency"`
+	Customer                  *string                                  `form:"customer" json:"customer"`
+	Description               *string                                  `form:"description" json:"description"`
+	OnBehalfOf                *string                                  `form:"on_behalf_of" json:"on_behalf_of"`
+	PaymentMethod             *string                                  `form:"payment_method" json:"payment_method"`
+	PaymentMethodOptions      *PaymentIntentPaymentMethodOptionsParams `form:"payment_method_options" json:"payment_method_options"`
+	PaymentMethodTypes        []*string                                `form:"payment_method_types" json:"payment_method_types"`
+	ReceiptEmail              *string                                  `form:"receipt_email" json:"receipt_email"`
+	ReturnURL                 *string                                  `form:"return_url" json:"return_url"`
+	SavePaymentMethod         *bool                                    `form:"save_payment_method" json:"save_payment_method"`
+	SetupFutureUsage          *string                                  `form:"setup_future_usage" json:"setup_future_usage"`
+	Shipping                  *ShippingDetailsParams                   `form:"shipping" json:"shipping"`
+	Source                    *string                                  `form:"source" json:"source"`
+	StatementDescriptor       *string                                  `form:"statement_descriptor" json:"statement_descriptor"`
+	StatementDescriptorSuffix *string                                  `form:"statement_descriptor_suffix" json:"statement_descriptor_suffix"`
+	TransferData              *PaymentIntentTransferDataParams         `form:"transfer_data" json:"transfer_data"`
+	TransferGroup             *string                                  `form:"transfer_group" json:"transfer_group"`
 
 	// This parameter only works if you confirm on creation.
-	OffSession *bool `form:"off_session"`
+	OffSession *bool `form:"off_session" json:"off_season"`
 }
 
 // PaymentIntentListParams is the set of parameters that can be used when listing payment intents.
 // For more details see https://stripe.com/docs/api#list_payouts.
 type PaymentIntentListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Customer     *string           `form:"customer"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Customer     *string           `form:"customer" json:"customer"`
 }
 
 // PaymentIntentNextActionRedirectToURL represents the resource for the next action of type
