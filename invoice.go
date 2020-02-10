@@ -15,16 +15,6 @@ const (
 	InvoiceLineTypeSubscription InvoiceLineType = "subscription"
 )
 
-// InvoiceBilling is the type of collection method for this invoice.
-// This is considered deprecated. Use InvoiceCollectionMethod instead.
-type InvoiceBilling string
-
-// List of values that InvoiceBilling can take.
-const (
-	InvoiceBillingChargeAutomatically InvoiceBilling = "charge_automatically"
-	InvoiceBillingSendInvoice         InvoiceBilling = "send_invoice"
-)
-
 // InvoiceBillingReason is the reason why a given invoice was created
 type InvoiceBillingReason string
 
@@ -39,16 +29,16 @@ const (
 	InvoiceBillingReasonUpcoming              InvoiceBillingReason = "upcoming"
 )
 
-// InvoiceBillingStatus is the reason why a given invoice was created
-type InvoiceBillingStatus string
+// InvoiceStatus is the reason why a given invoice was created
+type InvoiceStatus string
 
-// List of values that InvoiceBillingStatus can take.
+// List of values that InvoiceStatus can take.
 const (
-	InvoiceBillingStatusDraft         InvoiceBillingStatus = "draft"
-	InvoiceBillingStatusOpen          InvoiceBillingStatus = "open"
-	InvoiceBillingStatusPaid          InvoiceBillingStatus = "paid"
-	InvoiceBillingStatusUncollectible InvoiceBillingStatus = "uncollectible"
-	InvoiceBillingStatusVoid          InvoiceBillingStatus = "void"
+	InvoiceStatusDraft         InvoiceStatus = "draft"
+	InvoiceStatusOpen          InvoiceStatus = "open"
+	InvoiceStatusPaid          InvoiceStatus = "paid"
+	InvoiceStatusUncollectible InvoiceStatus = "uncollectible"
+	InvoiceStatusVoid          InvoiceStatus = "void"
 )
 
 // InvoiceCollectionMethod is the type of collection method for this invoice.
@@ -62,89 +52,84 @@ const (
 
 // InvoiceUpcomingInvoiceItemPeriodParams represents the period associated with that invoice item
 type InvoiceUpcomingInvoiceItemPeriodParams struct {
-	End   *int64 `form:"end"`
-	Start *int64 `form:"start"`
+	End   *int64 `form:"end" json:"end"`
+	Start *int64 `form:"start" json:"start"`
 }
 
 // InvoiceUpcomingInvoiceItemParams is the set of parameters that can be used when adding or modifying
 // invoice items on an upcoming invoice.
 // For more details see https://stripe.com/docs/api#upcoming_invoice-invoice_items.
 type InvoiceUpcomingInvoiceItemParams struct {
-	Amount            *int64                                  `form:"amount"`
-	Currency          *string                                 `form:"currency"`
-	Description       *string                                 `form:"description"`
-	Discountable      *bool                                   `form:"discountable"`
-	InvoiceItem       *string                                 `form:"invoiceitem"`
-	Period            *InvoiceUpcomingInvoiceItemPeriodParams `form:"period"`
-	Quantity          *int64                                  `form:"quantity"`
-	Schedule          *string                                 `form:"schedule"`
-	TaxRates          []*string                               `form:"tax_rates"`
-	UnitAmount        *int64                                  `form:"unit_amount"`
-	UnitAmountDecimal *float64                                `form:"unit_amount_decimal,high_precision"`
+	Amount            *int64                                  `form:"amount" json:"amount"`
+	Currency          *string                                 `form:"currency" json:"currency"`
+	Description       *string                                 `form:"description" json:"description"`
+	Discountable      *bool                                   `form:"discountable" json:"discountable"`
+	InvoiceItem       *string                                 `form:"invoiceitem" json:"invoiceitem"`
+	Period            *InvoiceUpcomingInvoiceItemPeriodParams `form:"period" json:"period"`
+	Quantity          *int64                                  `form:"quantity" json:"quantity"`
+	Schedule          *string                                 `form:"schedule" json:"schedule"`
+	TaxRates          []*string                               `form:"tax_rates" json:"tax_rates"`
+	UnitAmount        *int64                                  `form:"unit_amount" json:"unit_amount"`
+	UnitAmountDecimal *float64                                `form:"unit_amount_decimal,high_precision" json:"unit_amount_decimal,high_precision"`
 }
 
 // InvoiceCustomFieldParams represents the parameters associated with one custom field on an invoice.
 type InvoiceCustomFieldParams struct {
-	Name  *string `form:"name"`
-	Value *string `form:"value"`
+	Name  *string `form:"name" json:"name"`
+	Value *string `form:"value" json:"value"`
 }
 
 // InvoiceTransferDataParams is the set of parameters allowed for the transfer_data hash.
 type InvoiceTransferDataParams struct {
-	Destination *string `form:"destination"`
+	Destination *string `form:"destination" json:"destination"`
 }
 
 // InvoiceParams is the set of parameters that can be used when creating or updating an invoice.
 // For more details see https://stripe.com/docs/api#create_invoice, https://stripe.com/docs/api#update_invoice.
 type InvoiceParams struct {
-	Params               `form:"*"`
-	AutoAdvance          *bool                       `form:"auto_advance"`
-	ApplicationFeeAmount *int64                      `form:"application_fee_amount"`
-	CollectionMethod     *string                     `form:"collection_method"`
-	CustomFields         []*InvoiceCustomFieldParams `form:"custom_fields"`
-	Customer             *string                     `form:"customer"`
-	DaysUntilDue         *int64                      `form:"days_until_due"`
-	DefaultPaymentMethod *string                     `form:"default_payment_method"`
-	DefaultSource        *string                     `form:"default_source"`
-	DefaultTaxRates      []*string                   `form:"default_tax_rates"`
-	Description          *string                     `form:"description"`
-	DueDate              *int64                      `form:"due_date"`
-	Footer               *string                     `form:"footer"`
-	Paid                 *bool                       `form:"paid"`
-	StatementDescriptor  *string                     `form:"statement_descriptor"`
-	Subscription         *string                     `form:"subscription"`
-	TransferData         *InvoiceTransferDataParams  `form:"transfer_data"`
+	Params               `form:"*" json:"*"`
+	AutoAdvance          *bool                       `form:"auto_advance" json:"auto_advance"`
+	ApplicationFeeAmount *int64                      `form:"application_fee_amount" json:"application_fee_amount"`
+	CollectionMethod     *string                     `form:"collection_method" json:"collection_method"`
+	CustomFields         []*InvoiceCustomFieldParams `form:"custom_fields" json:"custom_fields"`
+	Customer             *string                     `form:"customer" json:"customer"`
+	DaysUntilDue         *int64                      `form:"days_until_due" json:"days_until_due"`
+	DefaultPaymentMethod *string                     `form:"default_payment_method" json:"default_payment_method"`
+	DefaultSource        *string                     `form:"default_source" json:"default_source"`
+	DefaultTaxRates      []*string                   `form:"default_tax_rates" json:"default_tax_rates"`
+	Description          *string                     `form:"description" json:"description"`
+	DueDate              *int64                      `form:"due_date" json:"due_date"`
+	Footer               *string                     `form:"footer" json:"footer"`
+	Paid                 *bool                       `form:"paid" json:"paid"`
+	StatementDescriptor  *string                     `form:"statement_descriptor" json:"statement_descriptor"`
+	Subscription         *string                     `form:"subscription" json:"subscription"`
+	TransferData         *InvoiceTransferDataParams  `form:"transfer_data" json:"transfer_data"`
 
 	// These are all for exclusive use by GetNext.
 
-	Coupon                                  *string                             `form:"coupon"`
-	InvoiceItems                            []*InvoiceUpcomingInvoiceItemParams `form:"invoice_items"`
-	SubscriptionBillingCycleAnchor          *int64                              `form:"subscription_billing_cycle_anchor"`
-	SubscriptionBillingCycleAnchorNow       *bool                               `form:"-"` // See custom AppendTo
-	SubscriptionBillingCycleAnchorUnchanged *bool                               `form:"-"` // See custom AppendTo
-	SubscriptionCancelAt                    *int64                              `form:"subscription_cancel_at"`
-	SubscriptionCancelAtPeriodEnd           *bool                               `form:"subscription_cancel_at_period_end"`
-	SubscriptionCancelNow                   *bool                               `form:"subscription_cancel_now"`
-	SubscriptionDefaultTaxRates             []*string                           `form:"subscription_default_tax_rates"`
-	SubscriptionItems                       []*SubscriptionItemsParams          `form:"subscription_items"`
-	SubscriptionPlan                        *string                             `form:"subscription_plan"`
-	SubscriptionProrate                     *bool                               `form:"subscription_prorate"`
-	SubscriptionProrationDate               *int64                              `form:"subscription_proration_date"`
-	SubscriptionQuantity                    *int64                              `form:"subscription_quantity"`
-	SubscriptionTrialEnd                    *int64                              `form:"subscription_trial_end"`
-	SubscriptionTrialFromPlan               *bool                               `form:"subscription_trial_from_plan"`
-
-	// This parameter is considered deprecated. Prefer using ApplicationFeeAmount
-	ApplicationFee *int64 `form:"application_fee"`
-
-	// This parameter is considered deprecated. Prefer using CollectionMethod
-	Billing *string `form:"billing"`
+	Coupon                                  *string                             `form:"coupon" json:"coupon"`
+	InvoiceItems                            []*InvoiceUpcomingInvoiceItemParams `form:"invoice_items" json:"invoice_items"`
+	SubscriptionBillingCycleAnchor          *int64                              `form:"subscription_billing_cycle_anchor" json:"subscription_billing_cycle_anchor"`
+	SubscriptionBillingCycleAnchorNow       *bool                               `form:"-" json:"-"` // See custom AppendTo
+	SubscriptionBillingCycleAnchorUnchanged *bool                               `form:"-" json:"-"` // See custom AppendTo
+	SubscriptionCancelAt                    *int64                              `form:"subscription_cancel_at" json:"subscription_cancel_at"`
+	SubscriptionCancelAtPeriodEnd           *bool                               `form:"subscription_cancel_at_period_end" json:"subscription_cancel_at_period_end"`
+	SubscriptionCancelNow                   *bool                               `form:"subscription_cancel_now" json:"subscription_cancel_now"`
+	SubscriptionDefaultTaxRates             []*string                           `form:"subscription_default_tax_rates" json:"subscription_default_tax_rates"`
+	SubscriptionItems                       []*SubscriptionItemsParams          `form:"subscription_items" json:"subscription_items"`
+	SubscriptionPlan                        *string                             `form:"subscription_plan" json:"subscription_plan"`
+	SubscriptionProrate                     *bool                               `form:"subscription_prorate" json:"subscription_prorate"`
+	SubscriptionProrationBehavior           *string                             `form:"subscription_proration_behavior" json:"subscription_proration_behavior"`
+	SubscriptionProrationDate               *int64                              `form:"subscription_proration_date" json:"subscription_proration_date"`
+	SubscriptionQuantity                    *int64                              `form:"subscription_quantity" json:"subscription_quantity"`
+	SubscriptionTrialEnd                    *int64                              `form:"subscription_trial_end" json:"subscription_trial_end"`
+	SubscriptionTrialFromPlan               *bool                               `form:"subscription_trial_from_plan" json:"subscription_trial_from_plan"`
 
 	// This parameter is deprecated and we recommend that you use DefaultTaxRates instead.
-	TaxPercent *float64 `form:"tax_percent"`
+	TaxPercent *float64 `form:"tax_percent" json:"tax_percent"`
 
 	// This parameter is deprecated and we recommend that you use SubscriptionDefaultTaxRates instead.
-	SubscriptionTaxPercent *float64 `form:"subscription_tax_percent"`
+	SubscriptionTaxPercent *float64 `form:"subscription_tax_percent" json:"subscription_tax_percent"`
 }
 
 // AppendTo implements custom encoding logic for InvoiceParams so that the special
@@ -163,64 +148,62 @@ func (p *InvoiceParams) AppendTo(body *form.Values, keyParts []string) {
 // InvoiceListParams is the set of parameters that can be used when listing invoices.
 // For more details see https://stripe.com/docs/api#list_customer_invoices.
 type InvoiceListParams struct {
-	ListParams       `form:"*"`
-	CollectionMethod *string           `form:"collection_method"`
-	Customer         *string           `form:"customer"`
-	Created          *int64            `form:"created"`
-	CreatedRange     *RangeQueryParams `form:"created"`
-	DueDate          *int64            `form:"due_date"`
-	DueDateRange     *RangeQueryParams `form:"due_date"`
-	Subscription     *string           `form:"subscription"`
-
-	// This parameter is considered deprecated. Prefer using CollectionMethod
-	Billing *string `form:"billing"`
+	ListParams       `form:"*" json:"*"`
+	CollectionMethod *string           `form:"collection_method" json:"collection_method"`
+	Customer         *string           `form:"customer" json:"customer"`
+	Created          *int64            `form:"created" json:"created"`
+	CreatedRange     *RangeQueryParams `form:"created" json:"created"`
+	DueDate          *int64            `form:"due_date" json:"due_date"`
+	DueDateRange     *RangeQueryParams `form:"due_date" json:"due_date"`
+	Status           *string           `form:"status" json:"status"`
+	Subscription     *string           `form:"subscription" json:"subscription"`
 }
 
 // InvoiceLineListParams is the set of parameters that can be used when listing invoice line items.
 // For more details see https://stripe.com/docs/api#invoice_lines.
 type InvoiceLineListParams struct {
-	ListParams `form:"*"`
+	ListParams `form:"*" json:"*"`
 
-	Customer *string `form:"customer"`
+	Customer *string `form:"customer" json:"customer"`
 
 	// ID is the invoice ID to list invoice lines for.
-	ID *string `form:"-"` // Goes in the URL
+	ID *string `form:"-" json:"-"` // Goes in the URL
 
-	Subscription *string `form:"subscription"`
+	Subscription *string `form:"subscription" json:"subscription"`
 }
 
 // InvoiceFinalizeParams is the set of parameters that can be used when finalizing invoices.
 type InvoiceFinalizeParams struct {
-	Params      `form:"*"`
-	AutoAdvance *bool `form:"auto_advance"`
+	Params      `form:"*" json:"*"`
+	AutoAdvance *bool `form:"auto_advance" json:"auto_advance"`
 }
 
 // InvoiceMarkUncollectibleParams is the set of parameters that can be used when marking
 // invoices as uncollectible.
 type InvoiceMarkUncollectibleParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // InvoicePayParams is the set of parameters that can be used when
 // paying invoices. For more details, see:
 // https://stripe.com/docs/api#pay_invoice.
 type InvoicePayParams struct {
-	Params        `form:"*"`
-	Forgive       *bool   `form:"forgive"`
-	OffSession    *bool   `form:"off_session"`
-	PaidOutOfBand *bool   `form:"paid_out_of_band"`
-	PaymentMethod *string `form:"payment_method"`
-	Source        *string `form:"source"`
+	Params        `form:"*" json:"*"`
+	Forgive       *bool   `form:"forgive" json:"forgive"`
+	OffSession    *bool   `form:"off_session" json:"off_session"`
+	PaidOutOfBand *bool   `form:"paid_out_of_band" json:"paid_out_of_band"`
+	PaymentMethod *string `form:"payment_method" json:"payment_method"`
+	Source        *string `form:"source" json:"source"`
 }
 
 // InvoiceSendParams is the set of parameters that can be used when sending invoices.
 type InvoiceSendParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // InvoiceVoidParams is the set of parameters that can be used when voiding invoices.
 type InvoiceVoidParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // Invoice is the resource representing a Stripe invoice.
@@ -274,7 +257,7 @@ type Invoice struct {
 	ReceiptNumber                string                   `json:"receipt_number"`
 	StartingBalance              int64                    `json:"starting_balance"`
 	StatementDescriptor          string                   `json:"statement_descriptor"`
-	Status                       InvoiceBillingStatus     `json:"status"`
+	Status                       InvoiceStatus            `json:"status"`
 	StatusTransitions            InvoiceStatusTransitions `json:"status_transitions"`
 	Subscription                 string                   `json:"subscription"`
 	SubscriptionProrationDate    int64                    `json:"subscription_proration_date"`
@@ -285,9 +268,6 @@ type Invoice struct {
 	TotalTaxAmounts              []*InvoiceTaxAmount      `json:"total_tax_amounts"`
 	TransferData                 *InvoiceTransferData     `json:"transfer_data"`
 	WebhooksDeliveredAt          int64                    `json:"webhooks_delivered_at"`
-
-	// This property is considered deprecated. Prefer using CollectionMethod
-	Billing *InvoiceBilling `form:"billing"`
 
 	// This field is deprecated and we recommend that you use TaxRates instead.
 	TaxPercent float64 `json:"tax_percent"`
@@ -339,7 +319,8 @@ type InvoiceLine struct {
 	Description      string              `json:"description"`
 	Discountable     bool                `json:"discountable"`
 	ID               string              `json:"id"`
-	Livemode         bool                `json:"live_mode"`
+	InvoiceItem      string              `json:"invoice_item"`
+	Livemode         bool                `json:"livemode"`
 	Metadata         map[string]string   `json:"metadata"`
 	Period           *Period             `json:"period"`
 	Plan             *Plan               `json:"plan"`

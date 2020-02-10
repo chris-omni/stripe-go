@@ -19,9 +19,9 @@ type UsageRecord struct {
 // UsageRecordParams create a usage record for a specified subscription item
 // and date, and fills it with a quantity.
 type UsageRecordParams struct {
-	Params           `form:"*"`
-	Action           *string `form:"action"`
-	Quantity         *int64  `form:"quantity"`
-	SubscriptionItem *string `form:"-"` // passed in the URL
-	Timestamp        *int64  `form:"timestamp"`
+	Params           `form:"*" json:"*"`
+	Action           *string `form:"action" json:"action"`
+	Quantity         *int64  `form:"quantity" json:"quantity"`
+	SubscriptionItem *string `form:"-" json:"-"` // passed in the URL
+	Timestamp        *int64  `form:"timestamp" json:"timestamp"`
 }

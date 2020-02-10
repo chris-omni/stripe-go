@@ -179,10 +179,10 @@ func (c *CardParams) AppendToAsCardSourceOrExternalAccount(body *form.Values, ke
 // CardListParams is the set of parameters that can be used when listing cards.
 // For more details see https://stripe.com/docs/api#list_cards.
 type CardListParams struct {
-	ListParams `form:"*"`
-	Account    *string `form:"-"`
-	Customer   *string `form:"-"`
-	Recipient  *string `form:"-"`
+	ListParams `form:"*" json:"*"`
+	Account    *string `form:"-" json:"-"`
+	Customer   *string `form:"-" json:"-"`
+	Recipient  *string `form:"-" json:"-"`
 }
 
 // AppendTo implements custom encoding logic for CardListParams

@@ -3,33 +3,34 @@ package stripe
 // SubscriptionItemParams is the set of parameters that can be used when creating or updating a subscription item.
 // For more details see https://stripe.com/docs/api#create_subscription_item and https://stripe.com/docs/api#update_subscription_item.
 type SubscriptionItemParams struct {
-	Params            `form:"*"`
-	ID                *string                                  `form:"-"` // Handled in URL
-	BillingThresholds *SubscriptionItemBillingThresholdsParams `form:"billing_thresholds"`
-	ClearUsage        *bool                                    `form:"clear_usage"`
-	Plan              *string                                  `form:"plan"`
-	Prorate           *bool                                    `form:"prorate"`
-	ProrationDate     *int64                                   `form:"proration_date"`
-	Quantity          *int64                                   `form:"quantity"`
-	Subscription      *string                                  `form:"subscription"`
-	TaxRates          []*string                                `form:"tax_rates"`
+	Params            `form:"*" json:"*"`
+	ID                *string                                  `form:"-" json:"-"` // Handled in URL
+	BillingThresholds *SubscriptionItemBillingThresholdsParams `form:"billing_thresholds" json:"billing_thresholds"`
+	ClearUsage        *bool                                    `form:"clear_usage" json:"clear_usage"`
+	PaymentBehavior   *string                                  `form:"payment_behavior" json:"payment_behavior"`
+	Plan              *string                                  `form:"plan" json:"plan"`
+	Prorate           *bool                                    `form:"prorate" json:"prorate"`
+	ProrationDate     *int64                                   `form:"proration_date" json:"proration_date"`
+	ProrationBehavior *string                                  `form:"proration_behavior" json:"proration_behavior"`
+	Quantity          *int64                                   `form:"quantity" json:"quantity"`
+	Subscription      *string                                  `form:"subscription" json:"subscription"`
+	TaxRates          []*string                                `form:"tax_rates" json:"tax_rates"`
 
 	// The following parameters are only supported on updates
-	OffSession      *bool   `form:"off_session"`
-	PaymentBehavior *string `form:"payment_behavior"`
+	OffSession *bool `form:"off_session" json:"off_session"`
 }
 
 // SubscriptionItemBillingThresholdsParams is a structure representing the parameters allowed to
 // control billing thresholds for a subscription item.
 type SubscriptionItemBillingThresholdsParams struct {
-	UsageGTE *int64 `form:"usage_gte"`
+	UsageGTE *int64 `form:"usage_gte" json:"usage_gte"`
 }
 
 // SubscriptionItemListParams is the set of parameters that can be used when listing invoice items.
 // For more details see https://stripe.com/docs/api#list_invoiceitems.
 type SubscriptionItemListParams struct {
-	ListParams   `form:"*"`
-	Subscription *string `form:"subscription"`
+	ListParams   `form:"*" json:"*"`
+	Subscription *string `form:"subscription" json:"subscription"`
 }
 
 // SubscriptionItem is the resource representing a Stripe subscription item.
@@ -49,7 +50,7 @@ type SubscriptionItem struct {
 // SubscriptionItemBillingThresholds is a structure representing the billing thresholds for a
 // subscription item.
 type SubscriptionItemBillingThresholds struct {
-	UsageGTE int64 `form:"usage_gte"`
+	UsageGTE int64 `form:"usage_gte" json:"usage_gte"`
 }
 
 // SubscriptionItemList is a list of invoice items as retrieved from a list endpoint.

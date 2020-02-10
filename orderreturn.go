@@ -2,6 +2,13 @@ package stripe
 
 import "encoding/json"
 
+// OrderReturnParams is the set of parameters that can be used when returning orders.
+type OrderReturnParams struct {
+	Params `form:"*" json:"*"`
+	Items  []*OrderItemParams `form:"items" json:"items"`
+	Order  *string            `form:"-" json:"-"` // Included in the URL
+}
+
 // OrderReturn is the resource representing an order return.
 // For more details see https://stripe.com/docs/api#order_returns.
 type OrderReturn struct {
@@ -23,10 +30,10 @@ type OrderReturnList struct {
 
 // OrderReturnListParams is the set of parameters that can be used when listing order returns.
 type OrderReturnListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Order        *string           `form:"order"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Order        *string           `form:"order" json:"order"`
 }
 
 // UnmarshalJSON handles deserialization of an OrderReturn.

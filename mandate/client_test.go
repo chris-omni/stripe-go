@@ -1,4 +1,4 @@
-package balance
+package mandate
 
 import (
 	"testing"
@@ -7,8 +7,8 @@ import (
 	_ "github.com/stripe/stripe-go/testing"
 )
 
-func TestBalanceGet(t *testing.T) {
-	balance, err := Get(nil)
+func TestMandateMethodGet(t *testing.T) {
+	pm, err := Get("mandate_123", nil)
 	assert.Nil(t, err)
-	assert.NotNil(t, balance)
+	assert.NotNil(t, pm)
 }

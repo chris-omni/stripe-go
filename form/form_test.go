@@ -10,79 +10,79 @@ import (
 )
 
 type benchStruct struct {
-	Bool         bool              `form:"bool"`
-	Ignored      string            `form:"-"`
-	Int          int64             `form:"int64"`
-	String       string            `form:"string"`
-	SubSubStruct *testSubSubStruct `form:"subsubstruct"`
+	Bool         bool              `form:"bool" json:"bool"`
+	Ignored      string            `form:"-" json:"-"`
+	Int          int64             `form:"int64" json:"int64"`
+	String       string            `form:"string" json:"string"`
+	SubSubStruct *testSubSubStruct `form:"subsubstruct" json:"subsubstruct"`
 }
 
 type testStruct struct {
 	// Note that only a pointer can implement the Appender interface, so only
 	// the pointer of testAppender is checked.
-	Appender *testAppender `form:"appender"`
+	Appender *testAppender `form:"appender" json:"appender"`
 
-	Array    [3]string  `form:"array"`
-	ArrayPtr *[3]string `form:"array_ptr"`
+	Array    [3]string  `form:"array" json:"array"`
+	ArrayPtr *[3]string `form:"array_ptr" json:"array_ptr"`
 
-	Bool    bool  `form:"bool"`
-	BoolPtr *bool `form:"bool_ptr"`
+	Bool    bool  `form:"bool" json:"bool"`
+	BoolPtr *bool `form:"bool_ptr" json:"bool_ptr"`
 
-	Emptied bool `form:"emptied,empty"`
+	Emptied bool `form:"emptied,empty" json:"emptied,empty"`
 
-	Float32    float32  `form:"float32"`
-	Float32Ptr *float32 `form:"float32_ptr"`
+	Float32    float32  `form:"float32" json:"float32"`
+	Float32Ptr *float32 `form:"float32_ptr" json:"float32_ptr"`
 
-	Float32Precise    float32  `form:"float32_precise,high_precision"`
-	Float32PrecisePtr *float32 `form:"float32_precise_ptr,high_precision"`
+	Float32Precise    float32  `form:"float32_precise,high_precision" json:"float32_precise,high_precision"`
+	Float32PrecisePtr *float32 `form:"float32_precise_ptr,high_precision" json:"float32_precise_ptr,high_precision"`
 
-	Float64    float64  `form:"float64"`
-	Float64Ptr *float64 `form:"float64_ptr"`
+	Float64    float64  `form:"float64" json:"float64"`
+	Float64Ptr *float64 `form:"float64_ptr" json:"float64_ptr"`
 
-	Float64Precise    float64  `form:"float64_precise,high_precision"`
-	Float64PrecisePtr *float64 `form:"float64_precise_ptr,high_precision"`
+	Float64Precise    float64  `form:"float64_precise,high_precision" json:"float64_precise,high_precision"`
+	Float64PrecisePtr *float64 `form:"float64_precise_ptr,high_precision" json:"float64_precise_ptr,high_precision"`
 
-	Ignored string `form:"-"`
+	Ignored string `form:"-" json:"-"`
 
-	Int      int    `form:"int"`
-	IntPtr   *int   `form:"int_ptr"`
-	Int8     int8   `form:"int8"`
-	Int8Ptr  *int8  `form:"int8_ptr"`
-	Int16    int16  `form:"int16"`
-	Int16Ptr *int16 `form:"int16_ptr"`
-	Int32    int32  `form:"int32"`
-	Int32Ptr *int32 `form:"int32_ptr"`
-	Int64    int64  `form:"int64"`
-	Int64Ptr *int64 `form:"int64_ptr"`
+	Int      int    `form:"int" json:"int"`
+	IntPtr   *int   `form:"int_ptr" json:"int_ptr"`
+	Int8     int8   `form:"int8" json:"int8"`
+	Int8Ptr  *int8  `form:"int8_ptr" json:"int8_ptr"`
+	Int16    int16  `form:"int16" json:"int16"`
+	Int16Ptr *int16 `form:"int16_ptr" json:"int16_ptr"`
+	Int32    int32  `form:"int32" json:"int32"`
+	Int32Ptr *int32 `form:"int32_ptr" json:"int32_ptr"`
+	Int64    int64  `form:"int64" json:"int64"`
+	Int64Ptr *int64 `form:"int64_ptr" json:"int64_ptr"`
 
-	Map map[string]interface{} `form:"map"`
+	Map map[string]interface{} `form:"map" json:"map"`
 
-	Slice    []string  `form:"slice"`
-	SlicePtr *[]string `form:"slice_ptr"`
+	Slice    []string  `form:"slice" json:"slice"`
+	SlicePtr *[]string `form:"slice_ptr" json:"slice_ptr"`
 
-	String    string  `form:"string"`
-	StringPtr *string `form:"string_ptr"`
+	String    string  `form:"string" json:"string"`
+	StringPtr *string `form:"string_ptr" json:"string_ptr"`
 
-	SubStruct    testSubStruct  `form:"substruct"`
-	SubStructPtr *testSubStruct `form:"substruct_ptr"`
+	SubStruct    testSubStruct  `form:"substruct" json:"substruct"`
+	SubStructPtr *testSubStruct `form:"substruct_ptr" json:"substruct_ptr"`
 
-	SubStructFlat    testSubStruct  `form:"*"`
-	SubStructFlatPtr *testSubStruct `form:"*"`
+	SubStructFlat    testSubStruct  `form:"*" json:"*"`
+	SubStructFlatPtr *testSubStruct `form:"*" json:"*"`
 
-	Uuint      uint    `form:"uint"`
-	UuintPtr   *uint   `form:"uint_ptr"`
-	Uuint8     uint8   `form:"uint8"`
-	Uuint8Ptr  *uint8  `form:"uint8_ptr"`
-	Uuint16    uint16  `form:"uint16"`
-	Uuint16Ptr *uint16 `form:"uint16_ptr"`
-	Uuint32    uint32  `form:"uint32"`
-	Uuint32Ptr *uint32 `form:"uint32_ptr"`
-	Uuint64    uint64  `form:"uint64"`
-	Uuint64Ptr *uint64 `form:"uint64_ptr"`
+	Uuint      uint    `form:"uint" json:"uint"`
+	UuintPtr   *uint   `form:"uint_ptr" json:"uint_ptr"`
+	Uuint8     uint8   `form:"uint8" json:"uint8"`
+	Uuint8Ptr  *uint8  `form:"uint8_ptr" json:"uint8_ptr"`
+	Uuint16    uint16  `form:"uint16" json:"uint16"`
+	Uuint16Ptr *uint16 `form:"uint16_ptr" json:"uint16_ptr"`
+	Uuint32    uint32  `form:"uint32" json:"uint32"`
+	Uuint32Ptr *uint32 `form:"uint32_ptr" json:"uint32_ptr"`
+	Uuint64    uint64  `form:"uint64" json:"uint64"`
+	Uuint64Ptr *uint64 `form:"uint64_ptr" json:"uint64_ptr"`
 }
 
 type testAppender struct {
-	String string `form:"-"` // Value added manually
+	String string `form:"-" json:"-"` // Value added manually
 }
 
 func (a *testAppender) AppendTo(values *Values, keyParts []string) {
@@ -90,11 +90,11 @@ func (a *testAppender) AppendTo(values *Values, keyParts []string) {
 }
 
 type testSubStruct struct {
-	SubSubStruct testSubSubStruct `form:"subsubstruct"`
+	SubSubStruct testSubSubStruct `form:"subsubstruct" json:"subsubstruct"`
 }
 
 type testSubSubStruct struct {
-	String string `form:"string"`
+	String string `form:"string" json:"string"`
 }
 
 func init() {

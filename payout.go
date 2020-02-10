@@ -37,6 +37,7 @@ const (
 	PayoutSourceTypeBankAccount     PayoutSourceType = "bank_account"
 	PayoutSourceTypeBitcoinReceiver PayoutSourceType = "bitcoin_receiver"
 	PayoutSourceTypeCard            PayoutSourceType = "card"
+	PayoutSourceTypeFPX             PayoutSourceType = "fpx"
 )
 
 // PayoutStatus is the list of allowed values for the payout's status.
@@ -82,26 +83,26 @@ type PayoutDestination struct {
 // PayoutParams is the set of parameters that can be used when creating or updating a payout.
 // For more details see https://stripe.com/docs/api#create_payout and https://stripe.com/docs/api#update_payout.
 type PayoutParams struct {
-	Params              `form:"*"`
-	Amount              *int64  `form:"amount"`
-	Currency            *string `form:"currency"`
-	Description         *string `form:"description"`
-	Destination         *string `form:"destination"`
-	Method              *string `form:"method"`
-	SourceType          *string `form:"source_type"`
-	StatementDescriptor *string `form:"statement_descriptor"`
+	Params              `form:"*" json:"*"`
+	Amount              *int64  `form:"amount" json:"amount"`
+	Currency            *string `form:"currency" json:"currency"`
+	Description         *string `form:"description" json:"description"`
+	Destination         *string `form:"destination" json:"destination"`
+	Method              *string `form:"method" json:"method"`
+	SourceType          *string `form:"source_type" json:"source_type"`
+	StatementDescriptor *string `form:"statement_descriptor" json:"statement_descriptor"`
 }
 
 // PayoutListParams is the set of parameters that can be used when listing payouts.
 // For more details see https://stripe.com/docs/api#list_payouts.
 type PayoutListParams struct {
-	ListParams       `form:"*"`
-	ArrivalDate      *int64            `form:"arrival_date"`
-	ArrivalDateRange *RangeQueryParams `form:"arrival_date"`
-	Created          *int64            `form:"created"`
-	CreatedRange     *RangeQueryParams `form:"created"`
-	Destination      *string           `form:"destination"`
-	Status           *string           `form:"status"`
+	ListParams       `form:"*" json:"*"`
+	ArrivalDate      *int64            `form:"arrival_date" json:"arrival_date"`
+	ArrivalDateRange *RangeQueryParams `form:"arrival_date" json:"arrival_date"`
+	Created          *int64            `form:"created" json:"created"`
+	CreatedRange     *RangeQueryParams `form:"created" json:"created"`
+	Destination      *string           `form:"destination" json:"destination"`
+	Status           *string           `form:"status" json:"status"`
 }
 
 // Payout is the resource representing a Stripe payout.
@@ -181,12 +182,4 @@ func (d *PayoutDestination) UnmarshalJSON(data []byte) error {
 	}
 
 	return err
-}
-
-// MarshalJSON handles serialization of a PayoutDestination.
-// This custom marshaling is needed because we can only send a string
-// ID as a destination, even though it can be expanded to a full
-// object when retrieving
-func (d *PayoutDestination) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.ID)
 }

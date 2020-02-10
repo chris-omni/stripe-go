@@ -10,7 +10,7 @@ like this:
 
 ``` go
 type UsageRecordParams struct {
-	Quantity uint64 `form:"quantity"`
+	Quantity uint64 `form:"quantity" json:"quantity"`
 }
 ```
 
@@ -34,8 +34,8 @@ that the zero value was intended, which was quite unintuitive for users:
 
 ``` go
 type UsageRecordParams struct {
-	Quantity     uint64 `form:"quantity"`
-	QuantityZero bool   `form:"quantity,zero"`
+	Quantity     uint64 `form:"quantity" json:"quantity"`
+	QuantityZero bool   `form:"quantity,zero" json:"quantity,zero"`
 }
 
 UsageRecord {
@@ -48,7 +48,7 @@ instead. So the above becomes:
 
 ``` go
 type UsageRecordParams struct {
-	Quantity *int64 `form:"quantity"`
+	Quantity *int64 `form:"quantity" json:"quantity"`
 }
 ```
 

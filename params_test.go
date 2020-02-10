@@ -12,7 +12,7 @@ import (
 
 func TestRangeQueryParamsAppendTo(t *testing.T) {
 	type testParams struct {
-		CreatedRange *stripe.RangeQueryParams `form:"created"`
+		CreatedRange *stripe.RangeQueryParams `form:"created" json:"created"`
 	}
 
 	{
@@ -68,8 +68,8 @@ func TestRangeQueryParamsAppendTo(t *testing.T) {
 }
 
 type testListParams struct {
-	stripe.ListParams `form:"*"`
-	Field             string `form:"field"`
+	stripe.ListParams `form:"*" json:"*"`
+	Field             string `form:"field" json:"field"`
 }
 
 func TestListParams_Nested(t *testing.T) {
@@ -125,9 +125,9 @@ func TestParams_AppendTo_Extra(t *testing.T) {
 }
 
 type testParams struct {
-	stripe.Params `form:"*"`
-	Field         string         `form:"field"`
-	SubParams     *testSubParams `form:"sub_params"`
+	stripe.Params `form:"*" json:"*"`
+	Field         string         `form:"field" json:"field"`
+	SubParams     *testSubParams `form:"sub_params" json:"sub_params"`
 }
 
 // AppendTo is implemented for testParams so that we can verify that Params is
@@ -137,8 +137,8 @@ func (p *testParams) AppendTo(body *form.Values, keyParts []string) {
 }
 
 type testSubParams struct {
-	stripe.Params `form:"*"`
-	SubField      string `form:"sub_field"`
+	stripe.Params `form:"*" json:"*"`
+	SubField      string `form:"sub_field" json:"sub_field"`
 }
 
 func TestParams_AppendTo_Nested(t *testing.T) {

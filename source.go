@@ -122,83 +122,101 @@ const (
 // SourceOwnerParams is the set of parameters allowed for the owner hash on
 // source creation or update.
 type SourceOwnerParams struct {
-	Address *AddressParams `form:"address"`
-	Email   *string        `form:"email"`
-	Name    *string        `form:"name"`
-	Phone   *string        `form:"phone"`
+	Address *AddressParams `form:"address" json:"address"`
+	Email   *string        `form:"email" json:"email"`
+	Name    *string        `form:"name" json:"name"`
+	Phone   *string        `form:"phone" json:"phone"`
 }
 
 // RedirectParams is the set of parameters allowed for the redirect hash on
 // source creation or update.
 type RedirectParams struct {
-	ReturnURL *string `form:"return_url"`
+	ReturnURL *string `form:"return_url" json:"return_url"`
 }
 
 // SourceOrderItemsParams is the set of parameters allowed for the items on a
 // source order for a source.
 type SourceOrderItemsParams struct {
-	Amount      *int64  `form:"amount"`
-	Currency    *string `form:"currency"`
-	Description *string `form:"description"`
-	Parent      *string `form:"parent"`
-	Quantity    *int64  `form:"quantity"`
-	Type        *string `form:"type"`
+	Amount      *int64  `form:"amount" json:"amount"`
+	Currency    *string `form:"currency" json:"currency"`
+	Description *string `form:"description" json:"description"`
+	Parent      *string `form:"parent" json:"parent"`
+	Quantity    *int64  `form:"quantity" json:"quantity"`
+	Type        *string `form:"type" json:"type"`
 }
 
 // SourceOrderParams is the set of parameters allowed for the source order of a
 // source.
 type SourceOrderParams struct {
-	Items    []*SourceOrderItemsParams `form:"items"`
-	Shipping *ShippingDetailsParams    `form:"shipping"`
+	Items    []*SourceOrderItemsParams `form:"items" json:"items"`
+	Shipping *ShippingDetailsParams    `form:"shipping" json:"shipping"`
 }
 
 // SourceObjectParams is the set of parameters allowed on source creation or update.
 type SourceObjectParams struct {
-	Params              `form:"*"`
-	Amount              *int64                `form:"amount"`
-	Currency            *string               `form:"currency"`
-	Customer            *string               `form:"customer"`
-	Flow                *string               `form:"flow"`
-	Mandate             *SourceMandateParams  `form:"mandate"`
-	OriginalSource      *string               `form:"original_source"`
-	Owner               *SourceOwnerParams    `form:"owner"`
-	Receiver            *SourceReceiverParams `form:"receiver"`
-	Redirect            *RedirectParams       `form:"redirect"`
-	SourceOrder         *SourceOrderParams    `form:"source_order"`
-	StatementDescriptor *string               `form:"statement_descriptor"`
-	Token               *string               `form:"token"`
-	Type                *string               `form:"type"`
-	TypeData            map[string]string     `form:"-"`
-	Usage               *string               `form:"usage"`
+	Params              `form:"*" json:"*"`
+	Amount              *int64                `form:"amount" json:"amount"`
+	Currency            *string               `form:"currency" json:"currency"`
+	Customer            *string               `form:"customer" json:"customer"`
+	Flow                *string               `form:"flow" json:"flow"`
+	Mandate             *SourceMandateParams  `form:"mandate" json:"mandate"`
+	OriginalSource      *string               `form:"original_source" json:"original_source"`
+	Owner               *SourceOwnerParams    `form:"owner" json:"owner"`
+	Receiver            *SourceReceiverParams `form:"receiver" json:"receiver"`
+	Redirect            *RedirectParams       `form:"redirect" json:"redirect"`
+	SourceOrder         *SourceOrderParams    `form:"source_order" json:"source_order"`
+	StatementDescriptor *string               `form:"statement_descriptor" json:"statement_descriptor"`
+	Token               *string               `form:"token" json:"token"`
+	Type                *string               `form:"type" json:"type"`
+	TypeData            map[string]string     `form:"-" json:"-"`
+	Usage               *string               `form:"usage" json:"usage"`
 }
 
 // SourceMandateAcceptanceParams describes the set of parameters allowed for the `acceptance`
 // hash on source creation or update.
 type SourceMandateAcceptanceParams struct {
-	Date      *int64  `form:"date"`
-	IP        *string `form:"ip"`
-	Status    *string `form:"status"`
-	UserAgent *string `form:"user_agent"`
+	Date      *int64                                `form:"date" json:"date"`
+	IP        *string                               `form:"ip" json:"ip"`
+	Offline   *SourceMandateAcceptanceOfflineParams `form:"offline" json:"offline"`
+	Online    *SourceMandateAcceptanceOnlineParams  `form:"online" json:"online"`
+	Status    *string                               `form:"status" json:"status"`
+	Type      *string                               `form:"type" json:"type"`
+	UserAgent *string                               `form:"user_agent" json:"user_agent"`
+}
+
+// SourceMandateAcceptanceOnlineParams describes the set of parameters for online accepted mandate
+type SourceMandateAcceptanceOnlineParams struct {
+	Date      *int64  `form:"date" json:"date"`
+	IP        *string `form:"ip" json:"ip"`
+	UserAgent *string `form:"user_agent" json:"user_agent"`
+}
+
+// SourceMandateAcceptanceOfflineParams describes the set of parameters for offline accepted mandate
+type SourceMandateAcceptanceOfflineParams struct {
+	ContactEmail *string `form:"contact_email" json:"contact_email"`
 }
 
 // SourceMandateParams describes the set of parameters allowed for the `mandate` hash on
 // source creation or update.
 type SourceMandateParams struct {
-	Acceptance         *SourceMandateAcceptanceParams `form:"acceptance"`
-	NotificationMethod *string                        `form:"notification_method"`
+	Amount             *int64                         `form:"amount" json:"amount"`
+	Acceptance         *SourceMandateAcceptanceParams `form:"acceptance" json:"acceptance"`
+	Currency           *string                        `form:"currency" json:"currency"`
+	Interval           *string                        `form:"interval" json:"interval"`
+	NotificationMethod *string                        `form:"notification_method" json:"notification_method"`
 }
 
 // SourceReceiverParams is the set of parameters allowed for the `receiver` hash on
 // source creation or update.
 type SourceReceiverParams struct {
-	RefundAttributesMethod *string `form:"refund_attributes_method"`
+	RefundAttributesMethod *string `form:"refund_attributes_method" json:"refund_attributes_method"`
 }
 
 // SourceObjectDetachParams is the set of parameters that can be used when detaching
 // a source from a customer.
 type SourceObjectDetachParams struct {
-	Params   `form:"*"`
-	Customer *string `form:"-"`
+	Params   `form:"*" json:"*"`
+	Customer *string `form:"-" json:"-"`
 }
 
 // SourceOwner describes the owner hash on a source.
@@ -264,11 +282,11 @@ type SourceSourceOrderItems struct {
 
 // SourceSourceOrder describes a source order for a source.
 type SourceSourceOrder struct {
-	Amount   int64                   `json:"amount"`
-	Currency Currency                `json:"currency"`
-	Email    string                  `json:"email"`
-	Items    *SourceSourceOrderItems `json:"items"`
-	Shipping *ShippingDetails        `json:"shipping"`
+	Amount   int64                     `json:"amount"`
+	Currency Currency                  `json:"currency"`
+	Email    string                    `json:"email"`
+	Items    *[]SourceSourceOrderItems `json:"items"`
+	Shipping *ShippingDetails          `json:"shipping"`
 }
 
 // Source is the resource representing a Source.

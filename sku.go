@@ -24,24 +24,24 @@ const (
 
 // InventoryParams is the set of parameters allowed as inventory on a SKU.
 type InventoryParams struct {
-	Quantity *int64  `form:"quantity"`
-	Type     *string `form:"type"`
-	Value    *string `form:"value"`
+	Quantity *int64  `form:"quantity" json:"quantity"`
+	Type     *string `form:"type" json:"type"`
+	Value    *string `form:"value" json:"value"`
 }
 
 // SKUParams is the set of parameters allowed on SKU creation or update.
 type SKUParams struct {
-	Params            `form:"*"`
-	Active            *bool                    `form:"active"`
-	Attributes        map[string]string        `form:"attributes"`
-	Currency          *string                  `form:"currency"`
-	Description       *string                  `form:"description"`
-	ID                *string                  `form:"id"`
-	Image             *string                  `form:"image"`
-	Inventory         *InventoryParams         `form:"inventory"`
-	PackageDimensions *PackageDimensionsParams `form:"package_dimensions"`
-	Price             *int64                   `form:"price"`
-	Product           *string                  `form:"product"`
+	Params            `form:"*" json:"*"`
+	Active            *bool                    `form:"active" json:"active"`
+	Attributes        map[string]string        `form:"attributes" json:"attributes"`
+	Currency          *string                  `form:"currency" json:"currency"`
+	Description       *string                  `form:"description" json:"description"`
+	ID                *string                  `form:"id" json:"id"`
+	Image             *string                  `form:"image" json:"image"`
+	Inventory         *InventoryParams         `form:"inventory" json:"inventory"`
+	PackageDimensions *PackageDimensionsParams `form:"package_dimensions" json:"package_dimensions"`
+	Price             *int64                   `form:"price" json:"price"`
+	Product           *string                  `form:"product" json:"product"`
 }
 
 // Inventory represents the inventory options of a SKU.
@@ -78,12 +78,12 @@ type SKUList struct {
 
 // SKUListParams is the set of parameters that can be used when listing SKUs.
 type SKUListParams struct {
-	ListParams `form:"*"`
-	Active     *bool             `form:"active"`
-	Attributes map[string]string `form:"attributes"`
-	IDs        []*string         `form:"ids"`
-	InStock    *bool             `form:"in_stock"`
-	Product    *string           `form:"product"`
+	ListParams `form:"*" json:"*"`
+	Active     *bool             `form:"active" json:"active"`
+	Attributes map[string]string `form:"attributes" json:"attributes"`
+	IDs        []*string         `form:"ids" json:"ids"`
+	InStock    *bool             `form:"in_stock" json:"in_stock"`
+	Product    *string           `form:"product" json:"product"`
 }
 
 // UnmarshalJSON handles deserialization of a SKU.

@@ -7,10 +7,10 @@ import (
 // BitcoinReceiverListParams is the set of parameters that can be used when listing BitcoinReceivers.
 // For more details see https://stripe.com/docs/api/#list_bitcoin_receivers.
 type BitcoinReceiverListParams struct {
-	ListParams      `form:"*"`
-	Active          *bool `form:"active"`
-	Filled          *bool `form:"filled"`
-	UncapturedFunds *bool `form:"uncaptured_funds"`
+	ListParams      `form:"*" json:"*"`
+	Active          *bool `form:"active" json:"active"`
+	Filled          *bool `form:"filled" json:"filled"`
+	UncapturedFunds *bool `form:"uncaptured_funds" json:"uncaptured_funds"`
 }
 
 // BitcoinReceiver is the resource representing a Stripe bitcoin receiver.

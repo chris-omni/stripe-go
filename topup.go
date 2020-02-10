@@ -3,13 +3,13 @@ package stripe
 // TopupParams is the set of parameters that can be used when creating or updating a top-up.
 // For more details see https://stripe.com/docs/api#create_topup and https://stripe.com/docs/api#update_topup.
 type TopupParams struct {
-	Params              `form:"*"`
-	Amount              *int64        `form:"amount"`
-	Currency            *string       `form:"currency"`
-	Description         *string       `form:"description"`
-	Source              *SourceParams `form:"*"` // SourceParams has custom encoding so brought to top level with "*"
-	StatementDescriptor *string       `form:"statement_descriptor"`
-	TransferGroup       *string       `form:"transfer_group"`
+	Params              `form:"*" json:"*"`
+	Amount              *int64        `form:"amount" json:"amount"`
+	Currency            *string       `form:"currency" json:"currency"`
+	Description         *string       `form:"description" json:"description"`
+	Source              *SourceParams `form:"*"` // SourceParams has custom encoding so brought to top level with "*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	StatementDescriptor *string       `form:"statement_descriptor" json:"statement_descriptor"`
+	TransferGroup       *string       `form:"transfer_group" json:"transfer_group"`
 }
 
 // SetSource adds valid sources to a TopupParams object,
@@ -23,9 +23,9 @@ func (p *TopupParams) SetSource(sp interface{}) error {
 // TopupListParams is the set of parameters that can be used when listing top-ups.
 // For more details see https://stripe.com/docs/api#list_topups.
 type TopupListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
 }
 
 // TopupList is a list of top-ups as retrieved from a list endpoint.

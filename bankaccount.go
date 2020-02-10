@@ -35,27 +35,27 @@ const (
 // some unusual logic on creates that necessitates manual handling of all
 // parameters. See AppendToAsSourceOrExternalAccount.
 type BankAccountParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 
 	// Account is the identifier of the parent account under which bank
 	// accounts are nested.
-	Account *string `form:"-"`
+	Account *string `form:"-" json:"-"`
 
-	AccountHolderName  *string `form:"account_holder_name"`
-	AccountHolderType  *string `form:"account_holder_type"`
-	AccountNumber      *string `form:"account_number"`
-	Country            *string `form:"country"`
-	Currency           *string `form:"currency"`
-	Customer           *string `form:"-"`
-	DefaultForCurrency *bool   `form:"default_for_currency"`
-	RoutingNumber      *string `form:"routing_number"`
+	AccountHolderName  *string `form:"account_holder_name" json:"account_holder_name"`
+	AccountHolderType  *string `form:"account_holder_type" json:"account_holder_type"`
+	AccountNumber      *string `form:"account_number" json:"account_number"`
+	Country            *string `form:"country" json:"country"`
+	Currency           *string `form:"currency" json:"currency"`
+	Customer           *string `form:"-" json:"-"`
+	DefaultForCurrency *bool   `form:"default_for_currency" json:"default_for_currency"`
+	RoutingNumber      *string `form:"routing_number" json:"routing_number"`
 
 	// Token is a token referencing an external account like one returned from
 	// Stripe.js.
-	Token *string `form:"-"`
+	Token *string `form:"-" json:"-"`
 
 	// ID is used when tokenizing a bank account for shared customers
-	ID *string `form:"*"`
+	ID *string `form:"*" json:"*"`
 }
 
 // AppendToAsSourceOrExternalAccount appends the given BankAccountParams as
@@ -121,15 +121,15 @@ func (a *BankAccountParams) AppendToAsSourceOrExternalAccount(body *form.Values)
 
 // BankAccountListParams is the set of parameters that can be used when listing bank accounts.
 type BankAccountListParams struct {
-	ListParams `form:"*"`
+	ListParams `form:"*" json:"*"`
 
 	// The identifier of the parent account under which the bank accounts are
 	// nested. Either Account or Customer should be populated.
-	Account *string `form:"-"`
+	Account *string `form:"-" json:"-"`
 
 	// The identifier of the parent customer under which the bank accounts are
 	// nested. Either Account or Customer should be populated.
-	Customer *string `form:"-"`
+	Customer *string `form:"-" json:"-"`
 }
 
 // AppendTo implements custom encoding logic for BankAccountListParams
@@ -141,6 +141,7 @@ func (p *BankAccountListParams) AppendTo(body *form.Values, keyParts []string) {
 
 // BankAccount represents a Stripe bank account.
 type BankAccount struct {
+	Account            *Account                     `json:"account"`
 	AccountHolderName  string                       `json:"account_holder_name"`
 	AccountHolderType  BankAccountAccountHolderType `json:"account_holder_type"`
 	BankName           string                       `json:"bank_name"`

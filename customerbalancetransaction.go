@@ -21,19 +21,19 @@ const (
 // updating a customer balance transactions.
 // For more details see https://stripe.com/docs/api/customers/create_customer_balance_transaction
 type CustomerBalanceTransactionParams struct {
-	Params      `form:"*"`
-	Amount      *int64  `form:"amount"`
-	Customer    *string `form:"-"`
-	Currency    *string `form:"currency"`
-	Description *string `form:"description"`
+	Params      `form:"*" json:"*"`
+	Amount      *int64  `form:"amount" json:"amount"`
+	Customer    *string `form:"-" json:"-"`
+	Currency    *string `form:"currency" json:"currency"`
+	Description *string `form:"description" json:"description"`
 }
 
 // CustomerBalanceTransactionListParams is the set of parameters that can be used when listing
 // customer balance transactions.
 // For more detail see https://stripe.com/docs/api/customers/customer_balance_transactions
 type CustomerBalanceTransactionListParams struct {
-	ListParams `form:"*"`
-	Customer   *string `form:"-"`
+	ListParams `form:"*" json:"*"`
+	Customer   *string `form:"-" json:"-"`
 }
 
 // CustomerBalanceTransaction is the resource representing a customer balance transaction.

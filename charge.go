@@ -31,11 +31,13 @@ const (
 	ChargePaymentMethodDetailsTypeAchDebit          ChargePaymentMethodDetailsType = "ach_debit"
 	ChargePaymentMethodDetailsTypeAcssDebit         ChargePaymentMethodDetailsType = "acss_debit"
 	ChargePaymentMethodDetailsTypeAlipay            ChargePaymentMethodDetailsType = "alipay"
+	ChargePaymentMethodDetailsTypeAUBECSDebit       ChargePaymentMethodDetailsType = "au_becs_debit"
 	ChargePaymentMethodDetailsTypeBancontact        ChargePaymentMethodDetailsType = "bancontact"
 	ChargePaymentMethodDetailsTypeBitcoin           ChargePaymentMethodDetailsType = "bitcoin" // This is unsupported today and is here for legacy charges.
 	ChargePaymentMethodDetailsTypeCard              ChargePaymentMethodDetailsType = "card"
 	ChargePaymentMethodDetailsTypeCardPresent       ChargePaymentMethodDetailsType = "card_present"
 	ChargePaymentMethodDetailsTypeEps               ChargePaymentMethodDetailsType = "eps"
+	ChargePaymentMethodDetailsTypeFPX               ChargePaymentMethodDetailsType = "fpx"
 	ChargePaymentMethodDetailsTypeGiropay           ChargePaymentMethodDetailsType = "giropay"
 	ChargePaymentMethodDetailsTypeIdeal             ChargePaymentMethodDetailsType = "ideal"
 	ChargePaymentMethodDetailsTypeKlarna            ChargePaymentMethodDetailsType = "klarna"
@@ -49,64 +51,61 @@ const (
 
 // ChargeLevel3LineItemsParams is the set of parameters that represent a line item on level III data.
 type ChargeLevel3LineItemsParams struct {
-	DiscountAmount     *int64  `form:"discount_amount"`
-	ProductCode        *string `form:"product_code"`
-	ProductDescription *string `form:"product_description"`
-	Quantity           *int64  `form:"quantity"`
-	TaxAmount          *int64  `form:"tax_amount"`
-	UnitCost           *int64  `form:"unit_cost"`
+	DiscountAmount     *int64  `form:"discount_amount" json:"discount_amount"`
+	ProductCode        *string `form:"product_code" json:"product_code"`
+	ProductDescription *string `form:"product_description" json:"product_description"`
+	Quantity           *int64  `form:"quantity" json:"quantity"`
+	TaxAmount          *int64  `form:"tax_amount" json:"tax_amount"`
+	UnitCost           *int64  `form:"unit_cost" json:"unit_cost"`
 }
 
 // ChargeLevel3Params is the set of parameters that can be used for the Level III data.
 type ChargeLevel3Params struct {
-	CustomerReference  *string                        `form:"customer_reference"`
-	LineItems          []*ChargeLevel3LineItemsParams `form:"line_items"`
-	MerchantReference  *string                        `form:"merchant_reference"`
-	ShippingAddressZip *string                        `form:"shipping_address_zip"`
-	ShippingFromZip    *string                        `form:"shipping_from_zip"`
-	ShippingAmount     *int64                         `form:"shipping_amount"`
+	CustomerReference  *string                        `form:"customer_reference" json:"customer_reference"`
+	LineItems          []*ChargeLevel3LineItemsParams `form:"line_items" json:"line_items"`
+	MerchantReference  *string                        `form:"merchant_reference" json:"merchant_reference"`
+	ShippingAddressZip *string                        `form:"shipping_address_zip" json:"shipping_address_zip"`
+	ShippingFromZip    *string                        `form:"shipping_from_zip" json:"shipping_from_zip"`
+	ShippingAmount     *int64                         `form:"shipping_amount" json:"shipping_amount"`
 }
 
 // ChargeTransferDataParams is the set of parameters allowed for the transfer_data hash.
 type ChargeTransferDataParams struct {
-	Amount *int64 `form:"amount"`
+	Amount *int64 `form:"amount" json:"amount"`
 	// This parameter can only be used on Charge creation.
-	Destination *string `form:"destination"`
+	Destination *string `form:"destination" json:"destination"`
 }
 
 // ChargeParams is the set of parameters that can be used when creating or updating a charge.
 type ChargeParams struct {
-	Params                    `form:"*"`
-	Amount                    *int64                    `form:"amount"`
-	ApplicationFeeAmount      *int64                    `form:"application_fee_amount"`
-	Capture                   *bool                     `form:"capture"`
-	Currency                  *string                   `form:"currency"`
-	Customer                  *string                   `form:"customer"`
-	Description               *string                   `form:"description"`
-	Destination               *DestinationParams        `form:"destination"`
-	ExchangeRate              *float64                  `form:"exchange_rate"`
-	FraudDetails              *FraudDetailsParams       `form:"fraud_details"`
-	Level3                    *ChargeLevel3Params       `form:"level3"`
-	OnBehalfOf                *string                   `form:"on_behalf_of"`
-	ReceiptEmail              *string                   `form:"receipt_email"`
-	Shipping                  *ShippingDetailsParams    `form:"shipping"`
-	Source                    *SourceParams             `form:"*"` // SourceParams has custom encoding so brought to top level with "*"
-	StatementDescriptor       *string                   `form:"statement_descriptor"`
-	StatementDescriptorSuffix *string                   `form:"statement_descriptor_suffix"`
-	TransferData              *ChargeTransferDataParams `form:"transfer_data"`
-	TransferGroup             *string                   `form:"transfer_group"`
-
-	// This property is considered deprecated. Prefer using ApplicationFeeAmount
-	ApplicationFee *int64 `form:"application_fee"`
+	Params                    `form:"*" json:"*"`
+	Amount                    *int64                    `form:"amount" json:"amount"`
+	ApplicationFeeAmount      *int64                    `form:"application_fee_amount" json:"application_fee_amount"`
+	Capture                   *bool                     `form:"capture" json:"capture"`
+	Currency                  *string                   `form:"currency" json:"currency"`
+	Customer                  *string                   `form:"customer" json:"customer"`
+	Description               *string                   `form:"description" json:"description"`
+	Destination               *DestinationParams        `form:"destination" json:"destination"`
+	ExchangeRate              *float64                  `form:"exchange_rate" json:"exchange_rate"`
+	FraudDetails              *FraudDetailsParams       `form:"fraud_details" json:"fraud_details"`
+	Level3                    *ChargeLevel3Params       `form:"level3" json:"level3"`
+	OnBehalfOf                *string                   `form:"on_behalf_of" json:"on_behalf_of"`
+	ReceiptEmail              *string                   `form:"receipt_email" json:"receipt_email"`
+	Shipping                  *ShippingDetailsParams    `form:"shipping" json:"shipping"`
+	Source                    *SourceParams             `form:"*"` // SourceParams has custom encoding so brought to top level with "*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	StatementDescriptor       *string                   `form:"statement_descriptor" json:"statement_descriptor"`
+	StatementDescriptorSuffix *string                   `form:"statement_descriptor_suffix" json:"statement_descriptor_suffix"`
+	TransferData              *ChargeTransferDataParams `form:"transfer_data" json:"transfer_data"`
+	TransferGroup             *string                   `form:"transfer_group" json:"transfer_group"`
 }
 
 // ShippingDetailsParams is the structure containing shipping information as parameters
 type ShippingDetailsParams struct {
-	Address        *AddressParams `form:"address"`
-	Carrier        *string        `form:"carrier"`
-	Name           *string        `form:"name"`
-	Phone          *string        `form:"phone"`
-	TrackingNumber *string        `form:"tracking_number"`
+	Address        *AddressParams `form:"address" json:"address"`
+	Carrier        *string        `form:"carrier" json:"carrier"`
+	Name           *string        `form:"name" json:"name"`
+	Phone          *string        `form:"phone" json:"phone"`
+	TrackingNumber *string        `form:"tracking_number" json:"tracking_number"`
 }
 
 // SetSource adds valid sources to a ChargeParams object,
@@ -119,39 +118,36 @@ func (p *ChargeParams) SetSource(sp interface{}) error {
 
 // DestinationParams describes the parameters available for the destination hash when creating a charge.
 type DestinationParams struct {
-	Account *string `form:"account"`
-	Amount  *int64  `form:"amount"`
+	Account *string `form:"account" json:"account"`
+	Amount  *int64  `form:"amount" json:"amount"`
 }
 
 // FraudDetailsParams provides information on the fraud details for a charge.
 type FraudDetailsParams struct {
-	UserReport *string `form:"user_report"`
+	UserReport *string `form:"user_report" json:"user_report"`
 }
 
 // ChargeListParams is the set of parameters that can be used when listing charges.
 type ChargeListParams struct {
-	ListParams    `form:"*"`
-	Created       *int64            `form:"created"`
-	CreatedRange  *RangeQueryParams `form:"created"`
-	Customer      *string           `form:"customer"`
-	PaymentIntent *string           `form:"payment_intent"`
-	TransferGroup *string           `form:"transfer_group"`
+	ListParams    `form:"*" json:"*"`
+	Created       *int64            `form:"created" json:"created"`
+	CreatedRange  *RangeQueryParams `form:"created" json:"created"`
+	Customer      *string           `form:"customer" json:"customer"`
+	PaymentIntent *string           `form:"payment_intent" json:"payment_intent"`
+	TransferGroup *string           `form:"transfer_group" json:"transfer_group"`
 }
 
 // CaptureParams is the set of parameters that can be used when capturing a charge.
 type CaptureParams struct {
-	Params                    `form:"*"`
-	Amount                    *int64                    `form:"amount"`
-	ApplicationFeeAmount      *int64                    `form:"application_fee_amount"`
-	ExchangeRate              *float64                  `form:"exchange_rate"`
-	ReceiptEmail              *string                   `form:"receipt_email"`
-	StatementDescriptor       *string                   `form:"statement_descriptor"`
-	StatementDescriptorSuffix *string                   `form:"statement_descriptor_suffix"`
-	TransferGroup             *string                   `form:"transfer_group"`
-	TransferData              *ChargeTransferDataParams `form:"transfer_data"`
-
-	// This property is considered deprecated. Prefer using ApplicationFeeAmount
-	ApplicationFee *int64 `form:"application_fee"`
+	Params                    `form:"*" json:"*"`
+	Amount                    *int64                    `form:"amount" json:"amount"`
+	ApplicationFeeAmount      *int64                    `form:"application_fee_amount" json:"application_fee_amount"`
+	ExchangeRate              *float64                  `form:"exchange_rate" json:"exchange_rate"`
+	ReceiptEmail              *string                   `form:"receipt_email" json:"receipt_email"`
+	StatementDescriptor       *string                   `form:"statement_descriptor" json:"statement_descriptor"`
+	StatementDescriptorSuffix *string                   `form:"statement_descriptor_suffix" json:"statement_descriptor_suffix"`
+	TransferGroup             *string                   `form:"transfer_group" json:"transfer_group"`
+	TransferData              *ChargeTransferDataParams `form:"transfer_data" json:"transfer_data"`
 }
 
 // ChargeLevel3LineItem represents a line item on level III data.
@@ -207,6 +203,14 @@ type ChargePaymentMethodDetailsAcssDebit struct {
 type ChargePaymentMethodDetailsAlipay struct {
 }
 
+// ChargePaymentMethodDetailsAUBECSDebit represents details about the AU BECS DD PaymentMethod.
+type ChargePaymentMethodDetailsAUBECSDebit struct {
+	BSBNumber   string `json:"bsb_number"`
+	Fingerprint string `json:"fingerprint"`
+	Last4       string `json:"last4"`
+	Mandate     string `json:"mandate"`
+}
+
 // ChargePaymentMethodDetailsBancontact represents details about the Bancontact PaymentMethod.
 type ChargePaymentMethodDetailsBancontact struct {
 	BankCode          string `json:"bank_code"`
@@ -233,6 +237,12 @@ type ChargePaymentMethodDetailsCardChecks struct {
 	AddressLine1Check      CardVerification `json:"address_line1_check"`
 	AddressPostalCodeCheck CardVerification `json:"address_postal_code_check"`
 	CVCCheck               CardVerification `json:"cvc_check"`
+}
+
+// ChargePaymentMethodDetailsCardInstallments represents details about the installment plan chosen
+// for this charge.
+type ChargePaymentMethodDetailsCardInstallments struct {
+	Plan *PaymentIntentPaymentMethodOptionsCardInstallmentsPlan `json:"plan"`
 }
 
 // ChargePaymentMethodDetailsCardThreeDSecure represents details about 3DS associated with the
@@ -299,7 +309,9 @@ type ChargePaymentMethodDetailsCard struct {
 	ExpYear      uint64                                      `json:"exp_year"`
 	Fingerprint  string                                      `json:"fingerprint"`
 	Funding      CardFunding                                 `json:"funding"`
+	Installments *ChargePaymentMethodDetailsCardInstallments `json:"installments"`
 	Last4        string                                      `json:"last4"`
+	Network      PaymentMethodCardNetwork                    `json:"network"`
 	MOTO         bool                                        `json:"moto"`
 	ThreeDSecure *ChargePaymentMethodDetailsCardThreeDSecure `json:"three_d_secure"`
 	Wallet       *ChargePaymentMethodDetailsCardWallet       `json:"wallet"`
@@ -335,6 +347,7 @@ type ChargePaymentMethodDetailsCardPresent struct {
 	Funding       CardFunding                                   `json:"funding"`
 	GeneratedCard string                                        `json:"generated_card"`
 	Last4         string                                        `json:"last4"`
+	Network       PaymentMethodCardNetwork                      `json:"network"`
 	ReadMethod    string                                        `json:"read_method"`
 	Receipt       *ChargePaymentMethodDetailsCardPresentReceipt `json:"receipt"`
 }
@@ -342,6 +355,13 @@ type ChargePaymentMethodDetailsCardPresent struct {
 // ChargePaymentMethodDetailsEps represents details about the EPS PaymentMethod.
 type ChargePaymentMethodDetailsEps struct {
 	VerifiedName string `json:"verified_name"`
+}
+
+// ChargePaymentMethodDetailsFPX represents details about the FPX PaymentMethod.
+type ChargePaymentMethodDetailsFPX struct {
+	AccountHolderType PaymentMethodFPXAccountHolderType `json:"account_holder_type"`
+	Bank              string                            `json:"bank"`
+	TransactionID     string                            `json:"transaction_id"`
 }
 
 // ChargePaymentMethodDetailsGiropay represents details about the Giropay PaymentMethod.
@@ -411,10 +431,12 @@ type ChargePaymentMethodDetails struct {
 	AchDebit          *ChargePaymentMethodDetailsAchDebit          `json:"ach_debit"`
 	Alipay            *ChargePaymentMethodDetailsAlipay            `json:"alipay"`
 	Bancontact        *ChargePaymentMethodDetailsBancontact        `json:"bancontact"`
+	AUBECSDebit       *ChargePaymentMethodDetailsAUBECSDebit       `json:"au_becs_debit"`
 	Bitcoin           *ChargePaymentMethodDetailsBitcoin           `json:"bitcoin"`
 	Card              *ChargePaymentMethodDetailsCard              `json:"card"`
 	CardPresent       *ChargePaymentMethodDetailsCardPresent       `json:"card_present"`
 	Eps               *ChargePaymentMethodDetailsEps               `json:"eps"`
+	FPX               *ChargePaymentMethodDetailsFPX               `json:"fpx"`
 	Giropay           *ChargePaymentMethodDetailsGiropay           `json:"giropay"`
 	Ideal             *ChargePaymentMethodDetailsIdeal             `json:"ideal"`
 	Klarna            *ChargePaymentMethodDetailsKlarna            `json:"klarna"`
@@ -429,7 +451,7 @@ type ChargePaymentMethodDetails struct {
 
 // ChargeTransferData represents the information for the transfer_data associated with a charge.
 type ChargeTransferData struct {
-	Amount      int64    `form:"amount"`
+	Amount      int64    `form:"amount" json:"amount"`
 	Destination *Account `json:"destination"`
 }
 
@@ -451,6 +473,7 @@ type Charge struct {
 	Description               string                      `json:"description"`
 	Destination               *Account                    `json:"destination"`
 	Dispute                   *Dispute                    `json:"dispute"`
+	Disputed                  bool                        `json:"disputed"`
 	FailureCode               string                      `json:"failure_code"`
 	FailureMessage            string                      `json:"failure_message"`
 	FraudDetails              *FraudDetails               `json:"fraud_details"`

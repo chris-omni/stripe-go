@@ -15,12 +15,12 @@ const (
 
 // SigmaScheduledQueryRunParams is the set of parameters that can be used when updating a scheduled query run.
 type SigmaScheduledQueryRunParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // SigmaScheduledQueryRunListParams is the set of parameters that can be used when listing scheduled query runs.
 type SigmaScheduledQueryRunListParams struct {
-	ListParams `form:"*"`
+	ListParams `form:"*" json:"*"`
 }
 
 // SigmaScheduledQueryRun is the resource representing a scheduled query run.

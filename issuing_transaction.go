@@ -15,17 +15,17 @@ const (
 
 // IssuingTransactionParams is the set of parameters that can be used when creating or updating an issuing transaction.
 type IssuingTransactionParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // IssuingTransactionListParams is the set of parameters that can be used when listing issuing transactions.
 type IssuingTransactionListParams struct {
-	ListParams   `form:"*"`
-	Card         *string           `form:"card"`
-	Cardholder   *string           `form:"cardholder"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Dispute      *string           `form:"dispute"`
+	ListParams   `form:"*" json:"*"`
+	Card         *string           `form:"card" json:"card"`
+	Cardholder   *string           `form:"cardholder" json:"cardholder"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Dispute      *string           `form:"dispute" json:"dispute"`
 }
 
 // IssuingTransaction is the resource representing a Stripe issuing transaction.

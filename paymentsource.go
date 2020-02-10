@@ -39,7 +39,7 @@ func (p *SourceParams) AppendTo(body *form.Values, keyParts []string) {
 type CustomerSourceParams struct {
 	Params   `form:"*" json:"*"`
 	Customer *string       `form:"-" json:"-"` // Goes in the URL
-	Source   *SourceParams `form:"*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	Source   *SourceParams `form:"*"` // SourceParams has custom encoding so brought to top level with "*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
 }
 
 // SourceVerifyParams are used to verify a customer source

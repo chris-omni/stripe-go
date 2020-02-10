@@ -2,18 +2,18 @@ package stripe
 
 // RadarValueListItemParams is the set of parameters that can be used when creating a value list item.
 type RadarValueListItemParams struct {
-	Params         `form:"*"`
-	Value          *string `form:"value"`
-	RadarValueList *string `form:"value_list"`
+	Params         `form:"*" json:"*"`
+	Value          *string `form:"value" json:"value"`
+	RadarValueList *string `form:"value_list" json:"value_list"`
 }
 
 // RadarValueListItemListParams is the set of parameters that can be used when listing value list items.
 type RadarValueListItemListParams struct {
-	ListParams     `form:"*"`
-	Created        *int64            `form:"created"`
-	CreatedRange   *RangeQueryParams `form:"created"`
-	RadarValueList *string           `form:"value_list"`
-	Value          *string           `form:"value"`
+	ListParams     `form:"*" json:"*"`
+	Created        *int64            `form:"created" json:"created"`
+	CreatedRange   *RangeQueryParams `form:"created" json:"created"`
+	RadarValueList *string           `form:"value_list" json:"value_list"`
+	Value          *string           `form:"value" json:"value"`
 }
 
 // RadarValueListItem is the resource representing a value list item.

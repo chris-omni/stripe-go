@@ -17,19 +17,19 @@ const (
 
 // ReviewParams is the set of parameters that can be used when approving a review.
 type ReviewParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // ReviewApproveParams is the set of parameters that can be used when approving a review.
 type ReviewApproveParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // ReviewListParams is the set of parameters that can be used when listing reviews.
 type ReviewListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
 }
 
 // Review is the resource representing a Radar review.

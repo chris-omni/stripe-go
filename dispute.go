@@ -37,49 +37,51 @@ const (
 // DisputeParams is the set of parameters that can be used when updating a dispute.
 // For more details see https://stripe.com/docs/api#update_dispute.
 type DisputeParams struct {
-	Params   `form:"*"`
-	Evidence *DisputeEvidenceParams `form:"evidence"`
-	Submit   *bool                  `form:"submit"`
+	Params   `form:"*" json:"*"`
+	Evidence *DisputeEvidenceParams `form:"evidence" json:"evidence"`
+	Submit   *bool                  `form:"submit" json:"submit"`
 }
 
 // DisputeEvidenceParams is the set of parameters that can be used when submitting
 // evidence for disputes.
 type DisputeEvidenceParams struct {
-	AccessActivityLog            *string `form:"access_activity_log"`
-	BillingAddress               *string `form:"billing_address"`
-	CancellationPolicy           *string `form:"cancellation_policy"`
-	CancellationPolicyDisclosure *string `form:"cancellation_policy_disclosure"`
-	CancellationRebuttal         *string `form:"cancellation_rebuttal"`
-	CustomerCommunication        *string `form:"customer_communication"`
-	CustomerEmailAddress         *string `form:"customer_email_address"`
-	CustomerName                 *string `form:"customer_name"`
-	CustomerPurchaseIP           *string `form:"customer_purchase_ip"`
-	CustomerSignature            *string `form:"customer_signature"`
-	DuplicateChargeDocumentation *string `form:"duplicate_charge_documentation"`
-	DuplicateChargeExplanation   *string `form:"duplicate_charge_explanation"`
-	DuplicateChargeID            *string `form:"duplicate_charge_id"`
-	ProductDescription           *string `form:"product_description"`
-	Receipt                      *string `form:"receipt"`
-	RefundPolicy                 *string `form:"refund_policy"`
-	RefundPolicyDisclosure       *string `form:"refund_policy_disclosure"`
-	RefundRefusalExplanation     *string `form:"refund_refusal_explanation"`
-	ServiceDate                  *string `form:"service_date"`
-	ServiceDocumentation         *string `form:"service_documentation"`
-	ShippingAddress              *string `form:"shipping_address"`
-	ShippingCarrier              *string `form:"shipping_carrier"`
-	ShippingDate                 *string `form:"shipping_date"`
-	ShippingDocumentation        *string `form:"shipping_documentation"`
-	ShippingTrackingNumber       *string `form:"shipping_tracking_number"`
-	UncategorizedFile            *string `form:"uncategorized_file"`
-	UncategorizedText            *string `form:"uncategorized_text"`
+	AccessActivityLog            *string `form:"access_activity_log" json:"access_activity_log"`
+	BillingAddress               *string `form:"billing_address" json:"billing_address"`
+	CancellationPolicy           *string `form:"cancellation_policy" json:"cancellation_policy"`
+	CancellationPolicyDisclosure *string `form:"cancellation_policy_disclosure" json:"cancellation_policy_disclosure"`
+	CancellationRebuttal         *string `form:"cancellation_rebuttal" json:"cancellation_rebuttal"`
+	CustomerCommunication        *string `form:"customer_communication" json:"customer_communication"`
+	CustomerEmailAddress         *string `form:"customer_email_address" json:"customer_email_address"`
+	CustomerName                 *string `form:"customer_name" json:"customer_name"`
+	CustomerPurchaseIP           *string `form:"customer_purchase_ip" json:"customer_purchase_ip"`
+	CustomerSignature            *string `form:"customer_signature" json:"customer_signature"`
+	DuplicateChargeDocumentation *string `form:"duplicate_charge_documentation" json:"duplicate_charge_documentation"`
+	DuplicateChargeExplanation   *string `form:"duplicate_charge_explanation" json:"duplicate_charge_explanation"`
+	DuplicateChargeID            *string `form:"duplicate_charge_id" json:"duplicate_charge_id"`
+	ProductDescription           *string `form:"product_description" json:"product_description"`
+	Receipt                      *string `form:"receipt" json:"receipt"`
+	RefundPolicy                 *string `form:"refund_policy" json:"refund_policy"`
+	RefundPolicyDisclosure       *string `form:"refund_policy_disclosure" json:"refund_policy_disclosure"`
+	RefundRefusalExplanation     *string `form:"refund_refusal_explanation" json:"refund_refusal_explanation"`
+	ServiceDate                  *string `form:"service_date" json:"service_date"`
+	ServiceDocumentation         *string `form:"service_documentation" json:"service_documentation"`
+	ShippingAddress              *string `form:"shipping_address" json:"shipping_address"`
+	ShippingCarrier              *string `form:"shipping_carrier" json:"shipping_carrier"`
+	ShippingDate                 *string `form:"shipping_date" json:"shipping_date"`
+	ShippingDocumentation        *string `form:"shipping_documentation" json:"shipping_documentation"`
+	ShippingTrackingNumber       *string `form:"shipping_tracking_number" json:"shipping_tracking_number"`
+	UncategorizedFile            *string `form:"uncategorized_file" json:"uncategorized_file"`
+	UncategorizedText            *string `form:"uncategorized_text" json:"uncategorized_text"`
 }
 
 // DisputeListParams is the set of parameters that can be used when listing disputes.
 // For more details see https://stripe.com/docs/api#list_disputes.
 type DisputeListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams    `form:"*" json:"*"`
+	Charge        *string           `form:"charge" json:"charge"`
+	Created       *int64            `form:"created" json:"created"`
+	CreatedRange  *RangeQueryParams `form:"created" json:"created"`
+	PaymentIntent *string           `form:"payment_intent" json:"payment_intent"`
 }
 
 // Dispute is the resource representing a Stripe dispute.
@@ -96,6 +98,7 @@ type Dispute struct {
 	IsChargeRefundable  bool                  `json:"is_charge_refundable"`
 	Livemode            bool                  `json:"livemode"`
 	Metadata            map[string]string     `json:"metadata"`
+	PaymentIntent       *PaymentIntent        `json:"payment_intent"`
 	Reason              DisputeReason         `json:"reason"`
 	Status              DisputeStatus         `json:"status"`
 }

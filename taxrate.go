@@ -5,33 +5,33 @@ import "encoding/json"
 // TaxRateParams is the set of parameters that can be used when creating a tax rate.
 // For more details see https://stripe.com/docs/api/tax_rates/create.
 type TaxRateParams struct {
-	Params       `form:"*"`
-	Active       *bool    `form:"active"`
-	Description  *string  `form:"description"`
-	DisplayName  *string  `form:"display_name"`
-	Inclusive    *bool    `form:"inclusive"`
-	Jurisdiction *string  `form:"jurisdiction"`
-	Percentage   *float64 `form:"percentage"`
+	Params       `form:"*" json:"*"`
+	Active       *bool    `form:"active" json:"active"`
+	Description  *string  `form:"description" json:"description"`
+	DisplayName  *string  `form:"display_name" json:"display_name"`
+	Inclusive    *bool    `form:"inclusive" json:"inclusive"`
+	Jurisdiction *string  `form:"jurisdiction" json:"jurisdiction"`
+	Percentage   *float64 `form:"percentage" json:"percentage"`
 }
 
 // TaxRatePercentageRangeQueryParams are used to filter tax rates by specific percentage values.
 type TaxRatePercentageRangeQueryParams struct {
-	GreaterThan        float64 `form:"gt"`
-	GreaterThanOrEqual float64 `form:"gte"`
-	LesserThan         float64 `form:"lt"`
-	LesserThanOrEqual  float64 `form:"lte"`
+	GreaterThan        float64 `form:"gt" json:"gt"`
+	GreaterThanOrEqual float64 `form:"gte" json:"gte"`
+	LesserThan         float64 `form:"lt" json:"lt"`
+	LesserThanOrEqual  float64 `form:"lte" json:"lte"`
 }
 
 // TaxRateListParams is the set of parameters that can be used when listing tax rates.
 // For more detail see https://stripe.com/docs/api/tax_rates/list.
 type TaxRateListParams struct {
-	ListParams      `form:"*"`
-	Active          *bool                              `form:"active"`
-	Created         *int64                             `form:"created"`
-	CreatedRange    *RangeQueryParams                  `form:"created"`
-	Inclusive       *bool                              `form:"inclusive"`
-	Percentage      *float64                           `form:"percentage"`
-	PercentageRange *TaxRatePercentageRangeQueryParams `form:"percentage"`
+	ListParams      `form:"*" json:"*"`
+	Active          *bool                              `form:"active" json:"active"`
+	Created         *int64                             `form:"created" json:"created"`
+	CreatedRange    *RangeQueryParams                  `form:"created" json:"created"`
+	Inclusive       *bool                              `form:"inclusive" json:"inclusive"`
+	Percentage      *float64                           `form:"percentage" json:"percentage"`
+	PercentageRange *TaxRatePercentageRangeQueryParams `form:"percentage" json:"percentage"`
 }
 
 // TaxRate is the resource representing a Stripe tax rate.

@@ -5,16 +5,16 @@ import "encoding/json"
 // ApplicationFeeParams is the set of parameters that can be used when refunding an application fee.
 // For more details see https://stripe.com/docs/api#refund_application_fee.
 type ApplicationFeeParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // ApplicationFeeListParams is the set of parameters that can be used when listing application fees.
 // For more details see https://stripe.com/docs/api#list_application_fees.
 type ApplicationFeeListParams struct {
-	ListParams   `form:"*"`
-	Charge       *string           `form:"charge"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams   `form:"*" json:"*"`
+	Charge       *string           `form:"charge" json:"charge"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
 }
 
 // ApplicationFee is the resource representing a Stripe application fee.

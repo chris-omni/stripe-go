@@ -4,8 +4,8 @@ import "encoding/json"
 
 // SourceTransactionListParams is the set of parameters that can be used when listing SourceTransactions.
 type SourceTransactionListParams struct {
-	ListParams `form:"*"`
-	Source     *string `form:"-"` // Sent in with the URL
+	ListParams `form:"*" json:"*"`
+	Source     *string `form:"-" json:"-"` // Sent in with the URL
 }
 
 // SourceTransactionList is a list object for SourceTransactions.

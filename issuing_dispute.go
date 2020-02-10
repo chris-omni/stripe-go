@@ -25,39 +25,39 @@ const (
 // IssuingDisputeEvidenceFraudulentParams is the subset of parameters that can be sent as evidence for an issuing dispute
 // with the reason set as fraudulent.
 type IssuingDisputeEvidenceFraudulentParams struct {
-	DisputeExplanation *string `form:"dispute_explanation"`
-	UncategorizedFile  *string `form:"uncategorized_file"`
+	DisputeExplanation *string `form:"dispute_explanation" json:"dispute_explanation"`
+	UncategorizedFile  *string `form:"uncategorized_file" json:"uncategorized_file"`
 }
 
 // IssuingDisputeEvidenceOtherParams is the subset of parameters that can be sent as evidence for an issuing dispute
 // with the reason set as other.
 type IssuingDisputeEvidenceOtherParams struct {
-	DisputeExplanation *string `form:"dispute_explanation"`
-	UncategorizedFile  *string `form:"uncategorized_file"`
+	DisputeExplanation *string `form:"dispute_explanation" json:"dispute_explanation"`
+	UncategorizedFile  *string `form:"uncategorized_file" json:"uncategorized_file"`
 }
 
 // IssuingDisputeEvidenceParams is the set of parameters that can be sent as evidence for an issuing dispute.
 type IssuingDisputeEvidenceParams struct {
-	Fraudulent *IssuingDisputeEvidenceFraudulentParams `form:"fraudulent"`
-	Other      *IssuingDisputeEvidenceOtherParams      `form:"other"`
+	Fraudulent *IssuingDisputeEvidenceFraudulentParams `form:"fraudulent" json:"fraudulent"`
+	Other      *IssuingDisputeEvidenceOtherParams      `form:"other" json:"other"`
 }
 
 // IssuingDisputeParams is the set of parameters that can be used when creating or updating an issuing dispute.
 type IssuingDisputeParams struct {
-	Params              `form:"*"`
-	Amount              *int64                        `form:"amount"`
-	Evidence            *IssuingDisputeEvidenceParams `form:"evidence"`
-	Reason              *string                       `form:"reason"`
-	DisputedTransaction *string                       `form:"disputed_transaction"`
+	Params              `form:"*" json:"*"`
+	Amount              *int64                        `form:"amount" json:"amount"`
+	Evidence            *IssuingDisputeEvidenceParams `form:"evidence" json:"evidence"`
+	Reason              *string                       `form:"reason" json:"reason"`
+	DisputedTransaction *string                       `form:"disputed_transaction" json:"disputed_transaction"`
 }
 
 // IssuingDisputeListParams is the set of parameters that can be used when listing issuing dispute.
 type IssuingDisputeListParams struct {
-	ListParams          `form:"*"`
-	Created             *int64            `form:"created"`
-	CreatedRange        *RangeQueryParams `form:"created"`
-	DisputedTransaction *string           `form:"disputed_transaction"`
-	Transaction         *string           `form:"transaction"`
+	ListParams          `form:"*" json:"*"`
+	Created             *int64            `form:"created" json:"created"`
+	CreatedRange        *RangeQueryParams `form:"created" json:"created"`
+	DisputedTransaction *string           `form:"disputed_transaction" json:"disputed_transaction"`
+	Transaction         *string           `form:"transaction" json:"transaction"`
 }
 
 // IssuingDisputeEvidenceFraudulent is the resource representing the evidence hash on an issuing dispute

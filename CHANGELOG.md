@@ -1,5 +1,191 @@
 # Changelog
 
+## 68.18.0 - 2020-02-05
+* [#1026](https://github.com/stripe/stripe-go/pull/1026) Multiple changes on the `Balance` resource:
+  * Add support for `ConnectReserved`
+  * Add support for `SourceTypes` for a given type of balance.
+  * Add support for FPX balance as a constant.
+
+## 68.17.0 - 2020-02-03
+* [#1024](https://github.com/stripe/stripe-go/pull/1024) Add `FilePurposeAdditionalVerification` and `FilePurposeBusinessIcon` on `File`
+* [#1018](https://github.com/stripe/stripe-go/pull/1018) Add support for `ErrorOnRequiresAction` on `PaymentIntent`
+
+## 68.16.0 - 2020-01-31
+* [#1023](https://github.com/stripe/stripe-go/pull/1023) Add support for `TaxIDTypeTHVAT` and `TaxIDTypeTWVAT` on `TaxId`
+
+## 68.15.0 - 2020-01-30
+* [#1022](https://github.com/stripe/stripe-go/pull/1022) Add support for `Structure` on `Account`
+
+## 68.14.0 - 2020-01-28
+* [#1021](https://github.com/stripe/stripe-go/pull/1021) Add support for `TaxIDTypeESCIF` on `TaxId`
+
+## 68.13.0 - 2020-01-24
+* [#1019](https://github.com/stripe/stripe-go/pull/1019) Add support for `Shipping.Speed` and `Shipping.TrackingURL` on `IssuingCard`
+
+## 68.12.0 - 2020-01-23
+* [#1017](https://github.com/stripe/stripe-go/pull/1017) Add new values for `TaxIDType` and fix `TaxIDTypeCHVAT`
+* [#1015](https://github.com/stripe/stripe-go/pull/1015) Replace duplicate code in GetBackend method
+
+## 68.11.0 - 2020-01-17
+* [#1014](https://github.com/stripe/stripe-go/pull/1014) Add `Metadata` support on Checkout `Session`
+
+## 68.10.0 - 2020-01-15
+* [#1012](https://github.com/stripe/stripe-go/pull/1012) Adds `PendingUpdate` to `Subscription`
+
+## 68.9.0 - 2020-01-14
+* [#1013](https://github.com/stripe/stripe-go/pull/1013) Add support for `CreditNoteLineItem`
+
+## 68.8.0 - 2020-01-08
+* [#1011](https://github.com/stripe/stripe-go/pull/1011) Add support for `InvoiceItem` and fix `Livemode` on `InvoiceLine`
+
+## 68.7.0 - 2020-01-07
+* [#1008](https://github.com/stripe/stripe-go/pull/1008) Add `ReportingCategory` to `BalanceTransaction`
+
+## 68.6.0 - 2020-01-06
+* [#1009](https://github.com/stripe/stripe-go/pull/1009) Add constant for `TaxIDTypeSGUEN` on `TaxId`
+
+## 68.5.0 - 2020-01-03
+* [#1007](https://github.com/stripe/stripe-go/pull/1007) Add support for `SpendingLimitsCurrency` on Issuing `Card` and `Cardholder`
+
+## 68.4.0 - 2019-12-20
+* [#1006](https://github.com/stripe/stripe-go/pull/1006) Adds `ExecutivesProvided` to `Account`
+
+## 68.3.0 - 2019-12-19
+* [#1005](https://github.com/stripe/stripe-go/pull/1005) Add `Metadata` and `Livemode` to Terminal `Reader` and `Location'
+
+## 68.2.0 - 2019-12-09
+* [#1002](https://github.com/stripe/stripe-go/pull/1002) Add support for AU BECS Debit on PaymentMethod
+
+## 68.1.0 - 2019-12-04
+* [#1001](https://github.com/stripe/stripe-go/pull/1001) Add support for `Network` on `Charge`
+
+## 68.0.0 - 2019-12-03
+* [#1000](https://github.com/stripe/stripe-go/pull/1000) Multiple breaking changes:
+  * Pin to API version `2019-12-03`
+  * Rename `InvoiceBillingStatus` to `InvoiceStatus` for consistency
+  * Remove typo-ed field `OutOfBankdAmount` on `CreditNote`
+  * Remove deprecated `PaymentIntentPaymentMethodOptionsCardRequestThreeDSecureChallengeOnly` and `SetupIntentPaymentMethodOptionsCardRequestThreeDSecureChallengeOnly` from `PaymentIntent` and `SetupIntent`.
+  * Remove `OperatorAccount` on `TerminalLocationListParams`
+
+## 67.10.0 - 2019-12-02
+* [#999](https://github.com/stripe/stripe-go/pull/999) Add support for `Status` filter when listing `Invoice`s.
+
+## 67.9.0 - 2019-11-26
+* [#997](https://github.com/stripe/stripe-go/pull/997) Add new refund reason `RefundReasonExpiredUncapturedCharge`
+
+## 67.8.0 - 2019-11-26
+* [#998](https://github.com/stripe/stripe-go/pull/998) Add support for `CreditNote` preview
+
+## 67.7.0 - 2019-11-25
+* [#996](https://github.com/stripe/stripe-go/pull/996) Add support for `OutOfBandAmount` on `CreditNote` creation
+* [#995](https://github.com/stripe/stripe-go/pull/995) Fix comment typos
+
+## 67.6.0 - 2019-11-22
+* [#994](https://github.com/stripe/stripe-go/pull/994) Support for the `now` on `StartDate` on Subscription Schedule creation
+
+## 67.5.0 - 2019-11-21
+* [#993](https://github.com/stripe/stripe-go/pull/993) Add `PaymentIntent` filter when listing `Dispute`s
+
+## 67.4.1 - 2019-11-19
+* [#991](https://github.com/stripe/stripe-go/pull/991) Add missing constant for PaymentMethod of type FPX
+
+## 67.4.0 - 2019-11-18
+* [#989](https://github.com/stripe/stripe-go/pull/989) Add support for `ViolatedAuthorizationControls` on Issuing `Authorization`
+
+## 67.3.0 - 2019-11-07
+* [#988](https://github.com/stripe/stripe-go/pull/988) Add `Company` and `Individual` to Issuing `Cardholder`
+
+## 67.2.0 - 2019-11-06
+* [#985](https://github.com/stripe/stripe-go/pull/985) Multiple API changes
+  * Add `Disputed` to `Charge`
+  * Add `PaymentIntent` to `Refund` and `Dispute`
+  * Add `Charge` to `DisputeListParams`
+  * Add `PaymentIntent` to `RefundListParams` and `RefundParams`
+
+## 67.1.0 - 2019-11-06
+* [#986](https://github.com/stripe/stripe-go/pull/986) Add support for iDEAL and SEPA debit on `PaymentMethod`
+
+## 67.0.0 - 2019-11-05
+* [#987](https://github.com/stripe/stripe-go/pull/987) Move to the latest API version and add new changes
+  * Move to API version `2019-11-05`
+  * Add `DefaultSettings` on `SubscritionSchedule`
+  * Remove `BillingThresholds`, `CollectionMethod`, `DefaultPaymentMethod` and `DefaultSource` and `invoice_settings` from `SubscriptionSchedule`
+  * `OffSession` on `PaymentIntent` is now always a boolean
+
+## 66.3.0 - 2019-11-04
+* [#984](https://github.com/stripe/stripe-go/pull/984) Add support for `UseStripeSDK` on `PaymentIntent` create and confirm
+
+## 66.2.0 - 2019-11-04
+* [#983](https://github.com/stripe/stripe-go/pull/983) Add support for cloning saved PaymentMethods
+* [#980](https://github.com/stripe/stripe-go/pull/980) Improve docs for ephemeral keys
+
+## 66.1.1 - 2019-10-24
+* [#978](https://github.com/stripe/stripe-go/pull/978) Properly pass `Type` in `PaymentIntentPaymentMethodOptionsCardInstallmentsPlanParams`
+  * Note that this is technically a breaking change, however we've chosen to release it as a patch version as this shipped yesterday and is a new feature
+* [#977](https://github.com/stripe/stripe-go/pull/977) Contributor Convenant
+
+## 66.1.0 - 2019-10-23
+* [#974](https://github.com/stripe/stripe-go/pull/974) Add support for installments on `PaymentIntent` and `Charge`
+* [#975](https://github.com/stripe/stripe-go/pull/975) Add support for `PendingInvoiceItemInterval` on `Subscription`
+* [#976](https://github.com/stripe/stripe-go/pull/976) Add `TaxIDTypeMXRFC` constant to `TaxIDType`
+
+## 66.0.0 - 2019-10-18
+* [#973](https://github.com/stripe/stripe-go/pull/973) Multiple breaking changes
+  * Pin to the latest API version `2019-10-17`
+  * Remove `RenewalBehavior` on `SubscriptionSchedule`
+  * Remove `RenewalBehavior` and `RenewalInterval` as parameters on `SubscriptionSchedule`
+
+## 65.2.0 - 2019-10-17
+* [#972](https://github.com/stripe/stripe-go/pull/972) Various API changes
+  * `Requirements` on Issuing `Cardholder`
+  * `PaymentMethodDetails.AuBecsDebit.Mandate` on `Charge`
+  * `PaymentBehavior` on `Subscription` creation can now take the value `pending_if_incomplete`
+  * `PaymentBehavior` on `SubscriptionItem` creation is now supported
+  * `SubscriptionData.TrialFromPlan` is now supported on Checkout `Session` creation
+  * New values for `TaxIDType`
+
+## 65.1.1 - 2019-10-11
+* [#970](https://github.com/stripe/stripe-go/pull/970) Properly deserialize `Fulfilled` on `StatusTransitions` in the `order` package
+
+## 65.1.0 - 2019-10-09
+* [#969](https://github.com/stripe/stripe-go/pull/969) Add `DeviceType` filter when listing Terminal `Reader`s
+
+## 65.0.0 - 2019-10-09
+* [#951](https://github.com/stripe/stripe-go/pull/951) Move to API version [`2019-10-08`](https://stripe.com/docs/upgrades#2019-10-08) and other changes
+  * [#950](https://github.com/stripe/stripe-go/pull/950) Remove lossy "MarshalJSON" implementations
+  * [#962](https://github.com/stripe/stripe-go/pull/962) Removed deprecated properties and most todos
+    * Removed `GetBalanceTransaction` and `List` from the `balance` package. Prefer using `Get` and `List` in the `balancetransaction` package.
+    * Removed `ApplicationFee` from the `charge` and `paymentintent` packages. Prefer using `ApplicationFeeAmount`.
+    * Removed `TaxInfo` and related fields from the `customer` packager. Prefer using the `customertaxid` package.
+    * Removed unsupported `Customer` parameter on `PaymentMethodParams` and `PaymentMethodDetachParams` in the `paymentmethod` package.
+    * Removed `Billing` properties in the `invoice`, `sub` and `subschedule` packages. Prefer using `CollectionMethod`.
+    * Removed the `InvoiceBilling` type from the `invoice` package. Prefer using `InvoiceCollectionMethod`.
+    * Removed the `SubscriptionBilling` type from the `sub` package. Prefer using `SubscriptionCollectionMethod`.
+    * Removed deprecated constants for `PaymentIntentConfirmationMethod` in `paymentintent` package.
+    * Removed `OperatorAccount` from Terminal APIs.
+  * [#960](https://github.com/stripe/stripe-go/pull/960) Remove `issuerfraudrecord` package. Prefer using `earlyfraudwarning`
+  * [#968](https://github.com/stripe/stripe-go/pull/968) Rename `AccountOpener` to `Representative` and update to latest API version
+
+## 64.1.0 - 2019-10-09
+* [#967](https://github.com/stripe/stripe-go/pull/967) Add `Get` method to `OrderReturn`
+
+## 64.0.0 - 2019-10-08
+* ~[#968](https://github.com/stripe/stripe-go/pull/968) Update to latest API version [`2019-10-08`](https://stripe.com/docs/upgrades#2019-10-08)~
+  * **Note:** This release is actually a no-op as we failed to merge the changes. Please use 65.0.0 instead.
+
+## 63.5.0 - 2019-10-03
+* [#955](https://github.com/stripe/stripe-go/pull/955) Add FPX `PaymentMethod` Support
+* [#966](https://github.com/stripe/stripe-go/pull/966) Add the `Account` field to `BankAccount`
+
+## 63.4.0 - 2019-09-30
+* [#952](https://github.com/stripe/stripe-go/pull/952) Add AU BECS Debit Support
+
+## 63.3.0 - 2019-09-30
+* [#964](https://github.com/stripe/stripe-go/pull/964) Add support for `Status` and `Location` filters when listing `Reader`s
+
+## 63.2.2 - 2019-09-26
+* [#963](https://github.com/stripe/stripe-go/pull/963) Update `SourceSourceOrder` `Items` field to fix unmarshalling errors
+
 ## 63.2.1 - 2019-09-25
 * [#961](https://github.com/stripe/stripe-go/pull/961) Properly tag `Customer` as deprecated in `PaymentMethodDetachParams`
 
@@ -179,7 +365,7 @@
 
 ## 61.1.0 - 2019-06-06
 * [#867](https://github.com/stripe/stripe-go/pull/867) Add support for `Location` on Terminal `ConnectionToken`
-* [#868](https://github.com/stripe/stripe-go/pull/868) Add support for `Balance` and deprecate `AccountBalance` on Customer 
+* [#868](https://github.com/stripe/stripe-go/pull/868) Add support for `Balance` and deprecate `AccountBalance` on Customer
 
 ## 61.0.1 - 2019-05-24
 * [#865](https://github.com/stripe/stripe-go/pull/865) Fix `earlyfraudwarning` client
@@ -246,7 +432,7 @@
 * [#837](https://github.com/stripe/stripe-go/pull/837) Add helpers to go from `[]T` to `[]*T` for `string`, `int64`, `float64`, `bool`
 
 ## 60.5.1 - 2019-04-16
-* [#836](https://github.com/stripe/stripe-go/pull/836) Fix `SpendingLimits` on `AuthorizationControlsParams` and `AuthorizationControls` to be a slice on Issuing `Card` and `Cardholder` 
+* [#836](https://github.com/stripe/stripe-go/pull/836) Fix `SpendingLimits` on `AuthorizationControlsParams` and `AuthorizationControls` to be a slice on Issuing `Card` and `Cardholder`
 
 ## 60.5.0 - 2019-04-16
 * [#740](https://github.com/stripe/stripe-go/pull/740) Add support for the Checkout `Session` resource and APIs
@@ -442,7 +628,7 @@
 * [#711](https://github.com/stripe/stripe-go/pull/711) Drop support for Go 1.7 (hasn't been supported by Go core since the release of Go 1.9 in August 2017)
 
 ## 51.4.0 - 2018-10-19
-* [#708](https://github.com/stripe/stripe-go/pull/708) Add Stripe Terminal endpoints to master to `client.API` 
+* [#708](https://github.com/stripe/stripe-go/pull/708) Add Stripe Terminal endpoints to master to `client.API`
 
 ## 51.3.0 - 2018-10-09
 * [#704](https://github.com/stripe/stripe-go/pull/704) Add support for `subscription_cancel_at_period_end` on the Upcoming Invoice API.
@@ -924,7 +1110,7 @@
 * Rules under charge outcomes are now expandable and collapsed by default
 
 ## 19.17.0 - 2017-04-06
-* Please see 20.0.0 (bad release)	
+* Please see 20.0.0 (bad release)
 
 ## 19.16.0 - 2017-03-23
 * Allow the ID of an identity document to be passed into an account owner update

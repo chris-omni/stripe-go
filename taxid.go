@@ -5,13 +5,23 @@ import "encoding/json"
 // TaxIDType is the list of allowed values for the tax id's type..
 type TaxIDType string
 
-// List of values that TaxIDDuration can take.
+// List of values that TaxIDType can take.
 const (
 	TaxIDTypeAUABN   TaxIDType = "au_abn"
+	TaxIDTypeCABN    TaxIDType = "ca_bn"
+	TaxIDTypeCHVAT   TaxIDType = "ch_vat"
+	TaxIDTypeESCIF   TaxIDType = "es_cif"
 	TaxIDTypeEUVAT   TaxIDType = "eu_vat"
+	TaxIDTypeHKBR    TaxIDType = "hk_br"
 	TaxIDTypeINGST   TaxIDType = "in_gst"
+	TaxIDTypeMXRFC   TaxIDType = "mx_rfc"
 	TaxIDTypeNOVAT   TaxIDType = "no_vat"
 	TaxIDTypeNZGST   TaxIDType = "nz_gst"
+	TaxIDTypeRUINN   TaxIDType = "ru_inn"
+	TaxIDTypeSGUEN   TaxIDType = "sg_uen"
+	TaxIDTypeTHVAT   TaxIDType = "th_vat"
+	TaxIDTypeTWVAT   TaxIDType = "tw_vat"
+	TaxIDTypeZAVAT   TaxIDType = "za_vat"
 	TaxIDTypeUnknown TaxIDType = "unknown"
 )
 
@@ -29,17 +39,17 @@ const (
 // TaxIDParams is the set of parameters that can be used when creating a tax id.
 // For more details see https://stripe.com/docs/api/customers/create_tax_id
 type TaxIDParams struct {
-	Params   `form:"*"`
-	Customer *string `form:"-"`
-	Type     *string `form:"type"`
-	Value    *string `form:"value"`
+	Params   `form:"*" json:"*"`
+	Customer *string `form:"-" json:"-"`
+	Type     *string `form:"type" json:"type"`
+	Value    *string `form:"value" json:"value"`
 }
 
 // TaxIDListParams is the set of parameters that can be used when listing tax ids.
 // For more detail see https://stripe.com/docs/api/customers/tax_ids
 type TaxIDListParams struct {
-	ListParams `form:"*"`
-	Customer   *string `form:"-"`
+	ListParams `form:"*" json:"*"`
+	Customer   *string `form:"-" json:"-"`
 }
 
 // TaxIDVerification represents the verification details of a customer's tax id.

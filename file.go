@@ -16,21 +16,23 @@ type FilePurpose string
 
 // List of values that FilePurpose can take.
 const (
-	FilePurposeBusinessLogo          FilePurpose = "business_logo"
-	FilePurposeCustomerSignature     FilePurpose = "customer_signature"
-	FilePurposeDisputeEvidence       FilePurpose = "dispute_evidence"
-	FilePurposeFinanceReportRun      FilePurpose = "finance_report_run"
-	FilePurposeFoundersStockDocument FilePurpose = "founders_stock_document"
-	FilePurposeIdentityDocument      FilePurpose = "identity_document"
-	FilePurposePCIDocument           FilePurpose = "pci_document"
-	FilePurposeSigmaScheduledQuery   FilePurpose = "sigma_scheduled_query"
-	FilePurposeTaxDocumentUserUpload FilePurpose = "tax_document_user_upload"
+	FilePurposeAdditionalVerification FilePurpose = "additional_verification"
+	FilePurposeBusinessIcon           FilePurpose = "business_icon"
+	FilePurposeBusinessLogo           FilePurpose = "business_logo"
+	FilePurposeCustomerSignature      FilePurpose = "customer_signature"
+	FilePurposeDisputeEvidence        FilePurpose = "dispute_evidence"
+	FilePurposeFinanceReportRun       FilePurpose = "finance_report_run"
+	FilePurposeFoundersStockDocument  FilePurpose = "founders_stock_document"
+	FilePurposeIdentityDocument       FilePurpose = "identity_document"
+	FilePurposePCIDocument            FilePurpose = "pci_document"
+	FilePurposeSigmaScheduledQuery    FilePurpose = "sigma_scheduled_query"
+	FilePurposeTaxDocumentUserUpload  FilePurpose = "tax_document_user_upload"
 )
 
 // FileParams is the set of parameters that can be used when creating a file.
 // For more details see https://stripe.com/docs/api#create_file.
 type FileParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 
 	// FileReader is a reader with the contents of the file that should be uploaded.
 	FileReader io.Reader
@@ -46,18 +48,18 @@ type FileParams struct {
 // FileFileLinkDataParams is the set of parameters allowed for the
 // file_link_data hash.
 type FileFileLinkDataParams struct {
-	Params    `form:"*"`
-	Create    *bool  `form:"create"`
-	ExpiresAt *int64 `form:"expires_at"`
+	Params    `form:"*" json:"*"`
+	Create    *bool  `form:"create" json:"create"`
+	ExpiresAt *int64 `form:"expires_at" json:"expires_at"`
 }
 
 // FileListParams is the set of parameters that can be used when listing
 // files. For more details see https://stripe.com/docs/api#list_files.
 type FileListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Purpose      *string           `form:"purpose"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Purpose      *string           `form:"purpose" json:"purpose"`
 }
 
 // File is the resource representing a Stripe file.

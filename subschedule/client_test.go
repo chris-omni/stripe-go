@@ -40,7 +40,8 @@ func TestSubscriptionScheduleList(t *testing.T) {
 
 func TestSubscriptionScheduleNew(t *testing.T) {
 	params := &stripe.SubscriptionScheduleParams{
-		Customer: stripe.String("cus_123"),
+		Customer:     stripe.String("cus_123"),
+		StartDateNow: stripe.Bool(true),
 		Phases: []*stripe.SubscriptionSchedulePhaseParams{
 			{
 				Plans: []*stripe.SubscriptionSchedulePhaseItemParams{
@@ -64,7 +65,7 @@ func TestSubscriptionScheduleNew(t *testing.T) {
 				},
 			},
 		},
-		RenewalBehavior: stripe.String(string(stripe.SubscriptionScheduleRenewalBehaviorNone)),
+		EndBehavior: stripe.String(string(stripe.SubscriptionScheduleEndBehaviorCancel)),
 	}
 	schedule, err := New(params)
 	assert.Nil(t, err)

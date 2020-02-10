@@ -24,7 +24,7 @@ type CountrySpec struct {
 
 // CountrySpecParams are the parameters allowed during CountrySpec retrieval.
 type CountrySpecParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // CountrySpecList is a list of country specs as retrieved from a list endpoint.
@@ -35,5 +35,5 @@ type CountrySpecList struct {
 
 // CountrySpecListParams are the parameters allowed during CountrySpec listing.
 type CountrySpecListParams struct {
-	ListParams `form:"*"`
+	ListParams `form:"*" json:"*"`
 }

@@ -31,13 +31,13 @@ import (
 	"github.com/stripe/stripe-go/filelink"
 	"github.com/stripe/stripe-go/invoice"
 	"github.com/stripe/stripe-go/invoiceitem"
-	"github.com/stripe/stripe-go/issuerfraudrecord"
 	"github.com/stripe/stripe-go/issuing/authorization"
 	issuingcard "github.com/stripe/stripe-go/issuing/card"
 	"github.com/stripe/stripe-go/issuing/cardholder"
 	issuingdispute "github.com/stripe/stripe-go/issuing/dispute"
 	"github.com/stripe/stripe-go/issuing/transaction"
 	"github.com/stripe/stripe-go/loginlink"
+	"github.com/stripe/stripe-go/mandate"
 	"github.com/stripe/stripe-go/oauth"
 	"github.com/stripe/stripe-go/order"
 	"github.com/stripe/stripe-go/orderreturn"
@@ -137,8 +137,6 @@ type API struct {
 	Invoices *invoice.Client
 	// InvoiceItems is the client used to invoke /invoiceitems APIs.
 	InvoiceItems *invoiceitem.Client
-	// IssuerFraudRecords is the client used to invoke /issuer_fraud_records APIs.
-	IssuerFraudRecords *issuerfraudrecord.Client
 	// IssuingAuthorizations is the client used to invoke /issuing/authorizations APIs.
 	IssuingAuthorizations *authorization.Client
 	// IssuingCardholders is the client used to invoke /issuing/cardholders APIs.
@@ -151,6 +149,8 @@ type API struct {
 	IssuingTransactions *transaction.Client
 	// LoginLinks is the client used to invoke login link related APIs.
 	LoginLinks *loginlink.Client
+	// Mandates is the client used to invoke mandates related APIs.
+	Mandates *mandate.Client
 	// OAuth is the client used to invoke /oauth APIs.
 	OAuth *oauth.Client
 	// Orders is the client used to invoke /orders APIs.
@@ -270,13 +270,13 @@ func (a *API) Init(key string, backends *stripe.Backends) {
 	a.FileLinks = &filelink.Client{B: backends.API, Key: key}
 	a.Invoices = &invoice.Client{B: backends.API, Key: key}
 	a.InvoiceItems = &invoiceitem.Client{B: backends.API, Key: key}
-	a.IssuerFraudRecords = &issuerfraudrecord.Client{B: backends.API, Key: key}
 	a.IssuingAuthorizations = &authorization.Client{B: backends.API, Key: key}
 	a.IssuingCardholders = &cardholder.Client{B: backends.API, Key: key}
 	a.IssuingCards = &issuingcard.Client{B: backends.API, Key: key}
 	a.IssuingDisputes = &issuingdispute.Client{B: backends.API, Key: key}
 	a.IssuingTransactions = &transaction.Client{B: backends.API, Key: key}
 	a.LoginLinks = &loginlink.Client{B: backends.API, Key: key}
+	a.Mandates = &mandate.Client{B: backends.API, Key: key}
 	a.OAuth = &oauth.Client{B: backends.Connect, Key: key}
 	a.OrderReturns = &orderreturn.Client{B: backends.API, Key: key}
 	a.Orders = &order.Client{B: backends.API, Key: key}

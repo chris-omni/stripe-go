@@ -47,75 +47,75 @@ const (
 
 // DOBParams represents a DOB during account creation/updates.
 type DOBParams struct {
-	Day   *int64 `form:"day"`
-	Month *int64 `form:"month"`
-	Year  *int64 `form:"year"`
+	Day   *int64 `form:"day" json:"day"`
+	Month *int64 `form:"month" json:"month"`
+	Year  *int64 `form:"year" json:"year"`
 }
 
 // RelationshipParams is used to set the relationship between an account and a person.
 type RelationshipParams struct {
-	AccountOpener    *bool    `form:"account_opener"`
-	Director         *bool    `form:"director"`
-	Executive        *bool    `form:"executive"`
-	Owner            *bool    `form:"owner"`
-	PercentOwnership *float64 `form:"percent_ownership"`
-	Title            *string  `form:"title"`
+	Director         *bool    `form:"director" json:"director"`
+	Executive        *bool    `form:"executive" json:"executive"`
+	Owner            *bool    `form:"owner" json:"owner"`
+	PercentOwnership *float64 `form:"percent_ownership" json:"percent_ownership"`
+	Representative   *bool    `form:"representative" json:"representative"`
+	Title            *string  `form:"title" json:"title"`
 }
 
 // PersonVerificationDocumentParams represents the parameters available for the document verifying
 // a person's identity.
 type PersonVerificationDocumentParams struct {
-	Back  *string `form:"back"`
-	Front *string `form:"front"`
+	Back  *string `form:"back" json:"back"`
+	Front *string `form:"front" json:"front"`
 }
 
 // PersonVerificationParams is used to represent parameters associated with a person's verification
 // details.
 type PersonVerificationParams struct {
-	AdditionalDocument *PersonVerificationDocumentParams `form:"additional_document"`
-	Document           *PersonVerificationDocumentParams `form:"document"`
+	AdditionalDocument *PersonVerificationDocumentParams `form:"additional_document" json:"additional_document"`
+	Document           *PersonVerificationDocumentParams `form:"document" json:"document"`
 }
 
 // PersonParams is the set of parameters that can be used when creating or updating a person.
 // For more details see https://stripe.com/docs/api#create_person.
 type PersonParams struct {
-	Params         `form:"*"`
-	Account        *string                   `form:"-"` // Included in URL
-	Address        *AccountAddressParams     `form:"address"`
-	AddressKana    *AccountAddressParams     `form:"address_kana"`
-	AddressKanji   *AccountAddressParams     `form:"address_kanji"`
-	DOB            *DOBParams                `form:"dob"`
-	Email          *string                   `form:"email"`
-	FirstName      *string                   `form:"first_name"`
-	FirstNameKana  *string                   `form:"first_name_kana"`
-	FirstNameKanji *string                   `form:"first_name_kanji"`
-	Gender         *string                   `form:"gender"`
-	IDNumber       *string                   `form:"id_number"`
-	LastName       *string                   `form:"last_name"`
-	LastNameKana   *string                   `form:"last_name_kana"`
-	LastNameKanji  *string                   `form:"last_name_kanji"`
-	MaidenName     *string                   `form:"maiden_name"`
-	PersonToken    *string                   `form:"person_token"`
-	Phone          *string                   `form:"phone"`
-	Relationship   *RelationshipParams       `form:"relationship"`
-	SSNLast4       *string                   `form:"ssn_last_4"`
-	Verification   *PersonVerificationParams `form:"verification"`
+	Params         `form:"*" json:"*"`
+	Account        *string                   `form:"-" json:"-"` // Included in URL
+	Address        *AccountAddressParams     `form:"address" json:"address"`
+	AddressKana    *AccountAddressParams     `form:"address_kana" json:"address_kana"`
+	AddressKanji   *AccountAddressParams     `form:"address_kanji" json:"address_kanji"`
+	DOB            *DOBParams                `form:"dob" json:"dob"`
+	Email          *string                   `form:"email" json:"email"`
+	FirstName      *string                   `form:"first_name" json:"first_name"`
+	FirstNameKana  *string                   `form:"first_name_kana" json:"first_name_kana"`
+	FirstNameKanji *string                   `form:"first_name_kanji" json:"first_name_kanji"`
+	Gender         *string                   `form:"gender" json:"gender"`
+	IDNumber       *string                   `form:"id_number" json:"id_number"`
+	LastName       *string                   `form:"last_name" json:"last_name"`
+	LastNameKana   *string                   `form:"last_name_kana" json:"last_name_kana"`
+	LastNameKanji  *string                   `form:"last_name_kanji" json:"last_name_kanji"`
+	MaidenName     *string                   `form:"maiden_name" json:"maiden_name"`
+	PersonToken    *string                   `form:"person_token" json:"person_token"`
+	Phone          *string                   `form:"phone" json:"phone"`
+	Relationship   *RelationshipParams       `form:"relationship" json:"relationship"`
+	SSNLast4       *string                   `form:"ssn_last_4" json:"ssn_last_4"`
+	Verification   *PersonVerificationParams `form:"verification" json:"verification"`
 }
 
 // RelationshipListParams is used to filter persons by the relationship
 type RelationshipListParams struct {
-	AccountOpener *bool `form:"account_opener"`
-	Director      *bool `form:"director"`
-	Executive     *bool `form:"executive"`
-	Owner         *bool `form:"owner"`
+	Director       *bool `form:"director" json:"director"`
+	Executive      *bool `form:"executive" json:"executive"`
+	Owner          *bool `form:"owner" json:"owner"`
+	Representative *bool `form:"representative" json:"representative"`
 }
 
 // PersonListParams is the set of parameters that can be used when listing persons.
 // For more detail see https://stripe.com/docs/api#list_persons.
 type PersonListParams struct {
-	ListParams   `form:"*"`
-	Account      *string                 `form:"-"` // Included in URL
-	Relationship *RelationshipListParams `form:"relationship"`
+	ListParams   `form:"*" json:"*"`
+	Account      *string                 `form:"-" json:"-"` // Included in URL
+	Relationship *RelationshipListParams `form:"relationship" json:"relationship"`
 }
 
 // DOB represents a Person's date of birth.
@@ -127,11 +127,11 @@ type DOB struct {
 
 // Relationship represents how the Person relates to the business.
 type Relationship struct {
-	AccountOpener    bool    `json:"account_opener"`
 	Director         bool    `json:"director"`
 	Executive        bool    `json:"executive"`
 	Owner            bool    `json:"owner"`
 	PercentOwnership float64 `json:"percent_ownership"`
+	Representative   bool    `json:"representative"`
 	Title            string  `json:"title"`
 }
 

@@ -11,6 +11,7 @@ const (
 	TransferSourceTypeBankAccount     TransferSourceType = "bank_account"
 	TransferSourceTypeBitcoinReceiver TransferSourceType = "bitcoin_receiver"
 	TransferSourceTypeCard            TransferSourceType = "card"
+	TransferSourceTypeFPX             TransferSourceType = "fpx"
 )
 
 // TransferDestination describes the destination of a Transfer.
@@ -24,24 +25,24 @@ type TransferDestination struct {
 // TransferParams is the set of parameters that can be used when creating or updating a transfer.
 // For more details see https://stripe.com/docs/api#create_transfer and https://stripe.com/docs/api#update_transfer.
 type TransferParams struct {
-	Params            `form:"*"`
-	Amount            *int64  `form:"amount"`
-	Currency          *string `form:"currency"`
-	Description       *string `form:"description"`
-	Destination       *string `form:"destination"`
-	SourceTransaction *string `form:"source_transaction"`
-	SourceType        *string `form:"source_type"`
-	TransferGroup     *string `form:"transfer_group"`
+	Params            `form:"*" json:"*"`
+	Amount            *int64  `form:"amount" json:"amount"`
+	Currency          *string `form:"currency" json:"currency"`
+	Description       *string `form:"description" json:"description"`
+	Destination       *string `form:"destination" json:"destination"`
+	SourceTransaction *string `form:"source_transaction" json:"source_transaction"`
+	SourceType        *string `form:"source_type" json:"source_type"`
+	TransferGroup     *string `form:"transfer_group" json:"transfer_group"`
 }
 
 // TransferListParams is the set of parameters that can be used when listing transfers.
 // For more details see https://stripe.com/docs/api#list_transfers.
 type TransferListParams struct {
-	ListParams    `form:"*"`
-	Created       *int64            `form:"created"`
-	CreatedRange  *RangeQueryParams `form:"created"`
-	Destination   *string           `form:"destination"`
-	TransferGroup *string           `form:"transfer_group"`
+	ListParams    `form:"*" json:"*"`
+	Created       *int64            `form:"created" json:"created"`
+	CreatedRange  *RangeQueryParams `form:"created" json:"created"`
+	Destination   *string           `form:"destination" json:"destination"`
+	TransferGroup *string           `form:"transfer_group" json:"transfer_group"`
 }
 
 // Transfer is the resource representing a Stripe transfer.
@@ -107,12 +108,4 @@ func (d *TransferDestination) UnmarshalJSON(data []byte) error {
 
 	*d = TransferDestination(v)
 	return json.Unmarshal(data, &d.Account)
-}
-
-// MarshalJSON handles serialization of a TransferDestination.
-// This custom marshaling is needed because we can only send a string
-// ID as a destination, even though it can be expanded to a full
-// object when retrieving
-func (d *TransferDestination) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.ID)
 }

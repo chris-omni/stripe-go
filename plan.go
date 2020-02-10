@@ -99,34 +99,34 @@ type PlanList struct {
 // PlanListParams is the set of parameters that can be used when listing plans.
 // For more details see https://stripe.com/docs/api#list_plans.
 type PlanListParams struct {
-	ListParams   `form:"*"`
-	Active       *bool             `form:"active"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Product      *string           `form:"product"`
+	ListParams   `form:"*" json:"*"`
+	Active       *bool             `form:"active" json:"active"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Product      *string           `form:"product" json:"product"`
 }
 
 // PlanParams is the set of parameters that can be used when creating or updating a plan.
 // For more details see https://stripe.com/docs/api#create_plan and https://stripe.com/docs/api#update_plan.
 type PlanParams struct {
-	Params          `form:"*"`
-	Active          *bool                     `form:"active"`
-	AggregateUsage  *string                   `form:"aggregate_usage"`
-	Amount          *int64                    `form:"amount"`
-	AmountDecimal   *float64                  `form:"amount_decimal,high_precision"`
-	BillingScheme   *string                   `form:"billing_scheme"`
-	Currency        *string                   `form:"currency"`
-	ID              *string                   `form:"id"`
-	Interval        *string                   `form:"interval"`
-	IntervalCount   *int64                    `form:"interval_count"`
-	Nickname        *string                   `form:"nickname"`
-	Product         *PlanProductParams        `form:"product"`
-	ProductID       *string                   `form:"product"`
-	Tiers           []*PlanTierParams         `form:"tiers"`
-	TiersMode       *string                   `form:"tiers_mode"`
-	TransformUsage  *PlanTransformUsageParams `form:"transform_usage"`
-	TrialPeriodDays *int64                    `form:"trial_period_days"`
-	UsageType       *string                   `form:"usage_type"`
+	Params          `form:"*" json:"*"`
+	Active          *bool                     `form:"active" json:"active"`
+	AggregateUsage  *string                   `form:"aggregate_usage" json:"aggregate_usage"`
+	Amount          *int64                    `form:"amount" json:"amount"`
+	AmountDecimal   *float64                  `form:"amount_decimal,high_precision" json:"amount_decimal,high_precision"`
+	BillingScheme   *string                   `form:"billing_scheme" json:"billing_scheme"`
+	Currency        *string                   `form:"currency" json:"currency"`
+	ID              *string                   `form:"id" json:"id"`
+	Interval        *string                   `form:"interval" json:"interval"`
+	IntervalCount   *int64                    `form:"interval_count" json:"interval_count"`
+	Nickname        *string                   `form:"nickname" json:"nickname"`
+	Product         *PlanProductParams        `form:"product" json:"product"`
+	ProductID       *string                   `form:"product" json:"product"`
+	Tiers           []*PlanTierParams         `form:"tiers" json:"tiers"`
+	TiersMode       *string                   `form:"tiers_mode" json:"tiers_mode"`
+	TransformUsage  *PlanTransformUsageParams `form:"transform_usage" json:"transform_usage"`
+	TrialPeriodDays *int64                    `form:"trial_period_days" json:"trial_period_days"`
+	UsageType       *string                   `form:"usage_type" json:"usage_type"`
 }
 
 // PlanTier configures tiered pricing
@@ -146,19 +146,19 @@ type PlanTransformUsage struct {
 
 // PlanTransformUsageParams represents the bucket billing configuration.
 type PlanTransformUsageParams struct {
-	DivideBy *int64  `form:"divide_by"`
-	Round    *string `form:"round"`
+	DivideBy *int64  `form:"divide_by" json:"divide_by"`
+	Round    *string `form:"round" json:"round"`
 }
 
 // PlanTierParams configures tiered pricing
 type PlanTierParams struct {
-	Params            `form:"*"`
-	FlatAmount        *int64   `form:"flat_amount"`
-	FlatAmountDecimal *float64 `form:"flat_amount_decimal,high_precision"`
-	UnitAmount        *int64   `form:"unit_amount"`
-	UnitAmountDecimal *float64 `form:"unit_amount_decimal,high_precision"`
-	UpTo              *int64   `form:"-"` // handled in custom AppendTo
-	UpToInf           *bool    `form:"-"` // handled in custom AppendTo
+	Params            `form:"*" json:"*"`
+	FlatAmount        *int64   `form:"flat_amount" json:"flat_amount"`
+	FlatAmountDecimal *float64 `form:"flat_amount_decimal,high_precision" json:"flat_amount_decimal,high_precision"`
+	UnitAmount        *int64   `form:"unit_amount" json:"unit_amount"`
+	UnitAmountDecimal *float64 `form:"unit_amount_decimal,high_precision" json:"unit_amount_decimal,high_precision"`
+	UpTo              *int64   `form:"-" json:"-"` // handled in custom AppendTo
+	UpToInf           *bool    `form:"-" json:"-"` // handled in custom AppendTo
 }
 
 // AppendTo implements custom up_to serialisation logic for tiers configuration
@@ -174,12 +174,12 @@ func (p *PlanTierParams) AppendTo(body *form.Values, keyParts []string) {
 // This can only be used on plan creation and won't work on plan update.
 // For more details see https://stripe.com/docs/api#create_plan-product and https://stripe.com/docs/api#update_plan-product
 type PlanProductParams struct {
-	Active              *bool             `form:"active"`
-	ID                  *string           `form:"id"`
-	Name                *string           `form:"name"`
-	Metadata            map[string]string `form:"metadata"`
-	StatementDescriptor *string           `form:"statement_descriptor"`
-	UnitLabel           *string           `form:"unit_label"`
+	Active              *bool             `form:"active" json:"active"`
+	ID                  *string           `form:"id" json:"id"`
+	Name                *string           `form:"name" json:"name"`
+	Metadata            map[string]string `form:"metadata" json:"metadata"`
+	StatementDescriptor *string           `form:"statement_descriptor" json:"statement_descriptor"`
+	UnitLabel           *string           `form:"unit_label" json:"unit_label"`
 }
 
 // UnmarshalJSON handles deserialization of a Plan.

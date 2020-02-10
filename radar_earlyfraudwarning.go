@@ -18,15 +18,15 @@ const (
 // retrieving early fraud warnings. For more details see
 // https://stripe.com/docs/api/early_fraud_warnings/retrieve.
 type RadarEarlyFraudWarningParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // RadarEarlyFraudWarningListParams is the set of parameters that can be used when
 // listing early fraud warnings. For more details see
 // https://stripe.com/docs/api/early_fraud_warnings/list.
 type RadarEarlyFraudWarningListParams struct {
-	ListParams `form:"*"`
-	Charge     *string `form:"charge"`
+	ListParams `form:"*" json:"*"`
+	Charge     *string `form:"charge" json:"charge"`
 }
 
 // RadarEarlyFraudWarningList is a list of early fraud warnings as retrieved from a

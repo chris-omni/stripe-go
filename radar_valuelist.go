@@ -16,19 +16,19 @@ const (
 
 // RadarValueListParams is the set of parameters that can be used when creating a value list.
 type RadarValueListParams struct {
-	Params   `form:"*"`
-	Alias    *string `form:"alias"`
-	ItemType *string `form:"item_type"`
-	Name     *string `form:"name"`
+	Params   `form:"*" json:"*"`
+	Alias    *string `form:"alias" json:"alias"`
+	ItemType *string `form:"item_type" json:"item_type"`
+	Name     *string `form:"name" json:"name"`
 }
 
 // RadarValueListListParams is the set of parameters that can be used when listing value lists.
 type RadarValueListListParams struct {
-	ListParams   `form:"*"`
-	Alias        *string           `form:"alias"`
-	Contains     *string           `form:"contains"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams   `form:"*" json:"*"`
+	Alias        *string           `form:"alias" json:"alias"`
+	Contains     *string           `form:"contains" json:"contains"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
 }
 
 // RadarValueList is the resource representing a value list.

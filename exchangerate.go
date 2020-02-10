@@ -10,7 +10,7 @@ type ExchangeRate struct {
 // ExchangeRateParams is the set of parameters that can be used when retrieving
 // exchange rates.
 type ExchangeRateParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // ExchangeRateList is a list of exchange rates as retrieved from a list endpoint.
@@ -21,5 +21,5 @@ type ExchangeRateList struct {
 
 // ExchangeRateListParams are the parameters allowed during ExchangeRate listing.
 type ExchangeRateListParams struct {
-	ListParams `form:"*"`
+	ListParams `form:"*" json:"*"`
 }

@@ -21,16 +21,6 @@ const (
 	SubscriptionStatusUnpaid            SubscriptionStatus = "unpaid"
 )
 
-// SubscriptionBilling is the type of collection method for this subscription's invoices.
-// This is considered deprecated. Use SubscriptionCollectionMethod instead.
-type SubscriptionBilling string
-
-// List of values that SubscriptionBilling can take.
-const (
-	SubscriptionBillingChargeAutomatically SubscriptionBilling = "charge_automatically"
-	SubscriptionBillingSendInvoice         SubscriptionBilling = "send_invoice"
-)
-
 // SubscriptionCollectionMethod is the type of collection method for this subscription's invoices.
 type SubscriptionCollectionMethod string
 
@@ -46,51 +36,79 @@ type SubscriptionPaymentBehavior string
 
 // List of values that SubscriptionPaymentBehavior can take.
 const (
-	SubscriptionPaymentBehaviorAllowIncomplete   SubscriptionPaymentBehavior = "allow_incomplete"
-	SubscriptionPaymentBehaviorErrorIfIncomplete SubscriptionPaymentBehavior = "error_if_incomplete"
+	SubscriptionPaymentBehaviorAllowIncomplete     SubscriptionPaymentBehavior = "allow_incomplete"
+	SubscriptionPaymentBehaviorErrorIfIncomplete   SubscriptionPaymentBehavior = "error_if_incomplete"
+	SubscriptionPaymentBehaviorPendingIfIncomplete SubscriptionPaymentBehavior = "pending_if_incomplete"
 )
+
+// SubscriptionProrationBehavior determines how to handle prorations when billing cycles change.
+type SubscriptionProrationBehavior string
+
+// List of values that SubscriptionProrationBehavior can take.
+const (
+	SubscriptionProrationBehaviorAlwaysInvoice    SubscriptionProrationBehavior = "always_invoice"
+	SubscriptionProrationBehaviorCreateProrations SubscriptionProrationBehavior = "create_prorations"
+	SubscriptionProrationBehaviorNone             SubscriptionProrationBehavior = "none"
+)
+
+// SubscriptionPendingInvoiceItemIntervalInterval controls the interval at which pending invoice
+// items should be invoiced.
+type SubscriptionPendingInvoiceItemIntervalInterval string
+
+// List of values that SubscriptionPendingInvoiceItemIntervalInterval can take.
+const (
+	SubscriptionPendingInvoiceItemIntervalIntervalDay   SubscriptionPendingInvoiceItemIntervalInterval = "day"
+	SubscriptionPendingInvoiceItemIntervalIntervalMonth SubscriptionPendingInvoiceItemIntervalInterval = "month"
+	SubscriptionPendingInvoiceItemIntervalIntervalWeek  SubscriptionPendingInvoiceItemIntervalInterval = "week"
+	SubscriptionPendingInvoiceItemIntervalIntervalYear  SubscriptionPendingInvoiceItemIntervalInterval = "year"
+)
+
+// SubscriptionPendingInvoiceItemIntervalParams is the set of parameters allowed for the transfer_data hash.
+type SubscriptionPendingInvoiceItemIntervalParams struct {
+	Interval      *string `form:"interval" json:"interval"`
+	IntervalCount *int64  `form:"interval_count" json:"interval_count"`
+}
 
 // SubscriptionTransferDataParams is the set of parameters allowed for the transfer_data hash.
 type SubscriptionTransferDataParams struct {
-	Destination *string `form:"destination"`
+	Destination *string `form:"destination" json:"destination"`
 }
 
 // SubscriptionParams is the set of parameters that can be used when creating or updating a subscription.
 // For more details see https://stripe.com/docs/api#create_subscription and https://stripe.com/docs/api#update_subscription.
 type SubscriptionParams struct {
 	Params                      `form:"*" json:"*"`
-	ApplicationFeePercent       *float64                             `form:"application_fee_percent" json:"application_fee_percent"`
-	BackdateStartDate           *int64                               `form:"backdate_start_date" json:"backdate_start_date"`
-	BillingCycleAnchor          *int64                               `form:"billing_cycle_anchor" json:"billing_cycle_anchor"`
-	BillingCycleAnchorNow       *bool                                `form:"-" json:"-"` // See custom AppendTo
-	BillingCycleAnchorUnchanged *bool                                `form:"-" json:"-"` // See custom AppendTo
-	BillingThresholds           *SubscriptionBillingThresholdsParams `form:"billing_thresholds" json:"billing_thresholds"`
-	CancelAt                    *int64                               `form:"cancel_at" json:"cancel_at"`
-	CancelAtPeriodEnd           *bool                                `form:"cancel_at_period_end" json:"cancel_at_period_end"`
-	Card                        *CardParams                          `form:"card" json:"card"`
-	CollectionMethod            *string                              `form:"collection_method" json:"collection_method"`
-	Coupon                      *string                              `form:"coupon" json:"coupon"`
-	Customer                    *string                              `form:"customer" json:"customer"`
-	DaysUntilDue                *int64                               `form:"days_until_due" json:"days_until_due"`
-	DefaultPaymentMethod        *string                              `form:"default_payment_method" json:"default_payment_method"`
-	DefaultSource               *string                              `form:"default_source" json:"default_source"`
-	DefaultTaxRates             []*string                            `form:"default_tax_rates" json:"default_tax_rates"`
-	Items                       []*SubscriptionItemsParams           `form:"items" json:"items"`
-	OffSession                  *bool                                `form:"off_session" json:"off_season"`
-	OnBehalfOf                  *string                              `form:"on_behalf_of" json:"on_behalf_of"`
-	PaymentBehavior             *string                              `form:"payment_behavior" json:"payment_behavior"`
-	Plan                        *string                              `form:"plan" json:"plan"`
-	Prorate                     *bool                                `form:"prorate" json:"prorate"`
-	ProrationDate               *int64                               `form:"proration_date" json:"proration_date"`
-	Quantity                    *int64                               `form:"quantity" json:"quantity"`
-	TrialEnd                    *int64                               `form:"trial_end" json:"trial_end"`
-	TransferData                *SubscriptionTransferDataParams      `form:"transfer_data" json:"transfer_data"`
-	TrialEndNow                 *bool                                `form:"-" json:"-"` // See custom AppendTo
-	TrialFromPlan               *bool                                `form:"trial_from_plan" json:"trial_from_plan"`
-	TrialPeriodDays             *int64                               `form:"trial_period_days" json:"trial_period_days"`
-
-	// This parameter is deprecated and we recommend that you use CollectionMethod instead.
-	Billing *string `form:"billing" json:"billing"`
+	ApplicationFeePercent       *float64                                      `form:"application_fee_percent" json:"application_fee_percent"`
+	BackdateStartDate           *int64                                        `form:"backdate_start_date" json:"backdate_start_date"`
+	BillingCycleAnchor          *int64                                        `form:"billing_cycle_anchor" json:"billing_cycle_anchor"`
+	BillingCycleAnchorNow       *bool                                         `form:"-" json:"-"` // See custom AppendTo
+	BillingCycleAnchorUnchanged *bool                                         `form:"-" json:"-"` // See custom AppendTo
+	BillingThresholds           *SubscriptionBillingThresholdsParams          `form:"billing_thresholds" json:"billing_thresholds"`
+	CancelAt                    *int64                                        `form:"cancel_at" json:"cancel_at"`
+	CancelAtPeriodEnd           *bool                                         `form:"cancel_at_period_end" json:"cancel_at_period_end"`
+	Card                        *CardParams                                   `form:"card" json:"card"`
+	CollectionMethod            *string                                       `form:"collection_method" json:"collection_method"`
+	Coupon                      *string                                       `form:"coupon" json:"coupon"`
+	Customer                    *string                                       `form:"customer" json:"customer"`
+	DaysUntilDue                *int64                                        `form:"days_until_due" json:"days_until_due"`
+	DefaultPaymentMethod        *string                                       `form:"default_payment_method" json:"default_payment_method"`
+	DefaultSource               *string                                       `form:"default_source" json:"default_source"`
+	DefaultTaxRates             []*string                                     `form:"default_tax_rates" json:"default_tax_rates"`
+	Items                       []*SubscriptionItemsParams                    `form:"items" json:"items"`
+	OffSession                  *bool                                         `form:"off_session" json:"off_session"`
+	OnBehalfOf                  *string                                       `form:"on_behalf_of" json:"on_behalf_of"`
+	PaymentBehavior             *string                                       `form:"payment_behavior" json:"payment_behavior"`
+	PendingInvoiceItemInterval  *SubscriptionPendingInvoiceItemIntervalParams `form:"pending_invoice_item_interval" json:"pending_invoice_item_interval"`
+	Plan                        *string                                       `form:"plan" json:"plan"`
+	Prorate                     *bool                                         `form:"prorate" json:"prorate"`
+	ProrationBehavior           *string                                       `form:"proration_behavior" json:"proration_behavior"`
+	ProrationDate               *int64                                        `form:"proration_date" json:"proration_date"`
+	Quantity                    *int64                                        `form:"quantity" json:"quantity"`
+	TrialEnd                    *int64                                        `form:"trial_end" json:"trial_end"`
+	TransferData                *SubscriptionTransferDataParams               `form:"transfer_data" json:"transfer_data"`
+	TrialEndNow                 *bool                                         `form:"-" json:"-"` // See custom AppendTo
+	TrialFromPlan               *bool                                         `form:"trial_from_plan" json:"trial_from_plan"`
+	TrialPeriodDays             *int64                                        `form:"trial_period_days" json:"trial_period_days"`
 
 	// This parameter is deprecated and we recommend that you use TaxRates instead.
 	TaxPercent *float64 `form:"tax_percent" json:"tax_percent"`
@@ -99,16 +117,16 @@ type SubscriptionParams struct {
 // SubscriptionBillingThresholdsParams is a structure representing the parameters allowed to control
 // billing thresholds for a subscription.
 type SubscriptionBillingThresholdsParams struct {
-	AmountGTE               *int64 `form:"amount_gte"`
-	ResetBillingCycleAnchor *bool  `form:"reset_billing_cycle_anchor"`
+	AmountGTE               *int64 `form:"amount_gte" json:"amount_gte"`
+	ResetBillingCycleAnchor *bool  `form:"reset_billing_cycle_anchor" json:"reset_billing_cycle_anchor"`
 }
 
 // SubscriptionCancelParams is the set of parameters that can be used when canceling a subscription.
 // For more details see https://stripe.com/docs/api#cancel_subscription
 type SubscriptionCancelParams struct {
-	Params     `form:"*"`
-	InvoiceNow *bool `form:"invoice_now"`
-	Prorate    *bool `form:"prorate"`
+	Params     `form:"*" json:"*"`
+	InvoiceNow *bool `form:"invoice_now" json:"invoice_now"`
+	Prorate    *bool `form:"prorate" json:"prorate"`
 }
 
 // AppendTo implements custom encoding logic for SubscriptionParams so that the special
@@ -131,33 +149,46 @@ func (p *SubscriptionParams) AppendTo(body *form.Values, keyParts []string) {
 // SubscriptionItemsParams is the set of parameters that can be used when creating or updating a subscription item on a subscription
 // For more details see https://stripe.com/docs/api#create_subscription and https://stripe.com/docs/api#update_subscription.
 type SubscriptionItemsParams struct {
-	Params            `form:"*"`
-	BillingThresholds *SubscriptionItemBillingThresholdsParams `form:"billing_thresholds"`
-	ClearUsage        *bool                                    `form:"clear_usage"`
-	Deleted           *bool                                    `form:"deleted"`
-	ID                *string                                  `form:"id"`
-	Plan              *string                                  `form:"plan"`
-	Quantity          *int64                                   `form:"quantity"`
-	TaxRates          []*string                                `form:"tax_rates"`
+	Params            `form:"*" json:"*"`
+	BillingThresholds *SubscriptionItemBillingThresholdsParams `form:"billing_thresholds" json:"billing_thresholds"`
+	ClearUsage        *bool                                    `form:"clear_usage" json:"clear_usage"`
+	Deleted           *bool                                    `form:"deleted" json:"deleted"`
+	ID                *string                                  `form:"id" json:"id"`
+	Plan              *string                                  `form:"plan" json:"plan"`
+	Quantity          *int64                                   `form:"quantity" json:"quantity"`
+	TaxRates          []*string                                `form:"tax_rates" json:"tax_rates"`
 }
 
 // SubscriptionListParams is the set of parameters that can be used when listing active subscriptions.
 // For more details see https://stripe.com/docs/api#list_subscriptions.
 type SubscriptionListParams struct {
-	ListParams              `form:"*"`
-	CollectionMethod        *string           `form:"collection_method"`
-	Created                 int64             `form:"created"`
-	CreatedRange            *RangeQueryParams `form:"created"`
-	CurrentPeriodEnd        *int64            `form:"current_period_end"`
-	CurrentPeriodEndRange   *RangeQueryParams `form:"current_period_end"`
-	CurrentPeriodStart      *int64            `form:"current_period_start"`
-	CurrentPeriodStartRange *RangeQueryParams `form:"current_period_start"`
-	Customer                string            `form:"customer"`
-	Plan                    string            `form:"plan"`
-	Status                  string            `form:"status"`
+	ListParams              `form:"*" json:"*"`
+	CollectionMethod        *string           `form:"collection_method" json:"collection_method"`
+	Created                 int64             `form:"created" json:"created"`
+	CreatedRange            *RangeQueryParams `form:"created" json:"created"`
+	CurrentPeriodEnd        *int64            `form:"current_period_end" json:"current_period_end"`
+	CurrentPeriodEndRange   *RangeQueryParams `form:"current_period_end" json:"current_period_end"`
+	CurrentPeriodStart      *int64            `form:"current_period_start" json:"current_period_start"`
+	CurrentPeriodStartRange *RangeQueryParams `form:"current_period_start" json:"current_period_start"`
+	Customer                string            `form:"customer" json:"customer"`
+	Plan                    string            `form:"plan" json:"plan"`
+	Status                  string            `form:"status" json:"status"`
+}
 
-	// This parameter is deprecated and we recommend that you use CollectionMethod instead.
-	Billing *string `form:"billing"`
+// SubscriptionPendingInvoiceItemInterval represents the interval at which to invoice pending invoice
+// items.
+type SubscriptionPendingInvoiceItemInterval struct {
+	Interval      SubscriptionPendingInvoiceItemIntervalInterval `json:"interval"`
+	IntervalCount int64                                          `json:"interval_count"`
+}
+
+// SubscriptionPendingUpdate represents deferred changes that will be applied when latest invoice is paid.
+type SubscriptionPendingUpdate struct {
+	BillingCycleAnchor int64               `json:"billing_cycle_anchor"`
+	ExpiresAt          int64               `json:"expires_at"`
+	SubscriptionItems  []*SubscriptionItem `json:"subscription_items"`
+	TrialEnd           int64               `json:"trial_end"`
+	TrialFromPlan      bool                `json:"trial_from_plan"`
 }
 
 // SubscriptionTransferData represents the information for the transfer_data associated with a subscription.
@@ -168,45 +199,42 @@ type SubscriptionTransferData struct {
 // Subscription is the resource representing a Stripe subscription.
 // For more details see https://stripe.com/docs/api#subscriptions.
 type Subscription struct {
-	ApplicationFeePercent float64                        `json:"application_fee_percent"`
-	BillingCycleAnchor    int64                          `json:"billing_cycle_anchor"`
-	BillingThresholds     *SubscriptionBillingThresholds `json:"billing_thresholds"`
-	CancelAt              int64                          `json:"cancel_at"`
-	CancelAtPeriodEnd     bool                           `json:"cancel_at_period_end"`
-	CanceledAt            int64                          `json:"canceled_at"`
-	CollectionMethod      SubscriptionCollectionMethod   `json:"collection_method"`
-	Created               int64                          `json:"created"`
-	CurrentPeriodEnd      int64                          `json:"current_period_end"`
-	CurrentPeriodStart    int64                          `json:"current_period_start"`
-	Customer              *Customer                      `json:"customer"`
-	DaysUntilDue          int64                          `json:"days_until_due"`
-	DefaultPaymentMethod  *PaymentMethod                 `json:"default_payment_method"`
-	DefaultSource         *PaymentSource                 `json:"default_source"`
-	DefaultTaxRates       []*TaxRate                     `json:"default_tax_rates"`
-	Discount              *Discount                      `json:"discount"`
-	EndedAt               int64                          `json:"ended_at"`
-	ID                    string                         `json:"id"`
-	Items                 *SubscriptionItemList          `json:"items"`
-	LatestInvoice         *Invoice                       `json:"latest_invoice"`
-	Livemode              bool                           `json:"livemode"`
-	Metadata              map[string]string              `json:"metadata"`
-	Object                string                         `json:"object"`
-	OnBehalfOf            *Account                       `json:"on_behalf_of"`
-	PendingSetupIntent    *SetupIntent                   `json:"pending_setup_intent"`
-	Plan                  *Plan                          `json:"plan"`
-	Quantity              int64                          `json:"quantity"`
-	Schedule              *SubscriptionSchedule          `json:"schedule"`
-	StartDate             int64                          `json:"start_date"`
-	Status                SubscriptionStatus             `json:"status"`
-	TransferData          *SubscriptionTransferData      `json:"transfer_data"`
-	TrialEnd              int64                          `json:"trial_end"`
-	TrialStart            int64                          `json:"trial_start"`
-
-	// This field is deprecated and we recommend that you use CollectionMethod instead.
-	Billing SubscriptionBilling `json:"billing"`
-
-	// This field is deprecated and we recommend that you use StartDate instead.
-	Start int64 `json:"start"`
+	ApplicationFeePercent         float64                                `json:"application_fee_percent"`
+	BillingCycleAnchor            int64                                  `json:"billing_cycle_anchor"`
+	BillingThresholds             *SubscriptionBillingThresholds         `json:"billing_thresholds"`
+	CancelAt                      int64                                  `json:"cancel_at"`
+	CancelAtPeriodEnd             bool                                   `json:"cancel_at_period_end"`
+	CanceledAt                    int64                                  `json:"canceled_at"`
+	CollectionMethod              SubscriptionCollectionMethod           `json:"collection_method"`
+	Created                       int64                                  `json:"created"`
+	CurrentPeriodEnd              int64                                  `json:"current_period_end"`
+	CurrentPeriodStart            int64                                  `json:"current_period_start"`
+	Customer                      *Customer                              `json:"customer"`
+	DaysUntilDue                  int64                                  `json:"days_until_due"`
+	DefaultPaymentMethod          *PaymentMethod                         `json:"default_payment_method"`
+	DefaultSource                 *PaymentSource                         `json:"default_source"`
+	DefaultTaxRates               []*TaxRate                             `json:"default_tax_rates"`
+	Discount                      *Discount                              `json:"discount"`
+	EndedAt                       int64                                  `json:"ended_at"`
+	ID                            string                                 `json:"id"`
+	Items                         *SubscriptionItemList                  `json:"items"`
+	LatestInvoice                 *Invoice                               `json:"latest_invoice"`
+	Livemode                      bool                                   `json:"livemode"`
+	Metadata                      map[string]string                      `json:"metadata"`
+	NextPendingInvoiceItemInvoice int64                                  `json:"next_pending_invoice_item_invoice"`
+	Object                        string                                 `json:"object"`
+	OnBehalfOf                    *Account                               `json:"on_behalf_of"`
+	PendingInvoiceItemInterval    SubscriptionPendingInvoiceItemInterval `json:"pending_invoice_item_interval"`
+	PendingSetupIntent            *SetupIntent                           `json:"pending_setup_intent"`
+	PendingUpdate                 *SubscriptionPendingUpdate             `json:"pending_update"`
+	Plan                          *Plan                                  `json:"plan"`
+	Quantity                      int64                                  `json:"quantity"`
+	Schedule                      *SubscriptionSchedule                  `json:"schedule"`
+	StartDate                     int64                                  `json:"start_date"`
+	Status                        SubscriptionStatus                     `json:"status"`
+	TransferData                  *SubscriptionTransferData              `json:"transfer_data"`
+	TrialEnd                      int64                                  `json:"trial_end"`
+	TrialStart                    int64                                  `json:"trial_start"`
 
 	// This field is deprecated and we recommend that you use TaxRates instead.
 	TaxPercent float64 `json:"tax_percent"`

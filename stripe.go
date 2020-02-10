@@ -28,7 +28,7 @@ import (
 
 const (
 	// APIVersion is the currently supported API version
-	APIVersion string = "2019-09-09"
+	APIVersion string = "2019-12-03"
 
 	// APIBackend is a constant representing the API service backend.
 	APIBackend SupportedBackend = "api"
@@ -763,17 +763,7 @@ func GetBackend(backendType SupportedBackend) Backend {
 		},
 	)
 
-	backends.mu.Lock()
-	defer backends.mu.Unlock()
-
-	switch backendType {
-	case APIBackend:
-		backends.API = backend
-	case ConnectBackend:
-		backends.Connect = backend
-	case UploadsBackend:
-		backends.Uploads = backend
-	}
+	SetBackend(backendType, backend)
 
 	return backend
 }
@@ -950,7 +940,7 @@ func StringSlice(v []string) []*string {
 const apiURL = "https://api.stripe.com"
 
 // clientversion is the binding version
-const clientversion = "63.2.1-omni.1"
+const clientversion = "68.18.0-omni"
 
 // defaultHTTPTimeout is the default timeout on the http.Client used by the library.
 // This is chosen to be consistent with the other Stripe language libraries and

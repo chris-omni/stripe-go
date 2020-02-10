@@ -29,16 +29,16 @@ const (
 // CapabilityParams is the set of parameters that can be used when updating a capability.
 // For more details see https://stripe.com/docs/api/capabilities/update
 type CapabilityParams struct {
-	Params    `form:"*"`
-	Account   *string `form:"-"` // Included in URL
-	Requested *bool   `form:"requested"`
+	Params    `form:"*" json:"*"`
+	Account   *string `form:"-" json:"-"` // Included in URL
+	Requested *bool   `form:"requested" json:"requested"`
 }
 
 // CapabilityListParams is the set of parameters that can be used when listing capabilities.
 // For more detail see https://stripe.com/docs/api/capabilities/list
 type CapabilityListParams struct {
-	ListParams `form:"*"`
-	Account    *string `form:"-"` // Included in URL
+	ListParams `form:"*" json:"*"`
+	Account    *string `form:"-" json:"-"` // Included in URL
 }
 
 // CapabilityRequirements represents information that needs to be collected for a capability.

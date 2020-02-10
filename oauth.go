@@ -42,70 +42,70 @@ const (
 
 // OAuthStripeUserParams for the stripe_user OAuth Authorize params.
 type OAuthStripeUserParams struct {
-	BlockKana          *string `form:"block_kana"`
-	BlockKanji         *string `form:"block_kanji"`
-	BuildingKana       *string `form:"building_kana"`
-	BuildingKanji      *string `form:"building_kanji"`
-	BusinessName       *string `form:"business_name"`
-	BusinessType       *string `form:"business_type"`
-	City               *string `form:"city"`
-	Country            *string `form:"country"`
-	Currency           *string `form:"currency"`
-	DOBDay             *int64  `form:"dob_day"`
-	DOBMonth           *int64  `form:"dob_month"`
-	DOBYear            *int64  `form:"dob_year"`
-	Email              *string `form:"email"`
-	FirstName          *string `form:"first_name"`
-	FirstNameKana      *string `form:"first_name_kana"`
-	FirstNameKanji     *string `form:"first_name_kanji"`
-	Gender             *string `form:"gender"`
-	LastName           *string `form:"last_name"`
-	LastNameKana       *string `form:"last_name_kana"`
-	LastNameKanji      *string `form:"last_name_kanji"`
-	PhoneNumber        *string `form:"phone_number"`
-	PhysicalProduct    *bool   `form:"physical_product"`
-	ProductDescription *string `form:"product_description"`
-	State              *string `form:"state"`
-	StreetAddress      *string `form:"street_address"`
-	URL                *string `form:"url"`
-	Zip                *string `form:"zip"`
+	BlockKana          *string `form:"block_kana" json:"block_kana"`
+	BlockKanji         *string `form:"block_kanji" json:"block_kanji"`
+	BuildingKana       *string `form:"building_kana" json:"building_kana"`
+	BuildingKanji      *string `form:"building_kanji" json:"building_kanji"`
+	BusinessName       *string `form:"business_name" json:"business_name"`
+	BusinessType       *string `form:"business_type" json:"business_type"`
+	City               *string `form:"city" json:"city"`
+	Country            *string `form:"country" json:"country"`
+	Currency           *string `form:"currency" json:"currency"`
+	DOBDay             *int64  `form:"dob_day" json:"dob_day"`
+	DOBMonth           *int64  `form:"dob_month" json:"dob_month"`
+	DOBYear            *int64  `form:"dob_year" json:"dob_year"`
+	Email              *string `form:"email" json:"email"`
+	FirstName          *string `form:"first_name" json:"first_name"`
+	FirstNameKana      *string `form:"first_name_kana" json:"first_name_kana"`
+	FirstNameKanji     *string `form:"first_name_kanji" json:"first_name_kanji"`
+	Gender             *string `form:"gender" json:"gender"`
+	LastName           *string `form:"last_name" json:"last_name"`
+	LastNameKana       *string `form:"last_name_kana" json:"last_name_kana"`
+	LastNameKanji      *string `form:"last_name_kanji" json:"last_name_kanji"`
+	PhoneNumber        *string `form:"phone_number" json:"phone_number"`
+	PhysicalProduct    *bool   `form:"physical_product" json:"physical_product"`
+	ProductDescription *string `form:"product_description" json:"product_description"`
+	State              *string `form:"state" json:"state"`
+	StreetAddress      *string `form:"street_address" json:"street_address"`
+	URL                *string `form:"url" json:"url"`
+	Zip                *string `form:"zip" json:"zip"`
 }
 
 // AuthorizeURLParams for creating OAuth AuthorizeURLs.
 type AuthorizeURLParams struct {
-	Params                `form:"*"`
-	AlwaysPrompt          *bool                  `form:"always_prompt"`
-	ClientID              *string                `form:"client_id"`
-	RedirectURI           *string                `form:"redirect_uri"`
-	ResponseType          *string                `form:"response_type"`
-	Scope                 *string                `form:"scope"`
-	State                 *string                `form:"state"`
-	StripeLanding         *string                `form:"stripe_landing"`
-	StripeUser            *OAuthStripeUserParams `form:"stripe_user"`
-	SuggestedCapabilities []*string              `form:"suggested_capabilities"`
+	Params                `form:"*" json:"*"`
+	AlwaysPrompt          *bool                  `form:"always_prompt" json:"always_prompt"`
+	ClientID              *string                `form:"client_id" json:"client_id"`
+	RedirectURI           *string                `form:"redirect_uri" json:"redirect_uri"`
+	ResponseType          *string                `form:"response_type" json:"response_type"`
+	Scope                 *string                `form:"scope" json:"scope"`
+	State                 *string                `form:"state" json:"state"`
+	StripeLanding         *string                `form:"stripe_landing" json:"stripe_landing"`
+	StripeUser            *OAuthStripeUserParams `form:"stripe_user" json:"stripe_user"`
+	SuggestedCapabilities []*string              `form:"suggested_capabilities" json:"suggested_capabilities"`
 
 	// Express is not sent as a parameter, but is used to modify the authorize URL
 	// path to use the express OAuth path.
-	Express *bool `form:"-"`
+	Express *bool `form:"-" json:"-"`
 }
 
 // DeauthorizeParams for deauthorizing an account.
 type DeauthorizeParams struct {
-	Params       `form:"*"`
-	ClientID     *string `form:"client_id"`
-	StripeUserID *string `form:"stripe_user_id"`
+	Params       `form:"*" json:"*"`
+	ClientID     *string `form:"client_id" json:"client_id"`
+	StripeUserID *string `form:"stripe_user_id" json:"stripe_user_id"`
 }
 
 // OAuthTokenParams is the set of paramaters that can be used to request
 // OAuthTokens.
 type OAuthTokenParams struct {
-	Params             `form:"*"`
-	AssertCapabilities []*string `form:"assert_capabilities"`
-	ClientSecret       *string   `form:"client_secret"`
-	Code               *string   `form:"code"`
-	GrantType          *string   `form:"grant_type"`
-	RefreshToken       *string   `form:"refresh_token"`
-	Scope              *string   `form:"scope"`
+	Params             `form:"*" json:"*"`
+	AssertCapabilities []*string `form:"assert_capabilities" json:"assert_capabilities"`
+	ClientSecret       *string   `form:"client_secret" json:"client_secret"`
+	Code               *string   `form:"code" json:"code"`
+	GrantType          *string   `form:"grant_type" json:"grant_type"`
+	RefreshToken       *string   `form:"refresh_token" json:"refresh_token"`
+	Scope              *string   `form:"scope" json:"scope"`
 }
 
 // OAuthToken is the value of the OAuthToken from OAuth flow.

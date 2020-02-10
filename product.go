@@ -14,10 +14,10 @@ const (
 // PackageDimensionsParams represents the set of parameters for the the dimension of a
 // product or a SKU from the perspective of shipping .
 type PackageDimensionsParams struct {
-	Height *float64 `form:"height"`
-	Length *float64 `form:"length"`
-	Weight *float64 `form:"weight"`
-	Width  *float64 `form:"width"`
+	Height *float64 `form:"height" json:"height"`
+	Length *float64 `form:"length" json:"length"`
+	Weight *float64 `form:"weight" json:"weight"`
+	Width  *float64 `form:"width" json:"width"`
 }
 
 // ProductParams is the set of parameters that can be used when creating or updating a product.
@@ -79,14 +79,14 @@ type ProductList struct {
 
 // ProductListParams is the set of parameters that can be used when listing products.
 type ProductListParams struct {
-	ListParams   `form:"*"`
-	Active       *bool             `form:"active"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	IDs          []*string         `form:"ids"`
-	Shippable    *bool             `form:"shippable"`
-	URL          *string           `form:"url"`
-	Type         *string           `form:"type"`
+	ListParams   `form:"*" json:"*"`
+	Active       *bool             `form:"active" json:"active"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	IDs          []*string         `form:"ids" json:"ids"`
+	Shippable    *bool             `form:"shippable" json:"shippable"`
+	URL          *string           `form:"url" json:"url"`
+	Type         *string           `form:"type" json:"type"`
 }
 
 // UnmarshalJSON handles deserialization of a Product.

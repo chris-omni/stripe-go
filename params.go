@@ -30,7 +30,7 @@ const (
 // They're implemented as a custom type so that they can have their own
 // AppendTo implementation.
 type ExtraValues struct {
-	url.Values `form:"-"` // See custom AppendTo implementation
+	url.Values `form:"-" json:"-"` // See custom AppendTo implementation
 }
 
 // AppendTo implements custom form encoding for extra parameter values.
@@ -44,7 +44,7 @@ func (v ExtraValues) AppendTo(body *form.Values, keyParts []string) {
 
 // Filters is a structure that contains a collection of filters for list-related APIs.
 type Filters struct {
-	f []*filter `form:"-"` // See custom AppendTo implementation
+	f []*filter `form:"-" json:"-"` // See custom AppendTo implementation
 }
 
 // AddFilter adds a new filter with a given key, op and value.
@@ -86,26 +86,26 @@ type ListParams struct {
 	// guarantee whether the operation was or was not completed on Stripe's API
 	// servers. For certainty, you must either retry with the same idempotency
 	// key or query the state of the API.
-	Context context.Context `form:"-"`
+	Context context.Context `form:"-" json:"-"`
 
-	EndingBefore *string   `form:"ending_before"`
-	Expand       []*string `form:"expand"`
-	Filters      Filters   `form:"*"`
-	Limit        *int64    `form:"limit"`
+	EndingBefore *string   `form:"ending_before" json:"ending_before"`
+	Expand       []*string `form:"expand" json:"expand"`
+	Filters      Filters   `form:"*" json:"*"`
+	Limit        *int64    `form:"limit" json:"limit"`
 
 	// Single specifies whether this is a single page iterator. By default,
 	// listing through an iterator will automatically grab additional pages as
 	// the query progresses. To change this behavior and just load a single
 	// page, set this to true.
-	Single bool `form:"-"` // Not an API parameter
+	Single bool `form:"-" json:"-"` // Not an API parameter
 
-	StartingAfter *string `form:"starting_after"`
+	StartingAfter *string `form:"starting_after" json:"starting_after"`
 
 	// StripeAccount may contain the ID of a connected account. By including
 	// this field, the request is made as if it originated from the connected
 	// account instead of under the account of the owner of the configured
 	// Stripe key.
-	StripeAccount *string `form:"-"` // Passed as header
+	StripeAccount *string `form:"-" json:"-"` // Passed as header
 }
 
 // AddExpand appends a new field to expand.
@@ -161,22 +161,22 @@ type Params struct {
 	// guarantee whether the operation was or was not completed on Stripe's API
 	// servers. For certainty, you must either retry with the same idempotency
 	// key or query the state of the API.
-	Context context.Context `form:"-"`
+	Context context.Context `form:"-" json:"-"`
 
-	Expand []*string    `form:"expand"`
-	Extra  *ExtraValues `form:"*"`
+	Expand []*string    `form:"expand" json:"expand"`
+	Extra  *ExtraValues `form:"*" json:"*"`
 
 	// Headers may be used to provide extra header lines on the HTTP request.
-	Headers http.Header `form:"-"`
+	Headers http.Header `form:"-" json:"-"`
 
-	IdempotencyKey *string           `form:"-"` // Passed as header
-	Metadata       map[string]string `form:"metadata"`
+	IdempotencyKey *string           `form:"-" json:"-"` // Passed as header
+	Metadata       map[string]string `form:"metadata" json:"metadata"`
 
 	// StripeAccount may contain the ID of a connected account. By including
 	// this field, the request is made as if it originated from the connected
 	// account instead of under the account of the owner of the configured
 	// Stripe key.
-	StripeAccount *string `form:"-"` // Passed as header
+	StripeAccount *string `form:"-" json:"-"` // Passed as header
 }
 
 // AddExpand appends a new field to expand.
@@ -231,18 +231,18 @@ type ParamsContainer interface {
 type RangeQueryParams struct {
 	// GreaterThan specifies that values should be a greater than this
 	// timestamp.
-	GreaterThan int64 `form:"gt"`
+	GreaterThan int64 `form:"gt" json:"gt"`
 
 	// GreaterThanOrEqual specifies that values should be greater than or equal
 	// to this timestamp.
-	GreaterThanOrEqual int64 `form:"gte"`
+	GreaterThanOrEqual int64 `form:"gte" json:"gte"`
 
 	// LesserThan specifies that values should be lesser than this timetamp.
-	LesserThan int64 `form:"lt"`
+	LesserThan int64 `form:"lt" json:"lt"`
 
 	// LesserThanOrEqual specifies that values should be lesser than or
 	// equalthis timetamp.
-	LesserThanOrEqual int64 `form:"lte"`
+	LesserThanOrEqual int64 `form:"lte" json:"lte"`
 }
 
 //

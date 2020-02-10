@@ -4,13 +4,13 @@ import "encoding/json"
 
 // BitcoinTransactionListParams is the set of parameters that can be used when listing BitcoinTransactions.
 type BitcoinTransactionListParams struct {
-	ListParams `form:"*"`
-	Customer   *string `form:"customer"`
-	Receiver   *string `form:"-"` // Sent in with the URL
+	ListParams `form:"*" json:"*"`
+	Customer   *string `form:"customer" json:"customer"`
+	Receiver   *string `form:"-" json:"-"` // Sent in with the URL
 }
 
 // BitcoinTransactionList is a list object for BitcoinTransactions.
-// It is a child object of BitcoinRecievers
+// It is a child object of BitcoinReceivers
 // For more details see https://stripe.com/docs/api/#retrieve_bitcoin_receiver
 type BitcoinTransactionList struct {
 	ListMeta

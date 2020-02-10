@@ -17,9 +17,10 @@ type RefundReason string
 
 // List of values that RefundReason can take.
 const (
-	RefundReasonDuplicate           RefundReason = "duplicate"
-	RefundReasonFraudulent          RefundReason = "fraudulent"
-	RefundReasonRequestedByCustomer RefundReason = "requested_by_customer"
+	RefundReasonDuplicate               RefundReason = "duplicate"
+	RefundReasonExpiredUncapturedCharge RefundReason = "expired_uncaptured_charge"
+	RefundReasonFraudulent              RefundReason = "fraudulent"
+	RefundReasonRequestedByCustomer     RefundReason = "requested_by_customer"
 )
 
 // RefundStatus is the status of the refund.
@@ -36,21 +37,23 @@ const (
 // RefundParams is the set of parameters that can be used when refunding a charge.
 // For more details see https://stripe.com/docs/api#refund.
 type RefundParams struct {
-	Params               `form:"*"`
-	Amount               *int64  `form:"amount"`
-	Charge               *string `form:"charge"`
-	Reason               *string `form:"reason"`
-	RefundApplicationFee *bool   `form:"refund_application_fee"`
-	ReverseTransfer      *bool   `form:"reverse_transfer"`
+	Params               `form:"*" json:"*"`
+	Amount               *int64  `form:"amount" json:"amount"`
+	Charge               *string `form:"charge" json:"charge"`
+	PaymentIntent        *string `form:"payment_intent" json:"payment_intent"`
+	Reason               *string `form:"reason" json:"reason"`
+	RefundApplicationFee *bool   `form:"refund_application_fee" json:"refund_application_fee"`
+	ReverseTransfer      *bool   `form:"reverse_transfer" json:"reverse_transfer"`
 }
 
 // RefundListParams is the set of parameters that can be used when listing refunds.
 // For more details see https://stripe.com/docs/api#list_refunds.
 type RefundListParams struct {
-	ListParams   `form:"*"`
-	Charge       *string           `form:"charge"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams    `form:"*" json:"*"`
+	Charge        *string           `form:"charge" json:"charge"`
+	Created       *int64            `form:"created" json:"created"`
+	CreatedRange  *RangeQueryParams `form:"created" json:"created"`
+	PaymentIntent *string           `form:"payment_intent" json:"payment_intent"`
 }
 
 // Refund is the resource representing a Stripe refund.
@@ -66,6 +69,7 @@ type Refund struct {
 	ID                        string              `json:"id"`
 	Metadata                  map[string]string   `json:"metadata"`
 	Object                    string              `json:"object"`
+	PaymentIntent             *PaymentIntent      `json:"payment_intent"`
 	Reason                    RefundReason        `json:"reason"`
 	ReceiptNumber             string              `json:"receipt_number"`
 	SourceTransferReversal    *Reversal           `json:"source_transfer_reversal"`

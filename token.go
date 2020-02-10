@@ -14,16 +14,16 @@ const (
 // TokenParams is the set of parameters that can be used when creating a token.
 // For more details see https://stripe.com/docs/api#create_card_token and https://stripe.com/docs/api#create_bank_account_token.
 type TokenParams struct {
-	Params      `form:"*"`
-	BankAccount *BankAccountParams `form:"bank_account"`
-	Card        *CardParams        `form:"card"`
-	Customer    *string            `form:"customer"`
+	Params      `form:"*" json:"*"`
+	BankAccount *BankAccountParams `form:"bank_account" json:"bank_account"`
+	Card        *CardParams        `form:"card" json:"card"`
+	Customer    *string            `form:"customer" json:"customer"`
 
 	// Email is an undocumented parameter used by Stripe Checkout
 	// It may be removed from the API without notice.
-	Email *string `form:"email"`
+	Email *string `form:"email" json:"email"`
 
-	PII *PIIParams `form:"pii"`
+	PII *PIIParams `form:"pii" json:"pii"`
 }
 
 // Token is the resource representing a Stripe token.
@@ -46,6 +46,6 @@ type Token struct {
 
 // PIIParams are parameters for personal identifiable information (PII).
 type PIIParams struct {
-	Params   `form:"*"`
-	IDNumber *string `form:"id_number"`
+	Params   `form:"*" json:"*"`
+	IDNumber *string `form:"id_number" json:"id_number"`
 }

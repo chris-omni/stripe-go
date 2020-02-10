@@ -20,12 +20,12 @@ const (
 
 // AccountLinkParams are the parameters allowed during an account link creation.
 type AccountLinkParams struct {
-	Params     `form:"*"`
-	Account    *string `form:"account"`
-	Collect    *string `form:"collect"`
-	FailureURL *string `form:"failure_url"`
-	SuccessURL *string `form:"success_url"`
-	Type       *string `form:"type"`
+	Params     `form:"*" json:"*"`
+	Account    *string `form:"account" json:"account"`
+	Collect    *string `form:"collect" json:"collect"`
+	FailureURL *string `form:"failure_url" json:"failure_url"`
+	SuccessURL *string `form:"success_url" json:"success_url"`
+	Type       *string `form:"type" json:"type"`
 }
 
 // AccountLink is the resource representing an account link.

@@ -2,12 +2,12 @@ package stripe
 
 // ReportTypeListParams is the set of parameters that can be used when listing report types.
 type ReportTypeListParams struct {
-	ListParams `form:"*"`
+	ListParams `form:"*" json:"*"`
 }
 
 // ReportTypeParams is the set of parameters that can be used when retrieving a report type.
 type ReportTypeParams struct {
-	Params `form:"*"`
+	Params `form:"*" json:"*"`
 }
 
 // ReportType is the resource representing a report type.

@@ -6,18 +6,18 @@ import (
 
 // FileLinkParams is the set of parameters that can be used when creating or updating a file link.
 type FileLinkParams struct {
-	Params    `form:"*"`
-	ExpiresAt *int64  `form:"expires_at"`
-	File      *string `form:"file"`
+	Params    `form:"*" json:"*"`
+	ExpiresAt *int64  `form:"expires_at" json:"expires_at"`
+	File      *string `form:"file" json:"file"`
 }
 
 // FileLinkListParams is the set of parameters that can be used when listing file links.
 type FileLinkListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Expired      *bool             `form:"expired"`
-	File         *string           `form:"file"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Expired      *bool             `form:"expired" json:"expired"`
+	File         *string           `form:"file" json:"file"`
 }
 
 // FileLink is the resource representing a Stripe file link.

@@ -28,7 +28,7 @@ import (
 The library currently *does not* ship with first-class support for Go
 modules. We put in support for it before, but ran into compatibility problems
 for existing installations using Dep (see discussion in [closer to the bottom
-of this thread][gomodvsdep], and [reverted support][gomodrevert]. Our current
+of this thread][gomodvsdep]), and [reverted support][gomodrevert]. Our current
 plan is to wait for better module compatibility in Dep (see a [preliminary
 patch here][depgomodsupport]), give the release a little grace time to become
 more widely distributed, then bring support back.
@@ -40,7 +40,7 @@ suffix* in the path like so:
 module github.com/my/package
 
 require (
-    github.com/stripe/stripe-go v63.2.1
+    github.com/stripe/stripe-go v68.18.0
 )
 ```
 
@@ -67,27 +67,26 @@ Below are a few simple examples:
 
 ```go
 params := &stripe.CustomerParams{
-	AccountBalance:     stripe.Int64(-123),
-	Description:        stripe.String("Stripe Developer"),
-	Email:              stripe.String("gostripe@stripe.com"),
+	Description: stripe.String("Stripe Developer"),
+	Email:       stripe.String("gostripe@stripe.com"),
 }
-params.SetSource("tok_1234")
 
 customer, err := customer.New(params)
 ```
 
-### Charges
+### PaymentIntents
 
 ```go
-params := &stripe.ChargeListParams{Customer: stripe.String(customer.ID)}
-params.Filters.AddFilter("include[]", "", "total_count")
+params := &stripe.PaymentIntentListParams{
+    Customer: stripe.String(customer.ID),
+}
 
 // set this so you can easily retry your request in case of a timeout
 params.Params.IdempotencyKey = stripe.NewIdempotencyKey()
 
-i := charge.List(params)
+i := paymentintent.List(params)
 for i.Next() {
-	charge := i.Charge()
+	pi := i.PaymentIntent()
 }
 
 if err := i.Err(); err != nil {
@@ -125,7 +124,7 @@ or `Params` class. For example:
 
 ```go
 // For a list request
-listParams := &stripe.ChargeListParams{}
+listParams := &stripe.CustomerListParams{}
 listParams.SetStripeAccount("acct_123")
 ```
 
@@ -170,19 +169,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
         c := appengine.NewContext(r)
         httpClient := urlfetch.Client(c)
 
-        sc := stripeClient.New("sk_live_key", stripe.NewBackends(httpClient))
+        sc := stripeClient.New("sk_test_123", stripe.NewBackends(httpClient))
 
-        chargeParams := &stripe.ChargeParams{
-            Amount:      stripe.Int64(2000),
-            Currency:    stripe.String(string(stripe.CurrencyUSD)),
-            Description: stripe.String("Charge from Google App Engine"),
+        params := &stripe.CustomerParams{
+            Description: stripe.String("Stripe Developer"),
+            Email:       stripe.String("gostripe@stripe.com"),
         }
-        chargeParams.SetSource("tok_amex") // obtained with Stripe.js
-        charge, err := sc.Charges.New(chargeParams)
+        customer, err := sc.Customers.New(params)
         if err != nil {
-            fmt.Fprintf(w, "Could not process payment: %v", err)
+            fmt.Fprintf(w, "Could not create customer: %v", err)
         }
-        fmt.Fprintf(w, "Completed payment: %v", charge.ID)
+        fmt.Fprintf(w, "Customer created: %v", customer.ID)
 }
 ```
 

@@ -7,16 +7,16 @@ import (
 // FeeRefundParams is the set of parameters that can be used when refunding an application fee.
 // For more details see https://stripe.com/docs/api#fee_refund.
 type FeeRefundParams struct {
-	Params         `form:"*"`
-	Amount         *int64  `form:"amount"`
-	ApplicationFee *string `form:"-"` // Included in the URL
+	Params         `form:"*" json:"*"`
+	Amount         *int64  `form:"amount" json:"amount"`
+	ApplicationFee *string `form:"-" json:"-"` // Included in the URL
 }
 
 // FeeRefundListParams is the set of parameters that can be used when listing application fee refunds.
 // For more details see https://stripe.com/docs/api#list_fee_refunds.
 type FeeRefundListParams struct {
-	ListParams     `form:"*"`
-	ApplicationFee *string `form:"-"` // Included in the URL
+	ListParams     `form:"*" json:"*"`
+	ApplicationFee *string `form:"-" json:"-"` // Included in the URL
 }
 
 // FeeRefund is the resource representing a Stripe application fee refund.

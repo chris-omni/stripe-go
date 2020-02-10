@@ -12,27 +12,27 @@ const (
 
 // ReportRunParametersParams is the set of parameters that can be used when creating a report run.
 type ReportRunParametersParams struct {
-	Columns           []*string `form:"columns"`
-	ConnectedAccount  *string   `form:"connected_account"`
-	Currency          *string   `form:"currency"`
-	IntervalEnd       *int64    `form:"interval_end"`
-	IntervalStart     *int64    `form:"interval_start"`
-	Payout            *string   `form:"payout"`
-	ReportingCategory *string   `form:"reporting_category"`
+	Columns           []*string `form:"columns" json:"columns"`
+	ConnectedAccount  *string   `form:"connected_account" json:"connected_account"`
+	Currency          *string   `form:"currency" json:"currency"`
+	IntervalEnd       *int64    `form:"interval_end" json:"interval_end"`
+	IntervalStart     *int64    `form:"interval_start" json:"interval_start"`
+	Payout            *string   `form:"payout" json:"payout"`
+	ReportingCategory *string   `form:"reporting_category" json:"reporting_category"`
 }
 
 // ReportRunParams is the set of parameters that can be used when creating a report run.
 type ReportRunParams struct {
-	Params     `form:"*"`
-	Parameters *ReportRunParametersParams `form:"parameters"`
-	ReportType *string                    `form:"report_type"`
+	Params     `form:"*" json:"*"`
+	Parameters *ReportRunParametersParams `form:"parameters" json:"parameters"`
+	ReportType *string                    `form:"report_type" json:"report_type"`
 }
 
 // ReportRunListParams is the set of parameters that can be used when listing report runs.
 type ReportRunListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
 }
 
 // ReportRunParameters describes the parameters hash on a report run.

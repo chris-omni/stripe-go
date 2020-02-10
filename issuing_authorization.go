@@ -15,6 +15,30 @@ const (
 	IssuingAuthorizationAuthorizationMethodSwipe       IssuingAuthorizationAuthorizationMethod = "swipe"
 )
 
+// IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity is the list of possible values
+// for the entity that owns the authorization control.
+type IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity string
+
+// List of values that IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity can take.
+const (
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntityAccount    IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity = "account"
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntityCard       IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity = "card"
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntityCardholder IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity = "cardholder"
+)
+
+// IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName is the list of possible values
+// for the name associated with the authorization control.
+type IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName string
+
+// List of values that IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName can take.
+const (
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlNameAllowedCategories IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName = "allowed_categories"
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlNameBlockedCategories IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName = "blocked_categories"
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlNameMaxAmount         IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName = "max_amount"
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlNameMaxApprovals      IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName = "max_approvals"
+	IssuingAuthorizationRequestHistoryViolatedAuthorizationControlNameSpendingLimits    IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName = "spending_limits"
+)
+
 // IssuingAuthorizationRequestHistoryReason is the list of possible values for the request history
 // reason on an issuing authorization.
 type IssuingAuthorizationRequestHistoryReason string
@@ -75,18 +99,18 @@ const (
 
 // IssuingAuthorizationParams is the set of parameters that can be used when updating an issuing authorization.
 type IssuingAuthorizationParams struct {
-	Params     `form:"*"`
-	HeldAmount *int64 `form:"held_amount"`
+	Params     `form:"*" json:"*"`
+	HeldAmount *int64 `form:"held_amount" json:"held_amount"`
 }
 
 // IssuingAuthorizationListParams is the set of parameters that can be used when listing issuing authorizations.
 type IssuingAuthorizationListParams struct {
-	ListParams   `form:"*"`
-	Card         *string           `form:"card"`
-	Cardholder   *string           `form:"cardholder"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Status       *string           `form:"status"`
+	ListParams   `form:"*" json:"*"`
+	Card         *string           `form:"card" json:"card"`
+	Cardholder   *string           `form:"cardholder" json:"cardholder"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Status       *string           `form:"status" json:"status"`
 }
 
 // IssuingAuthorizationAuthorizationControls is the resource representing authorization controls on an issuing authorization.
@@ -98,15 +122,23 @@ type IssuingAuthorizationAuthorizationControls struct {
 	MaxApprovals      int64    `json:"max_approvals"`
 }
 
+// IssuingAuthorizationRequestHistoryViolatedAuthorizationControl is the resource representing an
+// authorizaton control that caused the authorization to fail.
+type IssuingAuthorizationRequestHistoryViolatedAuthorizationControl struct {
+	Entity IssuingAuthorizationRequestHistoryViolatedAuthorizationControlEntity `json:"entity"`
+	Name   IssuingAuthorizationRequestHistoryViolatedAuthorizationControlName   `json:"name"`
+}
+
 // IssuingAuthorizationRequestHistory is the resource representing a request history on an issuing authorization.
 type IssuingAuthorizationRequestHistory struct {
-	Approved           bool                                     `json:"approved"`
-	AuthorizedAmount   int64                                    `json:"authorized_amount"`
-	AuthorizedCurrency Currency                                 `json:"authorized_currency"`
-	Created            int64                                    `json:"created"`
-	HeldAmount         int64                                    `json:"held_amount"`
-	HeldCurrency       Currency                                 `json:"held_currency"`
-	Reason             IssuingAuthorizationRequestHistoryReason `json:"reason"`
+	Approved                      bool                                                              `json:"approved"`
+	AuthorizedAmount              int64                                                             `json:"authorized_amount"`
+	AuthorizedCurrency            Currency                                                          `json:"authorized_currency"`
+	Created                       int64                                                             `json:"created"`
+	HeldAmount                    int64                                                             `json:"held_amount"`
+	HeldCurrency                  Currency                                                          `json:"held_currency"`
+	Reason                        IssuingAuthorizationRequestHistoryReason                          `json:"reason"`
+	ViolatedAuthorizationControls []*IssuingAuthorizationRequestHistoryViolatedAuthorizationControl `json:"violated_authorization_controls"`
 }
 
 // IssuingAuthorizationVerificationData is the resource representing verification data on an issuing authorization.

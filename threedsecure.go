@@ -5,12 +5,12 @@ type ThreeDSecureStatus string
 
 // ThreeDSecureParams is the set of parameters that can be used when creating a 3DS object.
 type ThreeDSecureParams struct {
-	Params    `form:"*"`
-	Amount    *int64  `form:"amount"`
-	Card      *string `form:"card"`
-	Currency  *string `form:"currency"`
-	Customer  *string `form:"customer"`
-	ReturnURL *string `form:"return_url"`
+	Params    `form:"*" json:"*"`
+	Amount    *int64  `form:"amount" json:"amount"`
+	Card      *string `form:"card" json:"card"`
+	Currency  *string `form:"currency" json:"currency"`
+	Customer  *string `form:"customer" json:"customer"`
+	ReturnURL *string `form:"return_url" json:"return_url"`
 }
 
 // ThreeDSecure is the resource representing a Stripe 3DS object

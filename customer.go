@@ -7,29 +7,11 @@ import (
 // CustomerTaxExempt is the type of tax exemption associated with a customer.
 type CustomerTaxExempt string
 
-// List of values that CustomerTaxInfoType can take.
+// List of values that CustomerTaxExempt can take.
 const (
 	CustomerTaxExemptExempt  CustomerTaxExempt = "exempt"
 	CustomerTaxExemptNone    CustomerTaxExempt = "none"
 	CustomerTaxExemptReverse CustomerTaxExempt = "reverse"
-)
-
-// CustomerTaxInfoType is the type of tax info associated with a customer.
-type CustomerTaxInfoType string
-
-// List of values that CustomerTaxInfoType can take.
-const (
-	CustomerTaxInfoTypeVAT CustomerTaxInfoType = "vat"
-)
-
-// CustomerTaxInfoVerificationStatus is the type of tax info associated with a customer.
-type CustomerTaxInfoVerificationStatus string
-
-// List of values that CustomerTaxInfoType can take.
-const (
-	CustomerTaxInfoVerificationStatusPending    CustomerTaxInfoVerificationStatus = "pending"
-	CustomerTaxInfoVerificationStatusUnverified CustomerTaxInfoVerificationStatus = "unverified"
-	CustomerTaxInfoVerificationStatusVerified   CustomerTaxInfoVerificationStatus = "verified"
 )
 
 // CustomerParams is the set of parameters that can be used when creating or updating a customer.
@@ -37,7 +19,7 @@ const (
 type CustomerParams struct {
 	Params           `form:"*" json:"*"`
 	Address          *AddressParams                 `form:"address" json:"address"`
-	Balance  	 *int64                         `form:"balance" json:"balance"`
+	Balance          *int64                         `form:"balance" json:"balance"`
 	Coupon           *string                        `form:"coupon" json:"coupon"`
 	DefaultSource    *string                        `form:"default_source" json:"default_source"`
 	Description      *string                        `form:"description" json:"description"`
@@ -49,16 +31,10 @@ type CustomerParams struct {
 	Phone            *string                        `form:"phone" json:"phone"`
 	PreferredLocales []*string                      `form:"preferred_locales" json:"preferred_locales"`
 	Shipping         *CustomerShippingDetailsParams `form:"shipping" json:"shipping"`
-	Source           *SourceParams                  `form:"*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
+	Source           *SourceParams                  `form:"*"` // SourceParams has custom encoding so brought to top level with "*" json:"*"` // SourceParams has custom encoding so brought to top level with "*"
 	TaxExempt        *string                        `form:"tax_exempt" json:"tax_exempt"`
 	TaxIDData        []*CustomerTaxIDDataParams     `form:"tax_id_data" json:"tax_id_data"`
 	Token            *string                        `form:"-" json:"-"` // This doesn't seem to be used?
-
-	// The following parameter is deprecated. Use Balance instead.
-	AccountBalance *int64 `form:"account_balance" json:"account_balance"`
-
-	// The following parameter is deprecated. Use TaxIDData instead.
-	TaxInfo *CustomerTaxInfoParams `form:"tax_info" json:"tax_info"`
 
 	// The parameters below are considered deprecated. Consider creating a Subscription separately instead.
 	Plan       *string  `form:"plan" json:"plan"`
@@ -70,35 +46,29 @@ type CustomerParams struct {
 // CustomerInvoiceCustomFieldParams represents the parameters associated with one custom field on
 // the customer's invoices.
 type CustomerInvoiceCustomFieldParams struct {
-	Name  *string `form:"name"`
-	Value *string `form:"value"`
+	Name  *string `form:"name" json:"name"`
+	Value *string `form:"value" json:"value"`
 }
 
 // CustomerInvoiceSettingsParams is the structure containing the default settings for invoices
 // associated with this customer.
 type CustomerInvoiceSettingsParams struct {
-	CustomFields         []*CustomerInvoiceCustomFieldParams `form:"custom_fields"`
-	DefaultPaymentMethod *string                             `form:"default_payment_method"`
-	Footer               *string                             `form:"footer"`
+	CustomFields         []*CustomerInvoiceCustomFieldParams `form:"custom_fields" json:"custom_fields"`
+	DefaultPaymentMethod *string                             `form:"default_payment_method" json:"default_payment_method"`
+	Footer               *string                             `form:"footer" json:"footer"`
 }
 
 // CustomerShippingDetailsParams is the structure containing shipping information.
 type CustomerShippingDetailsParams struct {
-	Address *AddressParams `form:"address"`
-	Name    *string        `form:"name"`
-	Phone   *string        `form:"phone"`
+	Address *AddressParams `form:"address" json:"address"`
+	Name    *string        `form:"name" json:"name"`
+	Phone   *string        `form:"phone" json:"phone"`
 }
 
 // CustomerTaxIDDataParams lets you pass the tax id details associated with a Customer.
 type CustomerTaxIDDataParams struct {
-	Type  *string `form:"type"`
-	Value *string `form:"value"`
-}
-
-// CustomerTaxInfoParams is the structure containing tax information for the customer.
-type CustomerTaxInfoParams struct {
-	TaxID *string `form:"tax_id"`
-	Type  *string `form:"type"`
+	Type  *string `form:"type" json:"type"`
+	Value *string `form:"value" json:"value"`
 }
 
 // SetSource adds valid sources to a CustomerParams object,
@@ -112,10 +82,10 @@ func (cp *CustomerParams) SetSource(sp interface{}) error {
 // CustomerListParams is the set of parameters that can be used when listing customers.
 // For more details see https://stripe.com/docs/api#list_customers.
 type CustomerListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
-	Email        *string           `form:"email"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
+	Email        *string           `form:"email" json:"email"`
 }
 
 // Customer is the resource representing a Stripe customer.
@@ -144,19 +114,12 @@ type Customer struct {
 	Subscriptions    *SubscriptionList        `json:"subscriptions"`
 	TaxExempt        CustomerTaxExempt        `json:"tax_exempt"`
 	TaxIDs           *TaxIDList               `json:"tax_ids"`
-
-	// The following property is deprecated. Use Balance instead.
-	AccountBalance int64 `json:"account_balance"`
-
-	// The following properties are deprecated. Use TaxIds instead.
-	TaxInfo             *CustomerTaxInfo             `json:"tax_info"`
-	TaxInfoVerification *CustomerTaxInfoVerification `json:"tax_info_verification"`
 }
 
 // CustomerInvoiceCustomField represents a custom field associated with the customer's invoices.
 type CustomerInvoiceCustomField struct {
-	Name  *string `form:"name"`
-	Value *string `form:"value"`
+	Name  *string `form:"name" json:"name"`
+	Value *string `form:"value" json:"value"`
 }
 
 // CustomerInvoiceSettings is the structure containing the default settings for invoices associated
@@ -178,18 +141,6 @@ type CustomerShippingDetails struct {
 	Address Address `json:"address"`
 	Name    string  `json:"name"`
 	Phone   string  `json:"phone"`
-}
-
-// CustomerTaxInfo is the structure containing tax information for the customer.
-type CustomerTaxInfo struct {
-	TaxID string              `json:"tax_id"`
-	Type  CustomerTaxInfoType `json:"type"`
-}
-
-// CustomerTaxInfoVerification is the structure containing tax verification for the customer.
-type CustomerTaxInfoVerification struct {
-	Status       CustomerTaxInfoVerificationStatus `json:"status"`
-	VerifiedName string                            `json:"verified_name"`
 }
 
 // UnmarshalJSON handles deserialization of a Customer.

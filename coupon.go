@@ -15,24 +15,24 @@ const (
 // CouponParams is the set of parameters that can be used when creating a coupon.
 // For more details see https://stripe.com/docs/api#create_coupon.
 type CouponParams struct {
-	Params           `form:"*"`
-	AmountOff        *int64   `form:"amount_off"`
-	Currency         *string  `form:"currency"`
-	Duration         *string  `form:"duration"`
-	DurationInMonths *int64   `form:"duration_in_months"`
-	ID               *string  `form:"id"`
-	MaxRedemptions   *int64   `form:"max_redemptions"`
-	Name             *string  `form:"name"`
-	PercentOff       *float64 `form:"percent_off"`
-	RedeemBy         *int64   `form:"redeem_by"`
+	Params           `form:"*" json:"*"`
+	AmountOff        *int64   `form:"amount_off" json:"amount_off"`
+	Currency         *string  `form:"currency" json:"currency"`
+	Duration         *string  `form:"duration" json:"duration"`
+	DurationInMonths *int64   `form:"duration_in_months" json:"duration_in_months"`
+	ID               *string  `form:"id" json:"id"`
+	MaxRedemptions   *int64   `form:"max_redemptions" json:"max_redemptions"`
+	Name             *string  `form:"name" json:"name"`
+	PercentOff       *float64 `form:"percent_off" json:"percent_off"`
+	RedeemBy         *int64   `form:"redeem_by" json:"redeem_by"`
 }
 
 // CouponListParams is the set of parameters that can be used when listing coupons.
 // For more detail see https://stripe.com/docs/api#list_coupons.
 type CouponListParams struct {
-	ListParams   `form:"*"`
-	Created      *int64            `form:"created"`
-	CreatedRange *RangeQueryParams `form:"created"`
+	ListParams   `form:"*" json:"*"`
+	Created      *int64            `form:"created" json:"created"`
+	CreatedRange *RangeQueryParams `form:"created" json:"created"`
 }
 
 // Coupon is the resource representing a Stripe coupon.
